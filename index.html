@@ -78,6 +78,11 @@
     .week-red .week-head>b{background:#fecaca;color:#b91c1c}.week-orange .week-head>b{background:#fed7aa;color:#c2410c}.week-yellow .week-head>b{background:#fde68a;color:#a16207}.week-green .week-head>b{background:#bbf7d0;color:#166534}
     .week-total{text-align:center;font-size:1rem;margin:10px 0 6px}.week-total.bottom{font-weight:700;border-top:1px solid #e5e7eb;padding-top:10px}
     .week-goals{margin-top:4px}.week-goal-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid #e5e7eb}.week-goal-row:last-child{border-bottom:0}.week-goal-name{display:flex;align-items:center;gap:9px;flex:1}.week-goal-name input{width:20px;height:20px;accent-color:var(--accent)}.week-goal-status{font-weight:750;white-space:nowrap}.week-goal-status.done{color:#16a34a}.week-goal-status.notdone{color:#ff476f}
+
+    .latest-row{background:#eff6ff}.latest-row td{font-weight:700}.latest-row td:first-child{color:var(--accent)}
+    .latest-badge{display:inline-flex;align-items:center;margin-left:6px;padding:3px 7px;border-radius:999px;background:#dbeafe;color:#1d4ed8;font-size:.65rem;font-weight:800}
+    .latest-metric{border:2px solid #93c5fd;background:#eff6ff}.analytics-table{width:100%;border-collapse:collapse}.analytics-table td{padding:10px 4px;border-bottom:1px solid #eef1f5}.analytics-table td:first-child{color:#64748b;width:55%}.analytics-table td:last-child{text-align:right;font-weight:800}.analytics-table tr:last-child td{border-bottom:0}
+
 </style>
 </head>
 <body>
@@ -95,7 +100,7 @@
   <nav class="tabs">
     <button class="tab active" data-tab="home">Сегодня</button>
     <button class="tab" data-tab="measure">Замеры</button>
-    <button class="tab" data-tab="analytics">Динамика</button>
+    <button class="tab" data-tab="analytics">Аналитика</button>
     <button class="tab" data-tab="habits">Привычки</button>
     <button class="tab" data-tab="profile">Профиль</button>
   </nav>
@@ -120,37 +125,29 @@
         <div class="grid2" id="measurementFields"></div>
         <button class="btn green" id="saveMeasurement">Добавить / обновить замер</button>
       </div>
-
+      <div class="card">
+        <div class="title">📈 Динамика веса</div>
+        <div id="weightChart"></div>
+        <div id="weightTable"></div>
+      </div>
+      <div class="card">
+        <div class="title">📐 Динамика объёмов</div>
+        <div id="measureAnalytics"></div>
+      </div>
     </section>
 
     <section id="view-analytics" class="view">
       <div class="card">
-        <div class="title">📈 Аналитика и динамика</div>
-        <div class="field">
-          <label>Период анализа</label>
-          <select id="analyticsPeriod">
-            <option value="30">Последние 30 дней</option>
-            <option value="90">Последние 90 дней</option>
-            <option value="all" selected>Весь период</option>
-          </select>
-        </div>
-        <div id="analyticsOverview"></div>
+        <div class="title">📊 Аналитика и динамика</div>
+        <div id="analyticsSummary"></div>
       </div>
-
       <div class="card">
-        <div class="title">⚖️ Динамика веса</div>
+        <div class="title">📈 Динамика веса</div>
         <div id="analyticsWeightChart"></div>
-        <div id="analyticsWeightStats"></div>
       </div>
-
       <div class="card">
-        <div class="title">📏 Динамика объёмов</div>
-        <div id="analyticsVolumeCharts"></div>
-      </div>
-
-      <div class="card">
-        <div class="title">🧬 Состав тела</div>
-        <div id="analyticsBody"></div>
+        <div class="title">📐 Динамика объёмов</div>
+        <div id="analyticsMeasurements"></div>
       </div>
     </section>
 
@@ -250,12 +247,12 @@
   const round = (v,d=1) => Math.round(v*10**d)/10**d;
   const clamp = (v,a,b) => Math.min(b,Math.max(a,v));
 
-  const DEFAULT_DAILY = [{id:'veg',label:'500 г растительной пищи',icon:'🌿',fixed:true,createdAt:null}];
+  const DEFAULT_DAILY = [{id:'veg',label:'🌿 500 г растительной пищи',fixed:true,createdAt:null}];
   const DEFAULT_WEEKLY = [
-    {id:'redmeat',label:'Красное мясо',icon:'🥩',fixed:true,createdAt:null},
-    {id:'fish',label:'Рыба',icon:'🐟',fixed:true,createdAt:null},
-    {id:'liver',label:'Печень / субпродукты',icon:'🍖',fixed:true,createdAt:null},
-    {id:'seafood',label:'Морепродукты',icon:'🦐',fixed:true,createdAt:null}
+    {id:'redmeat',label:'🥩 Красное мясо',fixed:true,createdAt:null},
+    {id:'fish',label:'🐟 Рыба',fixed:true,createdAt:null},
+    {id:'liver',label:'🍖 Печень / субпродукты',fixed:true,createdAt:null},
+    {id:'seafood',label:'🦐 Морепродукты',fixed:true,createdAt:null}
   ];
   const MEASUREMENTS = [
     ['neck','Шея'],['chest','Грудь'],['waist','Талия'],['hips','Бёдра'],
@@ -265,7 +262,7 @@
   let state = {
     profile:{name:'',gender:'female',birth:'',height:'',weight:'',target:'',goal:'maintain',steps:'',activity:'1.2',registrationDate:null,baseMeasurements:{}},
     weights:{}, measurements:{}, dailyGoals:structuredClone(DEFAULT_DAILY), weeklyGoals:structuredClone(DEFAULT_WEEKLY),
-    dailyDone:{}, weeklyDone:{}, weeklyHistory:{}, ui:{month:todayStr().slice(0,7),habitDate:todayStr(),selectedWeek:null,analyticsPeriod:'all'}
+    dailyDone:{}, weeklyDone:{}, weeklyHistory:{}, ui:{month:todayStr().slice(0,7),habitDate:todayStr(),selectedWeek:null}
   };
 
   const $ = id => document.getElementById(id);
@@ -289,19 +286,16 @@
   }
   function ensureDefaults(){
     const reg=state.profile.registrationDate||null;
-    for(const d of DEFAULT_DAILY) if(!state.dailyGoals.some(x=>x.id===d.id)) state.dailyGoals.unshift({...d,createdAt:reg||todayStr()});
-    for(const w of DEFAULT_WEEKLY) if(!state.weeklyGoals.some(x=>x.id===w.id)) state.weeklyGoals.push({...w,createdAt:reg||todayStr()});
-    for(const g of state.dailyGoals) {
-      if(!g.createdAt) g.createdAt=reg||todayStr();
-      if(g.id==='veg' && !g.icon) g.icon='🌿';
+    for(const d of DEFAULT_DAILY){
+      const existing=state.dailyGoals.find(x=>x.id===d.id);
+      if(existing) existing.label=d.label; else state.dailyGoals.unshift({...d,createdAt:reg||todayStr()});
     }
-    for(const g of state.weeklyGoals) {
-      if(!g.createdAt) g.createdAt=reg||todayStr();
-      if(g.id==='redmeat' && !g.icon) g.icon='🥩';
-      if(g.id==='fish' && !g.icon) g.icon='🐟';
-      if(g.id==='liver' && !g.icon) g.icon='🍖';
-      if(g.id==='seafood' && !g.icon) g.icon='🦐';
+    for(const w of DEFAULT_WEEKLY){
+      const existing=state.weeklyGoals.find(x=>x.id===w.id);
+      if(existing) existing.label=w.label; else state.weeklyGoals.push({...w,createdAt:reg||todayStr()});
     }
+    for(const g of state.dailyGoals) if(!g.createdAt) g.createdAt=reg||todayStr();
+    for(const g of state.weeklyGoals) if(!g.createdAt) g.createdAt=reg||todayStr();
     rolloverWeek();
     // При каждом открытии приложения дневной редактор начинается с текущей даты.
     state.ui.habitDate=todayStr();
@@ -313,7 +307,7 @@
     const current = weekStart(todayStr());
     const stored = state._currentWeek;
     if(stored && stored!==current){
-      const oldGoals = state.weeklyGoals.filter(g=>!g.createdAt || g.createdAt<=addDays(stored,6)).map(g=>({id:g.id,label:g.label,icon:g.icon||'',fixed:g.fixed,createdAt:g.createdAt||stored,done:!!state.weeklyDone[g.id]}));
+      const oldGoals = state.weeklyGoals.filter(g=>!g.createdAt || g.createdAt<=addDays(stored,6)).map(g=>({id:g.id,label:g.label,fixed:g.fixed,createdAt:g.createdAt||stored,done:!!state.weeklyDone[g.id]}));
       state.weeklyHistory[stored]={start:stored,end:addDays(stored,6),goals:oldGoals,
         percent: oldGoals.length ? Math.round(oldGoals.filter(x=>x.done).length/oldGoals.length*100):0};
       state.weeklyDone={};
@@ -498,130 +492,59 @@
     </svg></div>`;
   }
 
-
-  function filterAnalyticsWeights(days){
-    const vals=Object.keys(state.weights).sort().map(d=>({d,v:n(state.weights[d])})).filter(x=>x.v!=null);
-    if(days==='all'||!vals.length)return vals;
-    const end=vals[vals.length-1].d;
-    const cutoff=iso(addDays(end,-(Number(days)-1)));
-    return vals.filter(x=>x.d>=cutoff);
-  }
-
-  function analyticsLineChart(values, unit='кг'){
-    if(values.length<2) return `<div class="empty">Нужно минимум 2 замера для графика.</div>`;
-    const W=640,H=230,pad=34, xs=W-pad*1.2, ys=H-pad;
-    const vals=values.map(x=>x.v), min=Math.min(...vals), max=Math.max(...vals), range=max-min||1;
-    const pts=values.map((x,i)=>{
-      const xx=pad+(i/(values.length-1))*xs, yy=20+(1-(x.v-min)/range)*(H-55);
-      return [xx,yy,x];
-    });
-    const path=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
-    return `<div class="chart"><svg viewBox="0 0 ${W} ${H}" aria-label="График динамики">
-      <line x1="${pad}" y1="${H-35}" x2="${W-10}" y2="${H-35}" stroke="#dbe1e8"/>
-      <line x1="${pad}" y1="20" x2="${pad}" y2="${H-35}" stroke="#dbe1e8"/>
-      <path d="${path}" fill="none" stroke="#2563eb" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-      ${pts.map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="4.2" fill="#fff" stroke="#2563eb" stroke-width="3"><title>${fmt(p[2].d)}: ${p[2].v} ${unit}</title></circle>`).join('')}
-      <text x="${pad}" y="14" font-size="11" fill="#64748b">${max.toFixed(1)} ${unit}</text>
-      <text x="${pad}" y="${H-7}" font-size="11" fill="#64748b">${min.toFixed(1)} ${unit}</text>
-    </svg></div>`;
-  }
-
-  function miniLineChart(values){
-    if(values.length<2)return '';
-    const W=260,H=72,pad=5,vals=values.map(x=>x.v),min=Math.min(...vals),max=Math.max(...vals),range=max-min||1;
-    const pts=values.map((x,i)=>{
-      const xx=pad+(i/(values.length-1))*(W-pad*2);
-      const yy=8+(1-(x.v-min)/range)*(H-18);
-      return [xx,yy];
-    });
-    const path=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
-    return `<div class="mini-chart"><svg viewBox="0 0 ${W} ${H}" aria-hidden="true"><path d="${path}" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>`;
-  }
-
-  function renderAnalytics(){
-    const period=state.ui.analyticsPeriod||'all';
-    const vals=filterAnalyticsWeights(period);
-    const reg=state.profile.registrationDate;
-    const target=n(state.profile.target);
-    const startWeight=reg?state.weights[reg]:null;
-    const currentWeight=vals.length?vals[vals.length-1].v:n(state.profile.weight);
-    const firstInPeriod=vals.length?vals[0].v:null;
-    const change=firstInPeriod!=null&&currentWeight!=null?round(currentWeight-firstInPeriod,1):null;
-    const totalChange=startWeight!=null&&currentWeight!=null?round(currentWeight-startWeight,1):null;
-    const targetDiff=target!=null&&currentWeight!=null?round(currentWeight-target,1):null;
-    const prog=progress(state.profile);
-    const overview=[];
-    if(currentWeight!=null) overview.push(`<div class="analytics-kpi"><div class="k">Текущий вес</div><div class="v">${round(currentWeight,1)} кг</div><div class="s">${vals.length?fmt(vals[vals.length-1].d):'сейчас'}</div></div>`);
-    if(target!=null&&targetDiff!=null) overview.push(`<div class="analytics-kpi"><div class="k">До целевого веса</div><div class="v">${Math.abs(targetDiff).toFixed(1)} кг</div><div class="s">${targetDiff>0?'нужно снизить':'нужно набрать'}</div></div>`);
-    if(change!=null) overview.push(`<div class="analytics-kpi ${change<0?'good':change>0?'warn':''}"><div class="k">Изменение за период</div><div class="v">${change>0?'+':''}${change.toFixed(1)} кг</div><div class="s">${period==='all'?'за весь период':'за выбранный период'}</div></div>`);
-    if(prog) overview.push(`<div class="analytics-kpi"><div class="k">Прогресс к цели</div><div class="v">${Math.round(prog.pct)}%</div><div class="s">${esc(prog.label)}</div></div>`);
-    $('analyticsOverview').innerHTML=overview.length?`<div class="analytics-kpis">${overview.join('')}</div>`:'<div class="empty">Заполните профиль и добавьте замеры, чтобы увидеть аналитику.</div>';
-
-    $('analyticsWeightChart').innerHTML=vals.length?analyticsLineChart(vals):'<div class="empty">Пока нет замеров веса.</div>';
-    if(vals.length){
-      let weekly='';
-      if(vals.length>=2){
-        const days=Math.max(1,Math.round((parseDate(vals[vals.length-1].d)-parseDate(vals[0].d))/86400000));
-        const perWeek=round((vals[vals.length-1].v-vals[0].v)/(days/7),1);
-        weekly=`<div class="analytics-stat"><span>Среднее изменение</span><b>${perWeek>0?'+':''}${perWeek} кг/нед.</b></div>`;
-      }
-      $('analyticsWeightStats').innerHTML=`<div style="margin-top:10px">
-        ${startWeight!=null?`<div class="analytics-stat"><span>Вес при регистрации</span><b>${round(startWeight,1)} кг</b></div>`:''}
-        <div class="analytics-stat"><span>Последний замер</span><b>${currentWeight!=null?round(currentWeight,1)+' кг':'—'}</b></div>
-        ${totalChange!=null?`<div class="analytics-stat"><span>Изменение от регистрации</span><b>${totalChange>0?'+':''}${totalChange} кг</b></div>`:''}
-        ${target!=null?`<div class="analytics-stat"><span>Целевой вес</span><b>${round(target,1)} кг</b></div>`:''}
-        ${weekly}
-      </div>`;
-    }else $('analyticsWeightStats').innerHTML='';
-
-    const ms=Object.keys(state.measurements).sort();
-    if(!ms.length){
-      $('analyticsVolumeCharts').innerHTML='<div class="empty">Пока нет замеров объёмов.</div>';
-    }else{
-      const latestDate=ms[ms.length-1], firstDate=ms[0], latest=state.measurements[latestDate], first=state.measurements[firstDate];
-      $('analyticsVolumeCharts').innerHTML=`<div class="volume-grid">${MEASUREMENTS.map(([k,l])=>{
-        const series=ms.map(d=>({d,v:n(state.measurements[d][k])})).filter(x=>x.v!=null);
-        const now=n(latest[k]), start=n(first[k]), diff=now!=null&&start!=null?round(now-start,1):null;
-        const cls=diff==null||Math.abs(diff)<0.05?'trend-neutral':diff<0?'trend-down':'trend-up';
-        return `<div class="volume-card">
-          <div class="vc-head"><span class="vc-name">${esc(l)}</span><span class="vc-now">${now!=null?now+' см':'—'}</span></div>
-          <div class="vc-diff ${cls}">${diff==null?'нет сравнения':`от первого замера ${diff>0?'+':''}${diff} см`}</div>
-          ${miniLineChart(series)}
-        </div>`;
-      }).join('')}</div>
-      <div class="note" style="margin-top:10px">Первый замер: ${fmt(firstDate)} · последний: ${fmt(latestDate)}.</div>`;
-    }
-
-    const bc=bodyComp(state.profile);
-    $('analyticsBody').innerHTML=bc?`<div class="grid2">
-      <div class="metric"><div class="k">% жира</div><div class="v">${bc.bf.toFixed(1)}%</div><div class="s">${bc.bfN!=null?'US Navy':'по ИМТ'}</div></div>
-      <div class="metric"><div class="k">Жировая масса</div><div class="v">${bc.fatMass.toFixed(1)} кг</div></div>
-      <div class="metric"><div class="k">Безжировая масса</div><div class="v">${bc.ffm.toFixed(1)} кг</div></div>
-      <div class="metric"><div class="k">Категория</div><div class="v" style="font-size:1rem">${esc(bc.status)}</div></div>
-    </div>
-    <div class="note" style="margin-top:10px">Состав тела рассчитывается по последним сохранённым данным профиля и базовым замерам.</div>`
-    :'<div class="empty">Добавьте данные профиля и замеры, чтобы увидеть состав тела.</div>';
-  }
-
   function renderMeasurements(){
-    $('wDate').value=todayStr();$('mDate').value=todayStr();
+    const latestWeightDate=Object.keys(state.weights).sort().pop()||todayStr(); const latestMeasureDate=Object.keys(state.measurements).sort().pop()||todayStr(); $('wDate').value=latestWeightDate; $('mDate').value=latestMeasureDate;
     const vals=Object.keys(state.weights).sort().map(d=>({d,v:n(state.weights[d])})).filter(x=>x.v!=null);
     $('weightChart').innerHTML=vals.length?lineChart(vals):'<div class="empty">Пока нет замеров.</div>';
     let rows='';
     let prev=null, reg=state.profile.registrationDate?state.weights[state.profile.registrationDate]:null;
     [...vals].reverse().forEach(x=>{
       const diff=prev==null?null:round(x.v-prev,1), regDiff=reg==null?null:round(x.v-reg,1);
-      rows+=`<tr><td>${fmt(x.d)}</td><td><b>${x.v.toFixed(1)}</b></td><td>${diff==null?'—':(diff>0?'+':'')+diff}</td><td>${regDiff==null?'—':(regDiff>0?'+':'')+regDiff}</td></tr>`;
+      const isLatest = x.d===vals[vals.length-1].d;
+      rows+=`<tr class="${isLatest?'latest-row':''}"><td>${fmt(x.d)}${isLatest?'<span class="latest-badge">последний</span>':''}</td><td><b>${x.v.toFixed(1)}</b></td><td>${diff==null?'—':(diff>0?'+':'')+diff}</td><td>${regDiff==null?'—':(regDiff>0?'+':'')+regDiff}</td></tr>`;
       prev=x.v;
     });
     $('weightTable').innerHTML=vals.length?`<table class="table"><thead><tr><th>Дата</th><th>Вес</th><th>к пред.</th><th>к регистрации</th></tr></thead><tbody>${rows}</tbody></table>`:'';
     const ms=Object.keys(state.measurements).sort();
     if(!ms.length){$('measureAnalytics').innerHTML='<div class="empty">Пока нет замеров объёмов.</div>';return;}
-    const first=state.measurements[ms[0]], last=state.measurements[ms[ms.length-1]];
-    $('measureAnalytics').innerHTML=`<div class="grid2">${MEASUREMENTS.map(([k,l])=>{
-      const a=n(first[k]),b=n(last[k]); if(a==null||b==null)return `<div class="metric"><div class="k">${l}</div><div class="v">—</div></div>`;
-      const d=round(b-a,1); return `<div class="metric"><div class="k">${l}</div><div class="v">${b} см</div><div class="s">изменение ${d>0?'+':''}${d} см</div></div>`;
-    }).join('')}</div><div class="note" style="margin-top:10px">Первый замер: ${fmt(ms[0])}. Последний: ${fmt(ms[ms.length-1])}.</div>`;
+    const first=state.measurements[ms[0]], lastDate=ms[ms.length-1], last=state.measurements[lastDate];
+    $('measureAnalytics').innerHTML=`<div class="note good" style="margin-bottom:10px"><b>Последний замер: ${fmt(lastDate)}</b></div><div class="grid2">${MEASUREMENTS.map(([k,l])=>{
+      const a=n(first[k]),b=n(last[k]); if(b==null)return `<div class="metric"><div class="k">${l}</div><div class="v">—</div><div class="s">нет значения на ${fmt(lastDate)}</div></div>`;
+      const d=a==null?null:round(b-a,1); return `<div class="metric latest-metric"><div class="k">${l}</div><div class="v">${b} см</div><div class="s">${d==null?'нет первого замера':'изменение '+(d>0?'+':'')+d+' см'}</div></div>`;
+    }).join('')}</div><div class="note" style="margin-top:10px">Первый день с замерами: ${fmt(ms[0])}. Последний день с замерами: ${fmt(lastDate)}.</div>`;
+  }
+
+  function renderAnalytics(){
+    const p=state.profile, pr=progress(p);
+    const dates=Object.keys(state.weights).sort().filter(d=>state.profile.registrationDate ? d>=state.profile.registrationDate : true);
+    const latestDate=dates[dates.length-1]||null;
+    const currentWeight=latestDate?n(state.weights[latestDate]):n(p.weight);
+    const regWeight=state.profile.registrationDate?n(state.weights[state.profile.registrationDate]):null;
+    let delta=regWeight!=null&&currentWeight!=null?round(currentWeight-regWeight,1):null;
+    const target=n(p.target);
+    let toTarget=null, targetText='';
+    if(target!=null&&currentWeight!=null){
+      toTarget=round(Math.abs(target-currentWeight),1);
+      targetText=currentWeight>target?'нужно снизить':currentWeight<target?'нужно набрать':'цель достигнута';
+    }
+    const summary=`<table class="analytics-table"><tbody>
+      <tr><td>Дата</td><td>${latestDate?fmt(latestDate):'—'}</td></tr>
+      <tr><td>Текущий вес</td><td>${currentWeight!=null?currentWeight.toFixed(1)+' кг':'—'}</td></tr>
+      <tr><td>До целевого веса ${targetText}</td><td>${toTarget!=null?toTarget+' кг':'—'}</td></tr>
+      <tr><td>Изменение за весь период</td><td>${delta!=null?(delta>0?'+':'')+delta+' кг':'—'}</td></tr>
+      <tr><td>Прогресс к цели ${pr?pr.label:''}</td><td>${pr?pr.pct+'%':'—'}</td></tr>
+    </tbody></table>`;
+    $('analyticsSummary').innerHTML=summary;
+    $('analyticsWeightChart').innerHTML=dates.length?lineChart(dates.map(d=>({d,v:n(state.weights[d])})).filter(x=>x.v!=null)):'<div class="empty">Пока нет замеров веса.</div>';
+    const ms=Object.keys(state.measurements).sort();
+    if(!ms.length){$('analyticsMeasurements').innerHTML='<div class="empty">Пока нет замеров объёмов.</div>';return;}
+    const first=state.measurements[ms[0]], lastDate=ms[ms.length-1], last=state.measurements[lastDate];
+    $('analyticsMeasurements').innerHTML=`<div class="note good" style="margin-bottom:10px"><b>Последний день замеров: ${fmt(lastDate)}</b></div><div class="grid2">${MEASUREMENTS.map(([k,l])=>{
+      const a=n(first[k]),b=n(last[k]);
+      if(b==null)return `<div class="metric"><div class="k">${l}</div><div class="v">—</div></div>`;
+      const d=a==null?null:round(b-a,1);
+      return `<div class="metric latest-metric"><div class="k">${l}</div><div class="v">${b} см</div><div class="s">${d==null?'нет первого значения':'изменение '+(d>0?'+':'')+d+' см'}</div></div>`;
+    }).join('')}</div>`;
   }
 
   function goalActiveOnDay(g,d){ return !g.createdAt || g.createdAt<=d; }
@@ -648,7 +571,7 @@
       <div class="week-card week-${color}">
         <div class="week-head"><span>Неделя ${fmt(selected.start)} — ${fmt(selected.end)}</span><b>${pct}%</b></div>
         <div class="week-total">Выполнено <b>${done}</b> из <b>${total}</b> целей</div>
-        <div class="week-goals">${selected.goals.map(g=>`<div class="week-goal-row"><label class="week-goal-name"><input type="checkbox" data-week-goal="${esc(g.id)}" ${g.done?'checked':''}><span>${g.icon?esc(g.icon)+' ':''}${esc(g.label)}</span></label><span class="week-goal-status ${g.done?'done':'notdone'}">${g.done?'✓ Выполнено':'✕ Не выполнено'}</span></div>`).join('')}</div>
+        <div class="week-goals">${selected.goals.map(g=>`<div class="week-goal-row"><label class="week-goal-name"><input type="checkbox" data-week-goal="${esc(g.id)}" ${g.done?'checked':''}><span>${esc(g.label)}</span></label><span class="week-goal-status ${g.done?'done':'notdone'}">${g.done?'✓ Выполнено':'✕ Не выполнено'}</span></div>`).join('')}</div>
         <div class="week-total bottom">Выполнено <b>${done}</b> из <b>${total}</b> (${pct}%)</div>
       </div>`;
     $('weeklyWeekSelect').addEventListener('change',e=>{state.ui.selectedWeek=e.target.value;save();renderWeeklyBlock();});
@@ -662,7 +585,7 @@
   function renderHabits(){
     const d=state.ui.habitDate||todayStr(); ensureDay(d); $('habitDate').value=d;
     const daily=state.dailyGoals.filter(g=>goalActiveOnDay(g,d));
-    $('dailyList').innerHTML=daily.map(g=>`<div class="check"><input type="checkbox" data-id="${esc(g.id)}" ${state.dailyDone[d][g.id]?'checked':''}><label>${g.icon?esc(g.icon)+' ':''}${esc(g.label)}</label>${g.fixed?'':`<button class="x" data-del="${esc(g.id)}">×</button>`}</div>`).join('');
+    $('dailyList').innerHTML=daily.map(g=>`<div class="check"><input type="checkbox" data-id="${esc(g.id)}" ${state.dailyDone[d][g.id]?'checked':''}><label>${esc(g.label)}</label>${g.fixed?'':`<button class="x" data-del="${esc(g.id)}">×</button>`}</div>`).join('');
     renderWeeklyBlock(); renderCalendar();
     $('dailyList').querySelectorAll('[data-id]').forEach(cb=>cb.addEventListener('change',()=>{state.dailyDone[d][cb.dataset.id]=cb.checked;save();renderCalendar();renderDayDetail();}));
     $('dailyList').querySelectorAll('[data-del]').forEach(btn=>btn.addEventListener('click',()=>{state.dailyGoals=state.dailyGoals.filter(g=>g.id!==btn.dataset.del);Object.values(state.dailyDone).forEach(x=>delete x[btn.dataset.del]);save();renderHabits();}));
@@ -691,7 +614,6 @@
       b.classList.add('active');$('view-'+b.dataset.tab).classList.add('active');
       if(b.dataset.tab==='home')renderHome();if(b.dataset.tab==='measure')renderMeasurements();if(b.dataset.tab==='analytics')renderAnalytics();if(b.dataset.tab==='habits')renderHabits();if(b.dataset.tab==='profile')renderProfileFields();
     }));
-    $('analyticsPeriod').addEventListener('change',e=>{state.ui.analyticsPeriod=e.target.value;save();renderAnalytics();});
     $('saveProfile').addEventListener('click',()=>{
       const p={...state.profile,name:$('name').value.trim(),gender:$('gender').value,birth:$('birth').value,height:$('height').value,weight:$('weight').value,target:$('target').value,goal:$('goal').value,steps:$('steps').value,activity:$('activity').value};
       if(!p.birth||!n(p.height)||!n(p.weight)||age(p.birth)==null){alert('Заполните дату рождения, рост и вес.');return;}
@@ -707,7 +629,7 @@
       const d=$('wDate').value,v=n($('wValue').value);if(!d||v==null||v<20||v>300)return alert('Введите корректную дату и вес.');
       if(state.profile.registrationDate && d<state.profile.registrationDate)return alert('Нельзя добавлять замер до даты регистрации.');
       if(d>todayStr())return alert('Нельзя добавлять замер в будущем.');
-      state.weights[d]=v;if(d===todayStr())state.profile.weight=v;save();renderMeasurements();renderHome();$('wValue').value='';
+      state.weights[d]=v;if(d===todayStr())state.profile.weight=v;save();renderMeasurements();renderAnalytics();renderHome();$('wValue').value='';
     });
     $('saveMeasurement').addEventListener('click',()=>{
       const d=$('mDate').value;if(!d)return alert('Выберите дату.');
@@ -715,7 +637,7 @@
       if(d>todayStr())return alert('Нельзя добавлять замер в будущем.');
       const m={};for(const [k] of MEASUREMENTS){const v=n($('m_'+k)?.value);if(v!=null)m[k]=v;}
       if(!Object.keys(m).length)return alert('Введите хотя бы один объём.');
-      state.measurements[d]=m;save();renderMeasurements();alert('Замер сохранён.');
+      state.measurements[d]=m;save();renderMeasurements();renderAnalytics();alert('Замер сохранён.');
     });
     $('habitDate').addEventListener('change',()=>{state.ui.habitDate=$('habitDate').value;save();renderHabits();});
     $('addDaily').addEventListener('click',()=>{const t=$('newDaily').value.trim();if(!t)return;state.dailyGoals.push({id:'d_'+Date.now(),label:t,fixed:false,createdAt:todayStr()});$('newDaily').value='';ensureDay(state.ui.habitDate);save();renderHabits();});
