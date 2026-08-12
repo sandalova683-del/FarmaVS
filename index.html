@@ -9,6 +9,8 @@
   <meta name="apple-mobile-web-app-title" content="FormaVS">
   <title>FormaVS — здоровье без лишнего шума</title>
   <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <style>
     :root{
       --bg:#f5f7fb;--card:#fff;--ink:#172033;--muted:#6b7280;--line:#e6eaf0;
@@ -78,6 +80,8 @@
     .weekCount{text-align:center;font-size:1.05rem;margin-top:4px}
     .weekGoalRow{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid #e5e7eb}
     .weekGoalRow:last-child{border-bottom:0}.weekGoalStatus.done{color:#16a34a;font-weight:750}.weekGoalStatus.miss{color:#ff4d6d;font-weight:750}
+    .installBtn{margin-left:auto;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:12px;padding:8px 11px;font-weight:700;display:none;box-shadow:0 4px 12px rgba(15,23,42,.05)}
+    .installBtn.show{display:block}
     .hidden{display:none!important}
     @media(max-width:520px){.grid2{grid-template-columns:1fr}.grid3{grid-template-columns:1fr 1fr}.app{padding-left:11px;padding-right:11px}}
   </style>
@@ -91,6 +95,7 @@
         <h1>FormaVS</h1>
         <div class="tagline">Тело в цифрах. Привычки — в действии.</div>
       </div>
+      <button id="installApp" class="installBtn" type="button">Установить</button>
     </div>
   </header>
 
@@ -626,6 +631,27 @@
     $('chooseImport').addEventListener('click',()=>$('importData').click());
     $('importData').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{state=JSON.parse(r.result);ensureDefaults();save();location.reload();}catch(_){alert('Не удалось прочитать резервную копию.');}};r.readAsText(f);});
   }
+
+  let deferredInstallPrompt=null;
+  window.addEventListener('beforeinstallprompt',e=>{
+    e.preventDefault();
+    deferredInstallPrompt=e;
+    const btn=document.getElementById('installApp');
+    if(btn) btn.classList.add('show');
+  });
+  window.addEventListener('appinstalled',()=>{
+    deferredInstallPrompt=null;
+    const btn=document.getElementById('installApp');
+    if(btn) btn.classList.remove('show');
+  });
+  document.addEventListener('click',async e=>{
+    if(e.target && e.target.id==='installApp' && deferredInstallPrompt){
+      deferredInstallPrompt.prompt();
+      await deferredInstallPrompt.userChoice;
+      deferredInstallPrompt=null;
+      e.target.classList.remove('show');
+    }
+  });
 
   function init(){
     load();renderMeasurementFields();bind();renderProfileFields();renderHome();renderMeasurements();renderHabits();
