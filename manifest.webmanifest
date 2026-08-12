@@ -2,11 +2,12 @@
   "name": "FormaVS — здоровье без лишнего шума",
   "short_name": "FormaVS",
   "start_url": "./",
-  "scope": "./",
   "display": "standalone",
   "background_color": "#f5f7fb",
   "theme_color": "#111827",
   "lang": "ru",
-  "description": "FormaVS — локальный трекер веса, питания, состава тела и привычек.",
-  "icons": [{"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+  "description": "Локальный трекер веса, питания, состава тела, привычек и динамики.",
+  "icons": [
+    {"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ]
 }
