@@ -125,15 +125,7 @@
         <div class="grid2" id="measurementFields"></div>
         <button class="btn green" id="saveMeasurement">Добавить / обновить замер</button>
       </div>
-      <div class="card">
-        <div class="title">📈 Динамика веса</div>
-        <div id="weightChart"></div>
-        <div id="weightTable"></div>
-      </div>
-      <div class="card">
-        <div class="title">📐 Динамика объёмов</div>
-        <div id="measureAnalytics"></div>
-      </div>
+
     </section>
 
     <section id="view-analytics" class="view">
@@ -286,6 +278,15 @@
   }
   function ensureDefaults(){
     const reg=state.profile.registrationDate||null;
+    // Нормализуем стандартные привычки, если в старых данных эмодзи были продублированы.
+    state.dailyGoals=state.dailyGoals.map(g=>{
+      if(g.id==='veg') return {...g,label:'🌿 500 г растительной пищи',fixed:true};
+      return g;
+    });
+    state.weeklyGoals=state.weeklyGoals.map(g=>{
+      const labels={redmeat:'🥩 Красное мясо',fish:'🐟 Рыба',liver:'🍖 Печень / субпродукты',seafood:'🦐 Морепродукты'};
+      return labels[g.id]?{...g,label:labels[g.id],fixed:true}:g;
+    });
     for(const d of DEFAULT_DAILY){
       const existing=state.dailyGoals.find(x=>x.id===d.id);
       if(existing) existing.label=d.label; else state.dailyGoals.unshift({...d,createdAt:reg||todayStr()});
@@ -493,25 +494,16 @@
   }
 
   function renderMeasurements(){
-    const latestWeightDate=Object.keys(state.weights).sort().pop()||todayStr(); const latestMeasureDate=Object.keys(state.measurements).sort().pop()||todayStr(); $('wDate').value=latestWeightDate; $('mDate').value=latestMeasureDate;
-    const vals=Object.keys(state.weights).sort().map(d=>({d,v:n(state.weights[d])})).filter(x=>x.v!=null);
-    $('weightChart').innerHTML=vals.length?lineChart(vals):'<div class="empty">Пока нет замеров.</div>';
-    let rows='';
-    let prev=null, reg=state.profile.registrationDate?state.weights[state.profile.registrationDate]:null;
-    [...vals].reverse().forEach(x=>{
-      const diff=prev==null?null:round(x.v-prev,1), regDiff=reg==null?null:round(x.v-reg,1);
-      const isLatest = x.d===vals[vals.length-1].d;
-      rows+=`<tr class="${isLatest?'latest-row':''}"><td>${fmt(x.d)}${isLatest?'<span class="latest-badge">последний</span>':''}</td><td><b>${x.v.toFixed(1)}</b></td><td>${diff==null?'—':(diff>0?'+':'')+diff}</td><td>${regDiff==null?'—':(regDiff>0?'+':'')+regDiff}</td></tr>`;
-      prev=x.v;
-    });
-    $('weightTable').innerHTML=vals.length?`<table class="table"><thead><tr><th>Дата</th><th>Вес</th><th>к пред.</th><th>к регистрации</th></tr></thead><tbody>${rows}</tbody></table>`:'';
-    const ms=Object.keys(state.measurements).sort();
-    if(!ms.length){$('measureAnalytics').innerHTML='<div class="empty">Пока нет замеров объёмов.</div>';return;}
-    const first=state.measurements[ms[0]], lastDate=ms[ms.length-1], last=state.measurements[lastDate];
-    $('measureAnalytics').innerHTML=`<div class="note good" style="margin-bottom:10px"><b>Последний замер: ${fmt(lastDate)}</b></div><div class="grid2">${MEASUREMENTS.map(([k,l])=>{
-      const a=n(first[k]),b=n(last[k]); if(b==null)return `<div class="metric"><div class="k">${l}</div><div class="v">—</div><div class="s">нет значения на ${fmt(lastDate)}</div></div>`;
-      const d=a==null?null:round(b-a,1); return `<div class="metric latest-metric"><div class="k">${l}</div><div class="v">${b} см</div><div class="s">${d==null?'нет первого замера':'изменение '+(d>0?'+':'')+d+' см'}</div></div>`;
-    }).join('')}</div><div class="note" style="margin-top:10px">Первый день с замерами: ${fmt(ms[0])}. Последний день с замерами: ${fmt(lastDate)}.</div>`;
+    // Ввод нового веса всегда начинается с сегодняшней даты.
+    // Существующий вес показываем только как placeholder-пример, а не как введённое значение.
+    const today=todayStr();
+    $('wDate').value=today;
+    $('mDate').value=today;
+    const dates=Object.keys(state.weights).sort();
+    const latestValue=state.weights[today] ?? (dates.length ? state.weights[dates[dates.length-1]] : null);
+    $('wValue').value='';
+    $('wValue').placeholder=latestValue!=null ? Number(latestValue).toFixed(1) : '72.4';
+    $('wValue').title=latestValue!=null ? `Пример: последний внесённый вес — ${Number(latestValue).toFixed(1)} кг` : 'Введите вес';
   }
 
   function renderAnalytics(){
