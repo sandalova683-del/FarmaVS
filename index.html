@@ -9,8 +9,6 @@
   <meta name="apple-mobile-web-app-title" content="FormaVS">
   <title>FormaVS — здоровье без лишнего шума</title>
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
-  <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <style>
     :root{
       --bg:#f5f7fb;--card:#fff;--ink:#172033;--muted:#6b7280;--line:#e6eaf0;
@@ -66,25 +64,21 @@
     .weekdays,.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}.weekdays{margin:10px 0 5px;color:#94a3b8;font-size:.68rem;text-align:center}
     .day{min-height:38px;border:1px solid transparent;border-radius:11px;background:#f1f5f9;display:grid;place-items:center;font-size:.76rem;position:relative}
     .day.click{cursor:pointer}.day.today{outline:2px solid #111827}.day.sel{border-color:var(--accent)}.day.future{opacity:.4}
-    .day.p0{background:#fee2e2}.day.p1{background:#ffedd5}.day.p2{background:#fef3c7}.day.p4{background:#bbf7d0}.day.inactive{background:#f8fafc;color:#cbd5e1;border-color:#f1f5f9}
+    .day.p0{background:#fee2e2}.day.p1{background:#ffedd5}.day.p2{background:#fef3c7}.day.p3{background:#dcfce7}.day.p4{background:#bbf7d0}
     .chart{border:1px solid var(--line);border-radius:17px;background:#fafbfc;padding:10px;overflow:hidden}.chart svg{display:block;width:100%;height:auto}
     .table{width:100%;border-collapse:collapse;font-size:.78rem}.table th,.table td{text-align:left;padding:8px 5px;border-bottom:1px solid #eef1f5}.table th{color:#64748b;font-weight:650}
     .empty{padding:15px;color:#94a3b8;text-align:center;border:1px dashed #d9dee7;border-radius:14px}
     .footerNote{color:#94a3b8;font-size:.68rem;text-align:center;margin:20px 0}
-    .weekCard{border:1px solid var(--line);border-radius:17px;background:#fafbfc;padding:12px;margin-top:9px}
-    .weekCard.selected{border:3px solid var(--accent);padding:10px;background:#eff6ff}
-    .weekCardHead{display:flex;align-items:center;justify-content:space-between;gap:10px}
-    .weekTitle{font-size:1rem}.weekPercent{min-width:58px;text-align:center;border-radius:999px;padding:5px 9px;font-weight:800;font-size:.76rem}
-    .weekPercent.red{background:#fecaca;color:#dc2626}.weekPercent.orange{background:#fed7aa;color:#c2410c}
-    .weekPercent.yellow{background:#fef08a;color:#a16207}.weekPercent.green{background:#bbf7d0;color:#15803d}
-    .weekCount{text-align:center;font-size:1.05rem;margin-top:4px}
-    .weekGoalRow{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid #e5e7eb}
-    .weekGoalRow:last-child{border-bottom:0}.weekGoalStatus.done{color:#16a34a;font-weight:750}.weekGoalStatus.miss{color:#ff4d6d;font-weight:750}
-    .installBtn{margin-left:auto;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:12px;padding:8px 11px;font-weight:700;display:none;box-shadow:0 4px 12px rgba(15,23,42,.05)}
-    .installBtn.show{display:block}
     .hidden{display:none!important}
     @media(max-width:520px){.grid2{grid-template-columns:1fr}.grid3{grid-template-columns:1fr 1fr}.app{padding-left:11px;padding-right:11px}}
-  </style>
+  
+    .day.pre-reg{background:#f8fafc!important;color:#cbd5e1;border-color:transparent!important;opacity:.75}
+    .week-card{border:2px solid var(--accent);border-radius:20px;padding:14px;background:#f8fbff}
+    .week-head{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:1.03rem}.week-head>b{border-radius:999px;padding:7px 13px;font-size:.78rem}
+    .week-red .week-head>b{background:#fecaca;color:#b91c1c}.week-orange .week-head>b{background:#fed7aa;color:#c2410c}.week-yellow .week-head>b{background:#fde68a;color:#a16207}.week-green .week-head>b{background:#bbf7d0;color:#166534}
+    .week-total{text-align:center;font-size:1rem;margin:10px 0 6px}.week-total.bottom{font-weight:700;border-top:1px solid #e5e7eb;padding-top:10px}
+    .week-goals{margin-top:4px}.week-goal-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid #e5e7eb}.week-goal-row:last-child{border-bottom:0}.week-goal-name{display:flex;align-items:center;gap:9px;flex:1}.week-goal-name input{width:20px;height:20px;accent-color:var(--accent)}.week-goal-status{font-weight:750;white-space:nowrap}.week-goal-status.done{color:#16a34a}.week-goal-status.notdone{color:#ff476f}
+</style>
 </head>
 <body>
 <div class="app">
@@ -95,13 +89,13 @@
         <h1>FormaVS</h1>
         <div class="tagline">Тело в цифрах. Привычки — в действии.</div>
       </div>
-      <button id="installApp" class="installBtn" type="button">Установить</button>
     </div>
   </header>
 
   <nav class="tabs">
     <button class="tab active" data-tab="home">Сегодня</button>
     <button class="tab" data-tab="measure">Замеры</button>
+    <button class="tab" data-tab="analytics">Динамика</button>
     <button class="tab" data-tab="habits">Привычки</button>
     <button class="tab" data-tab="profile">Профиль</button>
   </nav>
@@ -126,20 +120,43 @@
         <div class="grid2" id="measurementFields"></div>
         <button class="btn green" id="saveMeasurement">Добавить / обновить замер</button>
       </div>
+
+    </section>
+
+    <section id="view-analytics" class="view">
       <div class="card">
-        <div class="title">📈 Динамика веса</div>
-        <div id="weightChart"></div>
-        <div id="weightTable"></div>
+        <div class="title">📈 Аналитика и динамика</div>
+        <div class="field">
+          <label>Период анализа</label>
+          <select id="analyticsPeriod">
+            <option value="30">Последние 30 дней</option>
+            <option value="90">Последние 90 дней</option>
+            <option value="all" selected>Весь период</option>
+          </select>
+        </div>
+        <div id="analyticsOverview"></div>
       </div>
+
       <div class="card">
-        <div class="title">📐 Динамика объёмов</div>
-        <div id="measureAnalytics"></div>
+        <div class="title">⚖️ Динамика веса</div>
+        <div id="analyticsWeightChart"></div>
+        <div id="analyticsWeightStats"></div>
+      </div>
+
+      <div class="card">
+        <div class="title">📏 Динамика объёмов</div>
+        <div id="analyticsVolumeCharts"></div>
+      </div>
+
+      <div class="card">
+        <div class="title">🧬 Состав тела</div>
+        <div id="analyticsBody"></div>
       </div>
     </section>
 
     <section id="view-habits" class="view">
       <div class="card">
-        <div class="title">🌱 Ежедневные цели</div>
+        <div class="title"> Ежедневные цели</div>
         <div class="field"><label>День, который редактируем</label><input id="habitDate" type="date"></div>
         <div id="dailyList" class="list"></div>
         <div class="add"><input id="newDaily" placeholder="Например: 8 000 шагов"><button id="addDaily">+</button></div>
@@ -147,19 +164,15 @@
       </div>
 
       <div class="card">
-        <div class="title">🥩 Недельные цели</div>
-        <div class="field"><label>Неделя, которую редактируем</label><input id="weekDate" type="date"></div>
-        <div id="weeklyList" class="list"></div>
+        <div class="title">Недельные цели</div>
         <div class="add"><input id="newWeekly" placeholder="Своя недельная цель"><button id="addWeekly">+</button></div>
-        <div class="note" style="margin-top:10px">1 порция = 20 г белка. Отмечайте выполнение.</div>
-        <div id="weeklyStats" style="margin-top:10px"></div>
+        <div id="weeklyCalendar" style="margin-top:12px"></div>
       </div>
+
       <div class="card">
-        <div class="title">🗓️ Недельный календарь</div>
-        <div id="weeklyCalendar"></div>
-      </div>
-      <div class="card">
-        <div class="calendarHead"><button id="prevMonth">‹</button><strong id="monthTitle"></strong><button id="nextMonth">›</button></div>
+        <div class="calendarHead">
+          <button id="prevMonth">‹</button><strong id="monthTitle"></strong><button id="nextMonth">›</button>
+        </div>
         <div class="weekdays"><span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span></div>
         <div id="habitCalendar" class="calendar"></div>
         <div id="dayDetail" style="margin-top:11px"></div>
@@ -237,12 +250,12 @@
   const round = (v,d=1) => Math.round(v*10**d)/10**d;
   const clamp = (v,a,b) => Math.min(b,Math.max(a,v));
 
-  const DEFAULT_DAILY = [{id:'veg',label:'🌿 500 г растительной пищи',fixed:true}];
+  const DEFAULT_DAILY = [{id:'veg',label:'500 г растительной пищи',icon:'🌿',fixed:true,createdAt:null}];
   const DEFAULT_WEEKLY = [
-    {id:'redmeat',label:'🥩 Красное мясо',fixed:true},
-    {id:'fish',label:'🐟 Рыба',fixed:true},
-    {id:'liver',label:'🍖 Печень / субпродукты',fixed:true},
-    {id:'seafood',label:'🦐 Морепродукты',fixed:true}
+    {id:'redmeat',label:'Красное мясо',icon:'🥩',fixed:true,createdAt:null},
+    {id:'fish',label:'Рыба',icon:'🐟',fixed:true,createdAt:null},
+    {id:'liver',label:'Печень / субпродукты',icon:'🍖',fixed:true,createdAt:null},
+    {id:'seafood',label:'Морепродукты',icon:'🦐',fixed:true,createdAt:null}
   ];
   const MEASUREMENTS = [
     ['neck','Шея'],['chest','Грудь'],['waist','Талия'],['hips','Бёдра'],
@@ -252,7 +265,7 @@
   let state = {
     profile:{name:'',gender:'female',birth:'',height:'',weight:'',target:'',goal:'maintain',steps:'',activity:'1.2',registrationDate:null,baseMeasurements:{}},
     weights:{}, measurements:{}, dailyGoals:structuredClone(DEFAULT_DAILY), weeklyGoals:structuredClone(DEFAULT_WEEKLY),
-    dailyDone:{}, weeklyDone:{}, weeklyDoneByWeek:{}, weeklyHistory:{}, ui:{month:todayStr().slice(0,7),habitDate:todayStr(),weekDate:todayStr()}
+    dailyDone:{}, weeklyDone:{}, weeklyHistory:{}, ui:{month:todayStr().slice(0,7),habitDate:todayStr(),selectedWeek:null,analyticsPeriod:'all'}
   };
 
   const $ = id => document.getElementById(id);
@@ -269,47 +282,44 @@
       }
       if(raw){
         const parsed=JSON.parse(raw);
-        state={...state,...parsed,profile:{...state.profile,...(parsed.profile||{})},ui:{...state.ui,...(parsed.ui||{})}};        state.dailyGoals=state.dailyGoals||structuredClone(DEFAULT_DAILY);
-        state.weeklyGoals=state.weeklyGoals||structuredClone(DEFAULT_WEEKLY);
-        state.dailyDone=state.dailyDone||{}; state.weeklyDone=state.weeklyDone||{};
-        state.weeklyDoneByWeek=state.weeklyDoneByWeek||{}; state.weeklyHistory=state.weeklyHistory||{};
+        state={...state,...parsed,profile:{...state.profile,...(parsed.profile||{})},ui:{...state.ui,...(parsed.ui||{})}};
       }
     }catch(e){ console.warn(e); }
     ensureDefaults();
   }
   function ensureDefaults(){
-    const reg=state.profile.registrationDate||todayStr();
-    for(const d of DEFAULT_DAILY){
-      const existing=state.dailyGoals.find(x=>x.id===d.id);
-      if(!existing) state.dailyGoals.unshift({...d,createdAt:reg}); else if(!existing.createdAt) existing.createdAt=reg;
+    const reg=state.profile.registrationDate||null;
+    for(const d of DEFAULT_DAILY) if(!state.dailyGoals.some(x=>x.id===d.id)) state.dailyGoals.unshift({...d,createdAt:reg||todayStr()});
+    for(const w of DEFAULT_WEEKLY) if(!state.weeklyGoals.some(x=>x.id===w.id)) state.weeklyGoals.push({...w,createdAt:reg||todayStr()});
+    for(const g of state.dailyGoals) {
+      if(!g.createdAt) g.createdAt=reg||todayStr();
+      if(g.id==='veg' && !g.icon) g.icon='🌿';
     }
-    for(const g of state.dailyGoals) if(!g.createdAt) g.createdAt=reg;
-    for(const w of DEFAULT_WEEKLY){
-      const existing=state.weeklyGoals.find(x=>x.id===w.id);
-      if(!existing) state.weeklyGoals.push({...w,createdAt:reg}); else if(!existing.createdAt) existing.createdAt=reg;
+    for(const g of state.weeklyGoals) {
+      if(!g.createdAt) g.createdAt=reg||todayStr();
+      if(g.id==='redmeat' && !g.icon) g.icon='🥩';
+      if(g.id==='fish' && !g.icon) g.icon='🐟';
+      if(g.id==='liver' && !g.icon) g.icon='🍖';
+      if(g.id==='seafood' && !g.icon) g.icon='🦐';
     }
-    for(const g of state.weeklyGoals) if(!g.createdAt) g.createdAt=reg;
-    state.weeklyDoneByWeek=state.weeklyDoneByWeek||{}; state.weeklyHistory=state.weeklyHistory||{};
-    const current=weekStart(todayStr());
-    if(!state.weeklyDoneByWeek[current] && state.weeklyDone) state.weeklyDoneByWeek[current]={...state.weeklyDone};
-    state.weeklyDone=state.weeklyDoneByWeek[current]||{};
     rolloverWeek();
-    if(!state.ui.habitDate) state.ui.habitDate=todayStr();
-    if(!state.ui.weekDate) state.ui.weekDate=todayStr();
+    // При каждом открытии приложения дневной редактор начинается с текущей даты.
+    state.ui.habitDate=todayStr();
     if(!state.ui.month) state.ui.month=todayStr().slice(0,7);
+    state.ui.selectedWeek=state.ui.selectedWeek||weekStart(todayStr());
     save();
   }
   function rolloverWeek(){
-    const current=weekStart(todayStr()), stored=state._currentWeek;
+    const current = weekStart(todayStr());
+    const stored = state._currentWeek;
     if(stored && stored!==current){
-      const goals=getWeekGoals(stored), done=state.weeklyDoneByWeek[stored]||{};
-      const snapshot=goals.map(g=>({id:g.id,label:g.label,fixed:g.fixed,createdAt:g.createdAt,done:!!done[g.id]}));
-      state.weeklyHistory[stored]={start:stored,end:addDays(stored,6),goals:snapshot,percent:snapshot.length?Math.round(snapshot.filter(x=>x.done).length/snapshot.length*100):0};
-      state.weeklyDoneByWeek[current]={};
+      const oldGoals = state.weeklyGoals.filter(g=>!g.createdAt || g.createdAt<=addDays(stored,6)).map(g=>({id:g.id,label:g.label,icon:g.icon||'',fixed:g.fixed,createdAt:g.createdAt||stored,done:!!state.weeklyDone[g.id]}));
+      state.weeklyHistory[stored]={start:stored,end:addDays(stored,6),goals:oldGoals,
+        percent: oldGoals.length ? Math.round(oldGoals.filter(x=>x.done).length/oldGoals.length*100):0};
+      state.weeklyDone={};
     }
-    state._currentWeek=current; state.weeklyDoneByWeek[current]=state.weeklyDoneByWeek[current]||{};
-    state.weeklyDone=state.weeklyDoneByWeek[current];
-    for(const g of getWeekGoals(current)) if(typeof state.weeklyDone[g.id]!=='boolean') state.weeklyDone[g.id]=false;
+    state._currentWeek=current;
+    for(const g of state.weeklyGoals) if(typeof state.weeklyDone[g.id]!=='boolean') state.weeklyDone[g.id]=false;
   }
   function weekStart(s){
     const d=parseDate(s), day=d.getDay();
@@ -317,20 +327,6 @@
     d.setDate(d.getDate()+diff);
     return iso(d);
   }
-  function weekLabel(start){return `Неделя ${fmtShort(start)} — ${fmtShort(addDays(start,6))}`;}
-  function fmtShort(s){return parseDate(s).toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit',year:'2-digit'});}
-  function dailyGoalsActive(d){return state.dailyGoals.filter(g=>!g.createdAt||g.createdAt<=d);}
-  function getWeekGoals(start){
-    if(state.weeklyHistory[start]?.goals) return state.weeklyHistory[start].goals;
-    return state.weeklyGoals.filter(g=>!g.createdAt||g.createdAt<=addDays(start,6));
-  }
-  function getWeekDone(start){
-    if(state.weeklyHistory[start]?.goals){const out={};for(const g of state.weeklyHistory[start].goals)out[g.id]=!!g.done;return out;}
-    state.weeklyDoneByWeek[start]=state.weeklyDoneByWeek[start]||{};
-    return state.weeklyDoneByWeek[start];
-  }
-  function weekPercent(start){const goals=getWeekGoals(start),done=getWeekDone(start);return goals.length?Math.round(goals.filter(g=>done[g.id]).length/goals.length*100):0;}
-  function weekColor(p){return p<25?'red':p<50?'orange':p<75?'yellow':'green';}
   function age(birth){
     if(!birth) return null;
     const b=parseDate(birth), t=new Date();
@@ -359,16 +355,15 @@
     const bmrV=bmrMifflin(w,h,a,p.gender==='male');
     const tdee=bmrV*act;
     let calories=tdee, safety='';
-    if(p.goal==='lose'){
-      calories=tdee*0.85;
-      if(calories<1200){calories=1200;safety='Цель ограничена 1200 ккал как консервативный нижний порог для расчёта приложения.';}
-    } else if(p.goal==='gain'){
-      calories=tdee*1.10;
-    }
+    if(p.goal==='lose') calories=tdee*0.85;
+    else if(p.goal==='gain') calories=tdee*1.10;
+    const floor=Math.ceil((bmrV*1.10)/10)*10;
+    if(calories<floor){calories=floor;safety='Нижняя граница: BMR + 10% для безопасного ориентира.';}
     calories=Math.round(calories/10)*10;
-    const protein=round(w*(p.goal==='maintain'?1.6:1.8),0);
+    const training=act>=1.55;
+    const protein=round(w*(p.goal==='maintain'?1.8:(training?2:1.8)),0);
     const fat=round(w*0.8,0);
-    const carbs=Math.max(0,Math.round((calories-protein*4-fat*9)/4));
+    const carbs=round(Math.max(0,(calories-protein*4-fat*9)/4),0);
     const waterL=round(w*0.035,1);
     return {bmi:bmi(w,h),bmr:bmrV,tdee,calories,protein,fat,carbs,waterL,safety};
   }
@@ -465,7 +460,7 @@
       h+=`<div class="card"><div class="title">🥗 Ориентир питания</div><div class="metrics">
         <div class="metric"><div class="k">BMR</div><div class="v">${Math.round(nut.bmr)}</div><div class="s">ккал/сутки</div></div>
         <div class="metric"><div class="k">Целевая калорийность</div><div class="v">${nut.calories}</div><div class="s">ккал/сутки</div></div>
-        <div class="metric"><div class="k">Белок</div><div class="v">${nut.protein} г</div><div class="s">ориентир</div></div>
+        <div class="metric"><div class="k">Белок</div><div class="v">${nut.protein} г</div><div class="s">${(n(p.activity)||1.2)>=1.55 && p.goal!=='maintain'?'2 г/кг':'1,8 г/кг'}</div></div>
         <div class="metric"><div class="k">Жиры</div><div class="v">${nut.fat} г</div><div class="s">ориентир</div></div>
         <div class="metric"><div class="k">Углеводы</div><div class="v">${nut.carbs} г</div><div class="s">остаток калорий</div></div>
         <div class="metric"><div class="k">Вода</div><div class="v">${nut.waterL} л</div><div class="s">≈ 35 мл/кг</div></div>
@@ -477,7 +472,7 @@
         <div class="metric"><div class="k">Жировая масса</div><div class="v">${comp.fatMass} кг</div><div class="s">оценка</div></div>
         <div class="metric"><div class="k">Безжировая масса</div><div class="v">${comp.ffm} кг</div><div class="s">не равна мышечной массе</div></div>
         <div class="metric"><div class="k">Ориентир по возрасту</div><div class="v"><span class="badge ${comp.cls}">${comp.status}</span></div><div class="s">${comp.range?`${comp.range[0]}–${comp.range[1]}%`:''}</div></div>
-      </div><div class="note" style="margin-top:10px">Безжировая масса включает мышцы, воду, кости и органы. Превращать её в «мышечную массу» одной формулой некорректно.</div></div>`;
+      </div><div class="note" style="margin-top:10px">Безжировая масса включает мышцы, воду, кости и органы.</div></div>`;
     } else {
       h+=`<div class="card"><div class="title">🧬 Состав тела</div><div class="note">Для US Navy нужны талия + шея; для женщин ещё бёдра. Их можно внести в профиле.</div></div>`;
     }
@@ -503,6 +498,111 @@
     </svg></div>`;
   }
 
+
+  function filterAnalyticsWeights(days){
+    const vals=Object.keys(state.weights).sort().map(d=>({d,v:n(state.weights[d])})).filter(x=>x.v!=null);
+    if(days==='all'||!vals.length)return vals;
+    const end=vals[vals.length-1].d;
+    const cutoff=iso(addDays(end,-(Number(days)-1)));
+    return vals.filter(x=>x.d>=cutoff);
+  }
+
+  function analyticsLineChart(values, unit='кг'){
+    if(values.length<2) return `<div class="empty">Нужно минимум 2 замера для графика.</div>`;
+    const W=640,H=230,pad=34, xs=W-pad*1.2, ys=H-pad;
+    const vals=values.map(x=>x.v), min=Math.min(...vals), max=Math.max(...vals), range=max-min||1;
+    const pts=values.map((x,i)=>{
+      const xx=pad+(i/(values.length-1))*xs, yy=20+(1-(x.v-min)/range)*(H-55);
+      return [xx,yy,x];
+    });
+    const path=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
+    return `<div class="chart"><svg viewBox="0 0 ${W} ${H}" aria-label="График динамики">
+      <line x1="${pad}" y1="${H-35}" x2="${W-10}" y2="${H-35}" stroke="#dbe1e8"/>
+      <line x1="${pad}" y1="20" x2="${pad}" y2="${H-35}" stroke="#dbe1e8"/>
+      <path d="${path}" fill="none" stroke="#2563eb" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      ${pts.map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="4.2" fill="#fff" stroke="#2563eb" stroke-width="3"><title>${fmt(p[2].d)}: ${p[2].v} ${unit}</title></circle>`).join('')}
+      <text x="${pad}" y="14" font-size="11" fill="#64748b">${max.toFixed(1)} ${unit}</text>
+      <text x="${pad}" y="${H-7}" font-size="11" fill="#64748b">${min.toFixed(1)} ${unit}</text>
+    </svg></div>`;
+  }
+
+  function miniLineChart(values){
+    if(values.length<2)return '';
+    const W=260,H=72,pad=5,vals=values.map(x=>x.v),min=Math.min(...vals),max=Math.max(...vals),range=max-min||1;
+    const pts=values.map((x,i)=>{
+      const xx=pad+(i/(values.length-1))*(W-pad*2);
+      const yy=8+(1-(x.v-min)/range)*(H-18);
+      return [xx,yy];
+    });
+    const path=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
+    return `<div class="mini-chart"><svg viewBox="0 0 ${W} ${H}" aria-hidden="true"><path d="${path}" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>`;
+  }
+
+  function renderAnalytics(){
+    const period=state.ui.analyticsPeriod||'all';
+    const vals=filterAnalyticsWeights(period);
+    const reg=state.profile.registrationDate;
+    const target=n(state.profile.target);
+    const startWeight=reg?state.weights[reg]:null;
+    const currentWeight=vals.length?vals[vals.length-1].v:n(state.profile.weight);
+    const firstInPeriod=vals.length?vals[0].v:null;
+    const change=firstInPeriod!=null&&currentWeight!=null?round(currentWeight-firstInPeriod,1):null;
+    const totalChange=startWeight!=null&&currentWeight!=null?round(currentWeight-startWeight,1):null;
+    const targetDiff=target!=null&&currentWeight!=null?round(currentWeight-target,1):null;
+    const prog=progress(state.profile);
+    const overview=[];
+    if(currentWeight!=null) overview.push(`<div class="analytics-kpi"><div class="k">Текущий вес</div><div class="v">${round(currentWeight,1)} кг</div><div class="s">${vals.length?fmt(vals[vals.length-1].d):'сейчас'}</div></div>`);
+    if(target!=null&&targetDiff!=null) overview.push(`<div class="analytics-kpi"><div class="k">До целевого веса</div><div class="v">${Math.abs(targetDiff).toFixed(1)} кг</div><div class="s">${targetDiff>0?'нужно снизить':'нужно набрать'}</div></div>`);
+    if(change!=null) overview.push(`<div class="analytics-kpi ${change<0?'good':change>0?'warn':''}"><div class="k">Изменение за период</div><div class="v">${change>0?'+':''}${change.toFixed(1)} кг</div><div class="s">${period==='all'?'за весь период':'за выбранный период'}</div></div>`);
+    if(prog) overview.push(`<div class="analytics-kpi"><div class="k">Прогресс к цели</div><div class="v">${Math.round(prog.pct)}%</div><div class="s">${esc(prog.label)}</div></div>`);
+    $('analyticsOverview').innerHTML=overview.length?`<div class="analytics-kpis">${overview.join('')}</div>`:'<div class="empty">Заполните профиль и добавьте замеры, чтобы увидеть аналитику.</div>';
+
+    $('analyticsWeightChart').innerHTML=vals.length?analyticsLineChart(vals):'<div class="empty">Пока нет замеров веса.</div>';
+    if(vals.length){
+      let weekly='';
+      if(vals.length>=2){
+        const days=Math.max(1,Math.round((parseDate(vals[vals.length-1].d)-parseDate(vals[0].d))/86400000));
+        const perWeek=round((vals[vals.length-1].v-vals[0].v)/(days/7),1);
+        weekly=`<div class="analytics-stat"><span>Среднее изменение</span><b>${perWeek>0?'+':''}${perWeek} кг/нед.</b></div>`;
+      }
+      $('analyticsWeightStats').innerHTML=`<div style="margin-top:10px">
+        ${startWeight!=null?`<div class="analytics-stat"><span>Вес при регистрации</span><b>${round(startWeight,1)} кг</b></div>`:''}
+        <div class="analytics-stat"><span>Последний замер</span><b>${currentWeight!=null?round(currentWeight,1)+' кг':'—'}</b></div>
+        ${totalChange!=null?`<div class="analytics-stat"><span>Изменение от регистрации</span><b>${totalChange>0?'+':''}${totalChange} кг</b></div>`:''}
+        ${target!=null?`<div class="analytics-stat"><span>Целевой вес</span><b>${round(target,1)} кг</b></div>`:''}
+        ${weekly}
+      </div>`;
+    }else $('analyticsWeightStats').innerHTML='';
+
+    const ms=Object.keys(state.measurements).sort();
+    if(!ms.length){
+      $('analyticsVolumeCharts').innerHTML='<div class="empty">Пока нет замеров объёмов.</div>';
+    }else{
+      const latestDate=ms[ms.length-1], firstDate=ms[0], latest=state.measurements[latestDate], first=state.measurements[firstDate];
+      $('analyticsVolumeCharts').innerHTML=`<div class="volume-grid">${MEASUREMENTS.map(([k,l])=>{
+        const series=ms.map(d=>({d,v:n(state.measurements[d][k])})).filter(x=>x.v!=null);
+        const now=n(latest[k]), start=n(first[k]), diff=now!=null&&start!=null?round(now-start,1):null;
+        const cls=diff==null||Math.abs(diff)<0.05?'trend-neutral':diff<0?'trend-down':'trend-up';
+        return `<div class="volume-card">
+          <div class="vc-head"><span class="vc-name">${esc(l)}</span><span class="vc-now">${now!=null?now+' см':'—'}</span></div>
+          <div class="vc-diff ${cls}">${diff==null?'нет сравнения':`от первого замера ${diff>0?'+':''}${diff} см`}</div>
+          ${miniLineChart(series)}
+        </div>`;
+      }).join('')}</div>
+      <div class="note" style="margin-top:10px">Первый замер: ${fmt(firstDate)} · последний: ${fmt(latestDate)}.</div>`;
+    }
+
+    const bc=bodyComp(state.profile);
+    $('analyticsBody').innerHTML=bc?`<div class="grid2">
+      <div class="metric"><div class="k">% жира</div><div class="v">${bc.bf.toFixed(1)}%</div><div class="s">${bc.bfN!=null?'US Navy':'по ИМТ'}</div></div>
+      <div class="metric"><div class="k">Жировая масса</div><div class="v">${bc.fatMass.toFixed(1)} кг</div></div>
+      <div class="metric"><div class="k">Безжировая масса</div><div class="v">${bc.ffm.toFixed(1)} кг</div></div>
+      <div class="metric"><div class="k">Категория</div><div class="v" style="font-size:1rem">${esc(bc.status)}</div></div>
+    </div>
+    <div class="note" style="margin-top:10px">Состав тела рассчитывается по последним сохранённым данным профиля и базовым замерам.</div>`
+    :'<div class="empty">Добавьте данные профиля и замеры, чтобы увидеть состав тела.</div>';
+  }
+
   function renderMeasurements(){
     $('wDate').value=todayStr();$('mDate').value=todayStr();
     const vals=Object.keys(state.weights).sort().map(d=>({d,v:n(state.weights[d])})).filter(x=>x.v!=null);
@@ -524,77 +624,74 @@
     }).join('')}</div><div class="note" style="margin-top:10px">Первый замер: ${fmt(ms[0])}. Последний: ${fmt(ms[ms.length-1])}.</div>`;
   }
 
+  function goalActiveOnDay(g,d){ return !g.createdAt || g.createdAt<=d; }
   function ensureDay(d){
     if(!state.dailyDone[d]) state.dailyDone[d]={};
-    for(const g of dailyGoalsActive(d)) if(typeof state.dailyDone[d][g.id]!=='boolean') state.dailyDone[d][g.id]=false;
+    for(const g of state.dailyGoals) if(goalActiveOnDay(g,d) && typeof state.dailyDone[d][g.id]!=='boolean') state.dailyDone[d][g.id]=false;
   }
-  function dayPercent(d){
-    if(state.profile.registrationDate&&d<state.profile.registrationDate)return null;
-    const goals=dailyGoalsActive(d); if(!goals.length)return null; ensureDay(d);
-    return Math.round(goals.filter(g=>state.dailyDone[d][g.id]).length/goals.length*100);
+  function weeklyData(week){
+    if(week===state._currentWeek){
+      const goals=state.weeklyGoals.filter(g=>!g.createdAt || g.createdAt<=addDays(week,6));
+      return {start:week,end:addDays(week,6),goals:goals.map(g=>({...g,done:!!state.weeklyDone[g.id]}))};
+    }
+    return state.weeklyHistory[week]||null;
+  }
+  function renderWeeklyBlock(){
+    const current=state._currentWeek||weekStart(todayStr());
+    const weeks=[current,...Object.keys(state.weeklyHistory).filter(w=>w!==current).sort().reverse()];
+    if(!weeks.includes(state.ui.selectedWeek)) state.ui.selectedWeek=current;
+    const selected=weeklyData(state.ui.selectedWeek)||weeklyData(current);
+    const total=selected.goals.length, done=selected.goals.filter(g=>g.done).length, pct=total?Math.round(done/total*100):0;
+    const color=pct<25?'red':pct<50?'orange':pct<75?'yellow':'green';
+    const options=weeks.map(w=>`<option value="${w}" ${w===selected.start?'selected':''}>Неделя ${fmt(w)} — ${fmt(addDays(w,6))}</option>`).join('');
+    $('weeklyCalendar').innerHTML=`<div class="field"><label>Неделя, которую редактируем</label><select id="weeklyWeekSelect">${options}</select></div>
+      <div class="week-card week-${color}">
+        <div class="week-head"><span>Неделя ${fmt(selected.start)} — ${fmt(selected.end)}</span><b>${pct}%</b></div>
+        <div class="week-total">Выполнено <b>${done}</b> из <b>${total}</b> целей</div>
+        <div class="week-goals">${selected.goals.map(g=>`<div class="week-goal-row"><label class="week-goal-name"><input type="checkbox" data-week-goal="${esc(g.id)}" ${g.done?'checked':''}><span>${g.icon?esc(g.icon)+' ':''}${esc(g.label)}</span></label><span class="week-goal-status ${g.done?'done':'notdone'}">${g.done?'✓ Выполнено':'✕ Не выполнено'}</span></div>`).join('')}</div>
+        <div class="week-total bottom">Выполнено <b>${done}</b> из <b>${total}</b> (${pct}%)</div>
+      </div>`;
+    $('weeklyWeekSelect').addEventListener('change',e=>{state.ui.selectedWeek=e.target.value;save();renderWeeklyBlock();});
+    $('weeklyCalendar').querySelectorAll('[data-week-goal]').forEach(cb=>cb.addEventListener('change',()=>{
+      const id=cb.dataset.weekGoal,w=state.ui.selectedWeek;
+      if(w===state._currentWeek) state.weeklyDone[id]=cb.checked;
+      else if(state.weeklyHistory[w]){const g=state.weeklyHistory[w].goals.find(x=>x.id===id);if(g)g.done=cb.checked;state.weeklyHistory[w].percent=state.weeklyHistory[w].goals.length?Math.round(state.weeklyHistory[w].goals.filter(x=>x.done).length/state.weeklyHistory[w].goals.length*100):0;}
+      save();renderWeeklyBlock();
+    }));
   }
   function renderHabits(){
     const d=state.ui.habitDate||todayStr(); ensureDay(d); $('habitDate').value=d;
-    const active=dailyGoalsActive(d);
-    $('dailyList').innerHTML=active.map(g=>`<div class="check"><input type="checkbox" data-id="${esc(g.id)}" ${state.dailyDone[d][g.id]?'checked':''}><label>${esc(g.label)}</label>${g.fixed?'':`<button class="x" data-del="${esc(g.id)}">×</button>`}</div>`).join('');
-
-    const selected=weekStart(state.ui.weekDate||todayStr()); state.ui.weekDate=selected; $('weekDate').value=selected;
-    const goals=getWeekGoals(selected), done=getWeekDone(selected), total=goals.length, count=goals.filter(g=>done[g.id]).length, pct=total?Math.round(count/total*100):0;
-    $('weeklyList').innerHTML=goals.map(g=>`<div class="check"><input type="checkbox" data-wid="${esc(g.id)}" ${done[g.id]?'checked':''}><label>${esc(g.label)}</label>${g.fixed?'':`<button class="x" data-wdel="${esc(g.id)}">×</button>`}</div>`).join('');
-    $('weeklyStats').innerHTML=`<div class="weekCard selected"><div class="weekCardHead"><div class="weekTitle">${weekLabel(selected)}</div><div class="weekPercent ${weekColor(pct)}">${pct}%</div></div><div class="weekCount">Выполнено <b>${count}</b> из <b>${total}</b> целей</div></div>`;
-
-    renderWeeklyCalendar(); renderCalendar();
+    const daily=state.dailyGoals.filter(g=>goalActiveOnDay(g,d));
+    $('dailyList').innerHTML=daily.map(g=>`<div class="check"><input type="checkbox" data-id="${esc(g.id)}" ${state.dailyDone[d][g.id]?'checked':''}><label>${g.icon?esc(g.icon)+' ':''}${esc(g.label)}</label>${g.fixed?'':`<button class="x" data-del="${esc(g.id)}">×</button>`}</div>`).join('');
+    renderWeeklyBlock(); renderCalendar();
     $('dailyList').querySelectorAll('[data-id]').forEach(cb=>cb.addEventListener('change',()=>{state.dailyDone[d][cb.dataset.id]=cb.checked;save();renderCalendar();renderDayDetail();}));
     $('dailyList').querySelectorAll('[data-del]').forEach(btn=>btn.addEventListener('click',()=>{state.dailyGoals=state.dailyGoals.filter(g=>g.id!==btn.dataset.del);Object.values(state.dailyDone).forEach(x=>delete x[btn.dataset.del]);save();renderHabits();}));
-    $('weeklyList').querySelectorAll('[data-wid]').forEach(cb=>cb.addEventListener('change',()=>{
-      if(selected===weekStart(todayStr())){
-        state.weeklyDoneByWeek[selected]=state.weeklyDoneByWeek[selected]||{}; state.weeklyDoneByWeek[selected][cb.dataset.wid]=cb.checked; state.weeklyDone=state.weeklyDoneByWeek[selected];
-      }else if(state.weeklyHistory[selected]){
-        const item=state.weeklyHistory[selected].goals.find(g=>g.id===cb.dataset.wid); if(item)item.done=cb.checked;
-        state.weeklyHistory[selected].percent=weekPercent(selected);
-      }
-      save();renderHabits();
-    }));
-    $('weeklyList').querySelectorAll('[data-wdel]').forEach(btn=>btn.addEventListener('click',()=>{state.weeklyGoals=state.weeklyGoals.filter(g=>g.id!==btn.dataset.wdel);Object.values(state.weeklyDoneByWeek).forEach(x=>delete x[btn.dataset.wdel]);save();renderHabits();}));
   }
-  function renderWeeklyCalendar(){
-    const starts=new Set([weekStart(todayStr()),weekStart(state.ui.weekDate||todayStr())]);
-    Object.keys(state.weeklyHistory||{}).forEach(s=>starts.add(s));
-    if(state.profile.registrationDate) starts.add(weekStart(state.profile.registrationDate));
-    const arr=[...starts].filter(s=>!state.profile.registrationDate||addDays(s,6)>=state.profile.registrationDate).sort((a,b)=>b.localeCompare(a));
-    $('weeklyCalendar').innerHTML=arr.map(start=>{
-      const goals=getWeekGoals(start),done=getWeekDone(start),pct=weekPercent(start),sel=start===weekStart(state.ui.weekDate||todayStr());
-      const rows=goals.map(g=>`<div class="weekGoalRow"><span>${esc(g.label)}</span><span class="weekGoalStatus ${done[g.id]?'done':'miss'}">${done[g.id]?'✅ Выполнено':'❌ Не выполнено'}</span></div>`).join('');
-      return `<div class="weekCard ${sel?'selected':''}" data-week="${start}"><div class="weekCardHead"><div class="weekTitle">🗓️ ${weekLabel(start)}</div><div class="weekPercent ${weekColor(pct)}">${pct}%</div></div><div class="list" style="margin-top:8px">${rows||'<div class="empty">В этой неделе ещё нет целей.</div>'}</div><div style="margin-top:8px"><b>Выполнено ${goals.filter(g=>done[g.id]).length} из ${goals.length} (${pct}%)</b></div></div>`;
-    }).join('');
-    $('weeklyCalendar').querySelectorAll('[data-week]').forEach(el=>el.addEventListener('click',()=>{state.ui.weekDate=el.dataset.week;save();renderHabits();}));
+  function dayPercent(d){
+    if(state.profile.registrationDate && d<state.profile.registrationDate) return null;
+    const goals=state.dailyGoals.filter(g=>goalActiveOnDay(g,d)); if(!goals.length)return null;
+    ensureDay(d); return Math.round(goals.filter(g=>state.dailyDone[d][g.id]).length/goals.length*100);
   }
+
   function renderCalendar(){
     const ym=state.ui.month,[y,m]=ym.split('-').map(Number),first=new Date(y,m-1,1),days=new Date(y,m,0).getDate(),monday=(first.getDay()||7)-1;
-    $('monthTitle').textContent=first.toLocaleDateString('ru-RU',{month:'long',year:'numeric'}); let h='';
-    for(let i=0;i<monday;i++)h+='<div></div>';
-    for(let d=1;d<=days;d++){
-      const ds=`${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`,pct=dayPercent(ds);
-      const cls=['day',ds===todayStr()?'today':'',ds===state.ui.habitDate?'sel':'',ds>todayStr()?'future':'',pct==null?'inactive':pct===0?'p0':pct<50?'p1':pct<75?'p2':'p4'].filter(Boolean).join(' ');
-      h+=`<div class="${cls} ${ds<=todayStr()&&pct!=null?'click':''}" data-day="${ds}">${d}</div>`;
-    }
-    $('habitCalendar').innerHTML=h;
-    $('habitCalendar').querySelectorAll('.click').forEach(el=>el.addEventListener('click',()=>{state.ui.habitDate=el.dataset.day;save();renderHabits();renderDayDetail();}));
-    renderDayDetail();
+    $('monthTitle').textContent=first.toLocaleDateString('ru-RU',{month:'long',year:'numeric'}); let h=''; for(let i=0;i<monday;i++)h+='<div></div>';
+    for(let d=1;d<=days;d++){const ds=`${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`,p=dayPercent(ds),pre=state.profile.registrationDate&&ds<state.profile.registrationDate;const cls=['day',ds===todayStr()?'today':'',ds===state.ui.habitDate?'sel':'',ds>todayStr()?'future':'',pre?'pre-reg':'',p===0?'p0':p<50?'p1':p<100?'p2':p===100?'p4':'p3'].filter(Boolean).join(' ');h+=`<div class="${cls} ${ds<=todayStr()?'click':''}" data-day="${ds}">${d}</div>`;}
+    $('habitCalendar').innerHTML=h; $('habitCalendar').querySelectorAll('.click').forEach(el=>el.addEventListener('click',()=>{state.ui.habitDate=el.dataset.day;save();renderHabits();})); renderDayDetail();
   }
   function renderDayDetail(){
     const d=state.ui.habitDate;if(!d){$('dayDetail').innerHTML='';return;}
-    if(state.profile.registrationDate&&d<state.profile.registrationDate){$('dayDetail').innerHTML='<div class="note">До даты регистрации привычки не отслеживаются.</div>';return;}
-    ensureDay(d); const goals=dailyGoalsActive(d),pct=dayPercent(d);
-    $('dayDetail').innerHTML=`<div class="note"><b>${fmt(d)}</b> · выполнено ${pct}%<div class="list" style="margin-top:7px">${goals.map(g=>`<div class="row"><span>${esc(g.label)}</span><span>${state.dailyDone[d][g.id]?'✅':'—'}</span></div>`).join('')}</div></div>`;
+    if(state.profile.registrationDate&&d<state.profile.registrationDate){$('dayDetail').innerHTML=`<div class="note"><b>${fmt(d)}</b> · привычки ещё не отслеживались</div>`;return;}
+    const goals=state.dailyGoals.filter(g=>goalActiveOnDay(g,d));if(!goals.length){$('dayDetail').innerHTML=`<div class="note"><b>${fmt(d)}</b> · на этот день целей ещё не было</div>`;return;}
+    ensureDay(d);const pct=dayPercent(d);$('dayDetail').innerHTML=`<div class="note"><b>${fmt(d)}</b> · выполнено ${pct}%<div class="list" style="margin-top:7px">${goals.map(g=>`<div class="row"><span>${esc(g.label)}</span><span>${state.dailyDone[d][g.id]?'✓':'—'}</span></div>`).join('')}</div></div>`;
   }
-
   function bind(){
     document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{
       document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
       b.classList.add('active');$('view-'+b.dataset.tab).classList.add('active');
-      if(b.dataset.tab==='home')renderHome();if(b.dataset.tab==='measure')renderMeasurements();if(b.dataset.tab==='habits')renderHabits();if(b.dataset.tab==='profile')renderProfileFields();
+      if(b.dataset.tab==='home')renderHome();if(b.dataset.tab==='measure')renderMeasurements();if(b.dataset.tab==='analytics')renderAnalytics();if(b.dataset.tab==='habits')renderHabits();if(b.dataset.tab==='profile')renderProfileFields();
     }));
+    $('analyticsPeriod').addEventListener('change',e=>{state.ui.analyticsPeriod=e.target.value;save();renderAnalytics();});
     $('saveProfile').addEventListener('click',()=>{
       const p={...state.profile,name:$('name').value.trim(),gender:$('gender').value,birth:$('birth').value,height:$('height').value,weight:$('weight').value,target:$('target').value,goal:$('goal').value,steps:$('steps').value,activity:$('activity').value};
       if(!p.birth||!n(p.height)||!n(p.weight)||age(p.birth)==null){alert('Заполните дату рождения, рост и вес.');return;}
@@ -621,9 +718,8 @@
       state.measurements[d]=m;save();renderMeasurements();alert('Замер сохранён.');
     });
     $('habitDate').addEventListener('change',()=>{state.ui.habitDate=$('habitDate').value;save();renderHabits();});
-    $('weekDate').addEventListener('change',()=>{state.ui.weekDate=$('weekDate').value||todayStr();save();renderHabits();});
     $('addDaily').addEventListener('click',()=>{const t=$('newDaily').value.trim();if(!t)return;state.dailyGoals.push({id:'d_'+Date.now(),label:t,fixed:false,createdAt:todayStr()});$('newDaily').value='';ensureDay(state.ui.habitDate);save();renderHabits();});
-    $('addWeekly').addEventListener('click',()=>{const t=$('newWeekly').value.trim();if(!t)return;const id='w_'+Date.now();state.weeklyGoals.push({id,label:t,fixed:false,createdAt:todayStr()});state.weeklyDoneByWeek[weekStart(todayStr())]=state.weeklyDoneByWeek[weekStart(todayStr())]||{};state.weeklyDoneByWeek[weekStart(todayStr())][id]=false;$('newWeekly').value='';save();renderHabits();});
+    $('addWeekly').addEventListener('click',()=>{const t=$('newWeekly').value.trim();if(!t)return;const id='w_'+Date.now();state.weeklyGoals.push({id,label:t,fixed:false,createdAt:todayStr()});state.weeklyDone[id]=false;$('newWeekly').value='';save();renderHabits();});
     $('prevMonth').addEventListener('click',()=>{const [y,m]=state.ui.month.split('-').map(Number);const d=new Date(y,m-2,1);state.ui.month=iso(d).slice(0,7);save();renderCalendar();});
     $('nextMonth').addEventListener('click',()=>{const [y,m]=state.ui.month.split('-').map(Number);const d=new Date(y,m,1);state.ui.month=iso(d).slice(0,7);save();renderCalendar();});
     $('resetData').addEventListener('click',()=>{if(confirm('Удалить все данные FormaVS? Это действие нельзя отменить.')){localStorage.removeItem(KEY);location.reload();}});
@@ -632,30 +728,9 @@
     $('importData').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{state=JSON.parse(r.result);ensureDefaults();save();location.reload();}catch(_){alert('Не удалось прочитать резервную копию.');}};r.readAsText(f);});
   }
 
-  let deferredInstallPrompt=null;
-  window.addEventListener('beforeinstallprompt',e=>{
-    e.preventDefault();
-    deferredInstallPrompt=e;
-    const btn=document.getElementById('installApp');
-    if(btn) btn.classList.add('show');
-  });
-  window.addEventListener('appinstalled',()=>{
-    deferredInstallPrompt=null;
-    const btn=document.getElementById('installApp');
-    if(btn) btn.classList.remove('show');
-  });
-  document.addEventListener('click',async e=>{
-    if(e.target && e.target.id==='installApp' && deferredInstallPrompt){
-      deferredInstallPrompt.prompt();
-      await deferredInstallPrompt.userChoice;
-      deferredInstallPrompt=null;
-      e.target.classList.remove('show');
-    }
-  });
-
   function init(){
-    load();renderMeasurementFields();bind();renderProfileFields();renderHome();renderMeasurements();renderHabits();
-    setInterval(()=>{if(todayStr()!==state._lastDay){state._lastDay=todayStr();rolloverWeek();save();renderHome();renderHabits();}},30000);
+    load();renderMeasurementFields();bind();renderProfileFields();renderHome();renderMeasurements();renderAnalytics();renderHabits();
+    setInterval(()=>{if(todayStr()!==state._lastDay){state._lastDay=todayStr();state.ui.habitDate=todayStr();state.ui.month=todayStr().slice(0,7);state.ui.selectedWeek=weekStart(todayStr());rolloverWeek();save();renderHome();renderHabits();}},30000);
     if('serviceWorker' in navigator) window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
   }
   init();
