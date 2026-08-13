@@ -38,7 +38,7 @@
     .grid2{display:grid;grid-template-columns:1fr 1fr;gap:11px}
     .journal-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 11px}
     .journal-grid .field{margin-bottom:0}
-    .journal-card .check{margin-top:13px}.journal-date-field input{font-weight:800}.journal-date-field label{font-weight:800}.journal-goals{margin-top:16px;padding-top:16px;border-top:1px solid var(--line)}.journal-goals-title{font-size:.95rem;margin-bottom:10px}.journal-save{margin-top:16px}
+    .journal-card .check{margin-top:13px}.journal-date-field input{font-weight:800}.journal-date-field label{font-weight:800}.journal-goals{margin-top:16px;padding-top:16px;border-top:1px solid var(--line)}.journal-save{margin-top:16px}.journal-goals .note{margin-bottom:10px} input:disabled,select:disabled{background:#f1f5f9;color:#64748b;opacity:.78;cursor:not-allowed}
     .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
     .field{margin-bottom:11px}.field label{display:block;color:#64748b;font-size:.78rem;font-weight:650;margin:0 0 5px}
     input,select{width:100%;border:1px solid #d8dee8;background:#fbfcfe;color:var(--ink);border-radius:14px;padding:11px 12px;outline:none}
@@ -122,7 +122,7 @@
         <label class="check journal-activity"><input id="jActivity" type="checkbox"><span>Была тренировка / физическая активность</span></label>
 
         <div class="journal-goals">
-          <div class="journal-goals-title">Ежедневные цели</div>
+          <div class="note">Выбери день выше, чтобы внести данные за выбранный день или изменить уже сохранённые данные.</div>
           <div id="dailyList" class="list"></div>
           <div class="add"><input id="newDaily" placeholder="Новая ежедневная цель"><button id="addDaily">+</button></div>
         </div>
@@ -177,38 +177,40 @@
       <div class="card">
         <div class="title">👤 Профиль</div>
         <div class="grid2">
+          <div class="field"><label>Дата регистрации</label><input id="registrationDate" type="date" disabled></div>
           <div class="field"><label>Имя / ник</label><input id="name"></div>
+        </div>
+        <div class="grid2">
           <div class="field"><label>Пол</label><select id="gender"><option value="female">Женский</option><option value="male">Мужской</option></select></div>
-        </div>
-        <div class="grid2">
           <div class="field"><label>Дата рождения</label><input id="birth" type="date"></div>
-          <div class="field"><label>Рост, см</label><input id="height" type="number" step=".1" min="100" max="250"></div>
         </div>
         <div class="grid2">
+          <div class="field"><label>Рост, см</label><input id="height" type="number" step=".1" min="100" max="250"></div>
           <div class="field"><label>Текущий вес, кг</label><input id="weight" type="number" step=".1" min="20" max="300"></div>
+        </div>
+        <div class="grid2">
           <div class="field"><label>Целевой вес, кг</label><input id="target" type="number" step=".1" min="20" max="300"></div>
+          <div class="field"><label>Средние шаги / день</label><input id="steps" type="number" min="0" max="100000" placeholder="8000"></div>
         </div>
         <div class="grid2">
           <div class="field"><label>Цель</label><select id="goal"><option value="lose">Снизить вес</option><option value="maintain">Поддержка веса</option><option value="gain">Набрать вес</option></select></div>
-          <div class="field"><label>Средние шаги / день</label><input id="steps" type="number" min="0" max="100000" placeholder="8000"></div>
+          <div class="field"><label>Активность вне тренировок</label>
+            <select id="activity">
+              <option value="1.2">Минимальная — в основном сидячий день</option>
+              <option value="1.375">Низкая — прогулки / лёгкая активность 1–3 р/нед</option>
+              <option value="1.55">Умеренная — тренировки 3–5 р/нед</option>
+              <option value="1.725">Высокая — интенсивные тренировки 6–7 р/нед</option>
+              <option value="1.9">Очень высокая — тяжёлая работа + спорт</option>
+            </select>
+          </div>
         </div>
-        <div class="field"><label>Активность вне тренировок</label>
-          <select id="activity">
-            <option value="1.2">Минимальная — в основном сидячий день</option>
-            <option value="1.375">Низкая — прогулки / лёгкая активность 1–3 р/нед</option>
-            <option value="1.55">Умеренная — тренировки 3–5 р/нед</option>
-            <option value="1.725">Высокая — интенсивные тренировки 6–7 р/нед</option>
-            <option value="1.9">Очень высокая — тяжёлая работа + спорт</option>
-          </select>
-        </div>
-        <div class="note">Дата регистрации фиксируется при первом сохранении профиля. Данные остаются в этом браузере.</div>
-        <button class="btn secondary" id="saveProfile" style="margin-top:10px">Сохранить профиль</button>
+        <div class="note">Дата регистрации фиксируется при первом сохранении профиля. Данные остаются в твоём ЛК.</div>
       </div>
 
       <div class="card">
         <div class="title">🧬 Исходные объёмы для оценки % жира</div>
-        <div class="grid2" id="profileMeasurementFields"></div>
-        <button class="btn" id="saveProfileMeasurements">Сохранить исходные объёмы</button>
+        <div class="note">Заполненные значения после сохранения становятся недоступны для изменения. Пустые поля можно будет заполнить позже.</div>
+        <div class="grid2" id="profileMeasurementFields" style="margin-top:10px"></div>
       </div>
 
       <div class="card">
@@ -217,16 +219,17 @@
         <input id="importData" type="file" accept="application/json" class="hidden">
         <button class="btn ghost" id="chooseImport" style="margin-top:8px">Импорт JSON</button>
       </div>
+      <button class="btn secondary" id="saveProfile" style="margin-top:2px">Сохранить профиль</button>
     </section>
   </main>
-  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v2.10.3</span></div>
+  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v2.10.7</span></div>
 </div>
 
 <script>
 (() => {
   'use strict';
 
-  const APP_VERSION = '2.10.3';
+  const APP_VERSION = '2.10.7';
   const KEY = 'formavs_v2';
   const LEGACY_KEY = 'forma_v2';
   const todayStr = () => {
@@ -258,7 +261,7 @@
   ];
 
   let state = {
-    profile:{name:'',gender:'female',birth:'',height:'',weight:'',target:'',goal:'maintain',steps:'',activity:'1.2',registrationDate:null,baseMeasurements:{}},
+    profile:{name:'',gender:'female',birth:'',height:'',weight:'',target:'',goal:'maintain',steps:'',activity:'1.2',registrationDate:null,baseMeasurements:{},locks:{}},
     weights:{}, measurements:{}, journal:{}, nutritionWeekly:{}, dailyGoals:structuredClone(DEFAULT_DAILY), weeklyGoals:structuredClone(DEFAULT_WEEKLY),
     dailyDone:{}, weeklyDone:{}, weeklyHistory:{}, ui:{month:todayStr().slice(0,7),habitDate:todayStr(),journalDate:todayStr(),analyticsDate:todayStr(),analyticsPeriod:'week',analyticsMetric:'steps'}
   };
@@ -282,6 +285,19 @@
     }catch(e){ console.warn(e); }
     ensureDefaults();
   }
+  const PROFILE_LOCK_FIELDS=['name','gender','birth','height','weight','target','goal','steps','activity'];
+  function initProfileLocks(){
+    const p=state.profile;
+    if(!p.locks || typeof p.locks!=='object') p.locks={};
+    for(const key of PROFILE_LOCK_FIELDS){
+      if(typeof p.locks[key]!=='boolean') p.locks[key]=!!p.registrationDate && p[key]!=='' && p[key]!=null;
+    }
+    for(const [k] of MEASUREMENTS){
+      const v=p.baseMeasurements?.[k];
+      if(typeof p.locks['m_'+k]!=='boolean') p.locks['m_'+k]=v!=null && v!=='';
+    }
+  }
+
   function normalizeGoalLabels(){
     const map=[
       ['🌿 🌿','🌿'],['🥩 🥩','🥩'],['🐟 🐟','🐟'],['🍖 🍖','🍖'],['🦐 🦐','🦐']
@@ -301,6 +317,7 @@
     for(const w of DEFAULT_WEEKLY) if(!state.weeklyGoals.some(x=>x.id===w.id)) state.weeklyGoals.push({...w});
     normalizeGoalLabels();
     rolloverWeek();
+    initProfileLocks();
     if(!state.ui.habitDate) state.ui.habitDate=todayStr();
     if(!state.ui.month) state.ui.month=todayStr().slice(0,7);
     save();
@@ -498,12 +515,19 @@
   // ---------- UI ----------
   function autoGoalFromTarget(p){const w=n(p.weight),t=n(p.target);if(t!=null&&w!=null){if(t<w)return 'lose';if(t>w)return 'gain';return 'maintain';}return p.goal||'maintain';}
   function renderProfileFields(){
-    $('name').value=state.profile.name||'';$('gender').value=state.profile.gender||'female';
-    $('birth').value=state.profile.birth||'';$('height').value=state.profile.height||'';
-    $('weight').value=state.profile.weight||'';$('target').value=state.profile.target||'';
-    $('goal').value=autoGoalFromTarget(state.profile);$('steps').value=state.profile.steps||'';
-    $('activity').value=state.profile.activity||'1.2';
-    const html=MEASUREMENTS.map(([k,l])=>`<div class="field"><label>${l}</label><input id="pm_${k}" type="number" step=".1" min="1" max="300" value="${esc(state.profile.baseMeasurements[k]??'')}"></div>`).join('');
+    initProfileLocks();
+    const p=state.profile, l=p.locks||{};
+    $('registrationDate').value=p.registrationDate||'';
+    $('name').value=p.name||''; $('name').disabled=!!l.name;
+    $('gender').value=p.gender||'female'; $('gender').disabled=!!l.gender;
+    $('birth').value=p.birth||''; $('birth').disabled=!!l.birth;
+    $('height').value=p.height||''; $('height').disabled=!!l.height;
+    $('weight').value=p.weight||''; $('weight').disabled=!!l.weight;
+    $('target').value=p.target||''; $('target').disabled=!!l.target;
+    $('goal').value=autoGoalFromTarget(p); $('goal').disabled=!!l.goal;
+    $('steps').value=p.steps||''; $('steps').disabled=!!l.steps;
+    $('activity').value=p.activity||'1.2'; $('activity').disabled=!!l.activity;
+    const html=MEASUREMENTS.map(([k,label])=>{const locked=!!l['m_'+k];return `<div class="field"><label>${label}</label><input id="pm_${k}" type="number" step=".1" min="1" max="300" value="${esc(p.baseMeasurements?.[k]??'')}" ${locked?'disabled':''}></div>`}).join('');
     $('profileMeasurementFields').innerHTML=html;
   }
   function renderMeasurementFields(){
@@ -661,18 +685,24 @@
     setInterval(()=>{try{recalcWeeklyNutrition();const t=document.querySelector('.tab.active')?.dataset.tab;if(t==='home')renderHome();if(t==='analytics')renderAnalytics();if(t==='week')renderWeek();}catch(e){}},60000);
 
     $('saveProfile').addEventListener('click',()=>{
-      const p={...state.profile,name:$('name').value.trim(),gender:$('gender').value,birth:$('birth').value,height:$('height').value,weight:$('weight').value,target:$('target').value,goal:$('goal').value,steps:$('steps').value,activity:$('activity').value};
-      p.goal=autoGoalFromTarget(p);
-      if(!p.birth||!n(p.height)||!n(p.weight)||age(p.birth)==null){alert('Заполните дату рождения, рост и вес.');return;}
-      if(age(p.birth)<18){alert('Эта версия расчётов предназначена для взрослых 18+.');return;}
-      if(!p.registrationDate){p.registrationDate=todayStr();state.weights[p.registrationDate]=n(p.weight);}
-      state.profile=p;state.profile.registrationDate=p.registrationDate;
-      const wk=weekStartDate(todayStr()); if(state.nutritionWeekly[wk]==null){const base=nutritionBase(p);if(base)state.nutritionWeekly[wk]=base.calories;}
-      recalcWeeklyNutrition();save();renderHome();toast('Данные сохранены');
-    });
-    $('saveProfileMeasurements').addEventListener('click',()=>{
-      const m={};for(const [k] of MEASUREMENTS){const v=n($('pm_'+k)?.value);if(v!=null)m[k]=v;}
-      state.profile.baseMeasurements=m;save();renderHome();toast('Данные сохранены');
+      initProfileLocks();
+      const p=state.profile, l=p.locks;
+      const values={name:$('name').value.trim(),gender:$('gender').value,birth:$('birth').value,height:$('height').value,weight:$('weight').value,target:$('target').value,goal:$('goal').value,steps:$('steps').value,activity:$('activity').value};
+      if(!p.registrationDate) p.registrationDate=todayStr();
+      for(const key of PROFILE_LOCK_FIELDS){
+        if(l[key]) continue;
+        let value=values[key];
+        if(key==='goal' && n(values.target)!=null) value=autoGoalFromTarget({...p,target:values.target,weight:values.weight||p.weight});
+        if(value!=='' && value!=null){p[key]=value;l[key]=true;}
+      }
+      if(n(p.target)!=null && !l.goal){p.goal=autoGoalFromTarget(p);l.goal=true;}
+      if(n(p.weight)!=null && state.weights[p.registrationDate]==null) state.weights[p.registrationDate]=n(p.weight);
+      const m={...(p.baseMeasurements||{})};
+      for(const [k] of MEASUREMENTS){const el=$('pm_'+k),v=n(el?.value);if(l['m_'+k]) continue;if(v!=null){m[k]=v;l['m_'+k]=true;}}
+      p.baseMeasurements=m;
+      const wk=weekStartDate(todayStr()),base=nutritionBase(p);
+      if(state.nutritionWeekly[wk]==null && base) state.nutritionWeekly[wk]=base.calories;
+      recalcWeeklyNutrition();save();renderProfileFields();renderHome();toast('Данные сохранены');
     });
     $('saveJournal').addEventListener('click',()=>{
       const d=$('journalDate').value||todayStr();
@@ -710,7 +740,7 @@
     load();renderMeasurementFields();bind();renderProfileFields();renderHome();renderWeek();renderJournal();renderAnalytics();
     setInterval(()=>{if(todayStr()!==state._lastDay){state._lastDay=todayStr();rolloverWeek();state.ui.habitDate=todayStr();state.ui.journalDate=todayStr();save();renderHome();renderJournal();renderWeek();renderAnalytics();}},30000);
     if ('serviceWorker' in navigator) {
-      const APP_VERSION='2.10.5';
+      const APP_VERSION='2.10.7';
       let reloadScheduled = false;
       function reloadOnceAfterUpdate(){
         if(reloadScheduled) return;
