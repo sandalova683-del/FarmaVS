@@ -178,7 +178,7 @@
           <div class="field"><label>Цель</label><select id="goal"><option value="lose">Снизить вес</option><option value="maintain">Поддержка веса</option><option value="gain">Набрать вес</option></select></div>
           <div class="field"><label>Средние шаги / день</label><input id="steps" type="number" min="0" max="100000" placeholder="8000"></div>
         </div>
-        <div class="field"><label>Активность</label>
+        <div class="field"><label>Активность вне тренировок</label>
           <select id="activity">
             <option value="1.2">Минимальная — в основном сидячий день</option>
             <option value="1.375">Низкая — прогулки / лёгкая активность 1–3 р/нед</option>
@@ -205,13 +205,14 @@
       </div>
     </section>
   </main>
-  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.</div>
+  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormaVS · v2.9.0</span></div>
 </div>
 
 <script>
 (() => {
   'use strict';
 
+  const APP_VERSION = '2.9.0';
   const KEY = 'formavs_v2';
   const LEGACY_KEY = 'forma_v2';
   const todayStr = () => {
@@ -227,7 +228,7 @@
   const fmt = s => parseDate(s).toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric'});
   const esc = s => String(s ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const n = v => Number.isFinite(Number(v)) ? Number(v) : null;
-  const round = (v,d=1) => Math.round(v*10**d)/10**d;
+  const round = (v,d=1) => Math.round(v*10**d)/10;
   const clamp = (v,a,b) => Math.min(b,Math.max(a,v));
 
   const DEFAULT_DAILY = [{id:'veg',label:'🌿 500 г растительной пищи',fixed:true}];
@@ -664,7 +665,68 @@
   function init(){
     load();renderMeasurementFields();bind();renderProfileFields();renderHome();renderMeasurements();renderHabits();renderJournal();renderAnalytics();
     setInterval(()=>{if(todayStr()!==state._lastDay){state._lastDay=todayStr();rolloverWeek();save();renderHome();renderHabits();}},30000);
-    if('serviceWorker' in navigator) window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+    if ('serviceWorker' in navigator) {
+      const APP_VERSION = '2.9.0';
+      const UPDATE_CHECK_MS = 2 * 60 * 1000;
+      let reloadingForUpdate = false;
+
+      async function checkRemoteVersion(registration) {
+        try {
+          const res = await fetch('./version.json?t=' + Date.now(), {cache:'no-store'});
+          if (!res.ok) return;
+          const data = await res.json();
+          if (data && data.version && data.version !== APP_VERSION) {
+            if (registration && navigator.serviceWorker.controller) {
+              navigator.serviceWorker.controller.postMessage({type:'CLEAR_CACHES_AND_RELOAD'});
+            } else {
+              location.reload();
+            }
+          }
+        } catch (_) {}
+      }
+
+      window.addEventListener('load', async () => {
+        try {
+          const registration = await navigator.serviceWorker.register('./sw.js', {updateViaCache:'none'});
+          if (registration.waiting) registration.waiting.postMessage({type:'SKIP_WAITING'});
+          registration.addEventListener('updatefound', () => {
+            const worker = registration.installing;
+            if (!worker) return;
+            worker.addEventListener('statechange', () => {
+              if (worker.state === 'installed' && navigator.serviceWorker.controller) {
+                worker.postMessage({type:'SKIP_WAITING'});
+              }
+            });
+          });
+          await registration.update();
+          await checkRemoteVersion(registration);
+          setInterval(async () => {
+            try { await registration.update(); } catch (_) {}
+            await checkRemoteVersion(registration);
+          }, UPDATE_CHECK_MS);
+          document.addEventListener('visibilitychange', async () => {
+            if (document.visibilityState === 'visible') {
+              try { await registration.update(); } catch (_) {}
+              await checkRemoteVersion(registration);
+            }
+          });
+        } catch (_) {}
+      });
+
+      navigator.serviceWorker.addEventListener('message', event => {
+        if (event.data && event.data.type === 'RELOAD_AFTER_UPDATE') {
+          if (reloadingForUpdate) return;
+          reloadingForUpdate = true;
+          location.reload();
+        }
+      });
+
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (reloadingForUpdate) return;
+        reloadingForUpdate = true;
+        location.reload();
+      });
+    }
   }
   init();
 })();
