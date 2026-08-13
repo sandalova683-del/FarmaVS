@@ -1,5 +1,5 @@
-const APP_CACHE = 'formavs-shell-v3';
-const APP_VERSION = '2.10.0';
+const APP_CACHE = 'formulavs-shell-v4';
+const APP_VERSION = '2.10.2';
 const CORE_ASSETS = [
   './',
   './index.html',

@@ -81,10 +81,10 @@
 <div class="app">
   <header class="hero">
     <div class="brand">
-      <div class="mark" aria-label="FormaVS">VS</div>
+      <div class="mark" aria-label="FormulaVS">VS</div>
       <div>
-        <h1>FormaVS</h1>
-        <div class="tagline">Тело в цифрах. Привычки — в действии.</div>
+        <h1>FormulaVS</h1>
+        <div class="tagline">Формула жизненной силы и стройности</div>
       </div>
     </div>
   </header>
@@ -100,21 +100,6 @@
   <main>
     <section id="view-home" class="view active">
       <div id="homeContent"></div>
-      <div class="card">
-        <div class="title">⚖️ Вес сегодня</div>
-        <div class="grid2">
-          <div class="field"><label>Дата</label><input id="wDate" type="date"></div>
-          <div class="field"><label>Вес, кг</label><input id="wValue" type="number" step=".1" min="20" max="300" placeholder="Последний внесённый вес"></div>
-        </div>
-        <button class="btn green" id="saveWeight">Добавить / обновить</button>
-      </div>
-      <div class="card">
-        <div class="title">Ежедневные цели</div>
-        <div class="field"><label>День</label><input id="habitDate" type="date"></div>
-        <div id="dailyList" class="list"></div>
-        <div class="add"><input id="newDaily" placeholder="Например: 8 000 шагов"><button id="addDaily">+</button></div>
-        <div class="note" style="margin-top:10px">Можно открыть любой прошедший день после регистрации и внести то, что забыли отметить.</div>
-      </div>
     </section>
 
     <section id="view-journal" class="view">
@@ -122,6 +107,7 @@
         <div class="title">📝 Дневник дня</div>
         <div class="field"><label>Дата</label><input id="journalDate" type="date"></div>
         <div class="grid2">
+          <div class="field"><label>Вес, кг</label><input id="jWeight" type="number" min="20" max="300" step=".1" placeholder="Последний внесённый вес"></div>
           <div class="field"><label>Калории, ккал</label><input id="jCalories" type="number" min="0"></div>
           <div class="field"><label>Белок, г</label><input id="jProtein" type="number" min="0" step=".1"></div>
           <div class="field"><label>Жиры, г</label><input id="jFat" type="number" min="0" step=".1"></div>
@@ -131,6 +117,14 @@
         </div>
         <label class="check"><input id="jActivity" type="checkbox"><span>Была тренировка / физическая активность</span></label>
         <button class="btn green" id="saveJournal" style="margin-top:10px">Сохранить день</button>
+      </div>
+
+      <div class="card">
+        <div class="title">Ежедневные цели</div>
+        <div class="field"><label>День</label><input id="habitDate" type="date"></div>
+        <div id="dailyList" class="list"></div>
+        <div class="add"><input id="newDaily" placeholder="Например: 8 000 шагов"><button id="addDaily">+</button></div>
+        <div class="note" style="margin-top:10px">Можно открыть любой прошедший день после регистрации и внести то, что забыли отметить.</div>
       </div>
     </section>
 
@@ -229,7 +223,7 @@
 (() => {
   'use strict';
 
-  const APP_VERSION = '2.9.0';
+  const APP_VERSION = '2.10.2';
   const KEY = 'formavs_v2';
   const LEGACY_KEY = 'forma_v2';
   const todayStr = () => {
@@ -518,10 +512,10 @@
     if(!p.registrationDate){
       $('homeContent').innerHTML=`<div class="card">
         <div class="title">👋 Начнём с базовых данных</div>
-        <div class="note">Сначала сохрани профиль. После этого FormaVS покажет расчёты питания, состав тела, цель и прогресс.</div>
+        <div class="note">Сначала сохрани профиль. После этого FormulaVS покажет расчёты питания, состав тела, цель и прогресс.</div>
         <button class="btn secondary" style="margin-top:10px" onclick="document.querySelector('[data-tab=profile]').click()">Заполнить профиль</button>
       </div>`;
-      renderDailyGoals(); renderMeasurements(); return;
+      return;
     }
     let h=`<div class="card"><div class="title">Сегодня · ${fmt(todayStr())}</div>
       <div class="metrics"><div class="metric heroMetric"><div class="k">Вес</div><div class="v">${p.weight||'—'} кг</div><div class="s">${pr?`до цели ${Math.abs(pr.diff)} кг`:'цель не задана'}</div></div>
@@ -543,11 +537,11 @@
       <div class="metric"><div class="k">Ориентир по возрасту</div><div class="v"><span class="badge ${comp.cls}">${comp.status}</span></div><div class="s">${comp.range?`${comp.range[0]}–${comp.range[1]}%`:''}</div></div>
     </div></div>`;
     else h+=`<div class="card"><div class="title">🧬 Состав тела</div><div class="note">Для US Navy нужны талия + шея; для женщин ещё бёдра. Их можно внести в профиле.</div></div>`;
-    $('homeContent').innerHTML=h; renderDailyGoals(); renderMeasurements();
+    $('homeContent').innerHTML=h;
   }
 
   function renderDailyGoals(){
-    const d=state.ui.habitDate||todayStr(); ensureDay(d);
+    const d=state.ui.journalDate||todayStr(); state.ui.habitDate=d; ensureDay(d);
     $('habitDate').value=d; $('habitDate').min=state.profile.registrationDate||todayStr(); $('habitDate').max=todayStr();
     $('dailyList').innerHTML=state.dailyGoals.map(g=>`<div class="check"><input type="checkbox" data-id="${esc(g.id)}" ${state.dailyDone[d][g.id]?'checked':''}><label>${esc(g.label)}</label>${g.fixed?'':`<button class="x" data-del="${esc(g.id)}">×</button>`}</div>`).join('');
     $('dailyList').querySelectorAll('[data-id]').forEach(cb=>cb.addEventListener('change',()=>{state.dailyDone[d][cb.dataset.id]=cb.checked;save();renderDailyGoals();renderAnalytics();}));
@@ -602,9 +596,18 @@
     $('dayDetail').innerHTML=`<div class="note"><b>${fmt(d)}</b> · выполнено ${dayPercent(d)}%<div class="list" style="margin-top:7px">${state.dailyGoals.map(g=>`<div class="row"><span>${esc(g.label)}</span><span>${state.dailyDone[d][g.id]?'✅':'—'}</span></div>`).join('')}</div></div>`;
   }
 
-  const JOURNAL_LABELS={calories:'Калории, ккал',protein:'Белок, г',fat:'Жиры, г',carbs:'Углеводы, г',steps:'Шаги',water:'Вода, л',activity:'Тренировки'};
-  const JOURNAL_UNITS={calories:'ккал',protein:'г',fat:'г',carbs:'г',steps:'шагов',water:'л',activity:'раз'};
-  function renderJournal(){const d=state.ui.journalDate||todayStr(),j=state.journal[d]||{};$('journalDate').value=d;$('journalDate').min=state.profile.registrationDate||todayStr();$('journalDate').max=todayStr();$('jCalories').value=j.calories??'';$('jProtein').value=j.protein??'';$('jFat').value=j.fat??'';$('jCarbs').value=j.carbs??'';$('jSteps').value=j.steps??'';$('jWater').value=j.water??'';$('jActivity').checked=!!j.activity;}
+  const JOURNAL_LABELS={weight:'Вес, кг',calories:'Калории, ккал',protein:'Белок, г',fat:'Жиры, г',carbs:'Углеводы, г',steps:'Шаги',water:'Вода, л',activity:'Тренировки'};
+  const JOURNAL_UNITS={weight:'кг',calories:'ккал',protein:'г',fat:'г',carbs:'г',steps:'шагов',water:'л',activity:'раз'};
+  function renderJournal(){
+    const d=state.ui.journalDate||todayStr(),j=state.journal[d]||{};
+    $('journalDate').value=d;$('journalDate').min=state.profile.registrationDate||todayStr();$('journalDate').max=todayStr();
+    const weight=state.weights[d]??j.weight??null;
+    $('jWeight').value=weight??'';
+    const lastWeight=Object.keys(state.weights).sort().at(-1);
+    $('jWeight').placeholder=lastWeight?String(state.weights[lastWeight]):'Введите вес';
+    $('jCalories').value=j.calories??'';$('jProtein').value=j.protein??'';$('jFat').value=j.fat??'';$('jCarbs').value=j.carbs??'';$('jSteps').value=j.steps??'';$('jWater').value=j.water??'';$('jActivity').checked=!!j.activity;
+    renderDailyGoals();
+}
   function journalValue(d,k){const j=state.journal[d];if(!j)return null;return k==='activity'?(j.activity?1:0):n(j[k]);}
   function rangeFor(end,period){const e=parseDate(end),s=new Date(e);if(period==='week')s.setDate(s.getDate()-6);else if(period==='month')s.setDate(s.getDate()-29);else if(period==='halfyear')s.setMonth(s.getMonth()-5),s.setDate(1);else if(period==='year')s.setMonth(s.getMonth()-11),s.setDate(1);else if(state.profile.registrationDate)return [parseDate(state.profile.registrationDate),e];return [s,e];}
   function buckets(end,period,key){const [s,e]=rangeFor(end,period),out=[];if(period==='week'){for(let d=new Date(s);d<=e;d.setDate(d.getDate()+1))out.push({label:fmt(iso(d)),dates:[iso(d)]});}else{let cur=new Date(s);while(cur<=e){let a=new Date(cur),b=new Date(cur);if(period==='month')b.setDate(b.getDate()+6);else b.setMonth(b.getMonth()+1),b.setDate(0);if(b>e)b=new Date(e);let ds=[];for(let d=new Date(a);d<=b;d.setDate(d.getDate()+1))ds.push(iso(d));out.push({label:fmt(iso(a))+' — '+fmt(iso(b)),dates:ds});cur=new Date(b);cur.setDate(cur.getDate()+1);}}return out.map(x=>{const v=x.dates.map(d=>journalValue(d,key)).filter(v=>v!=null);return {...x,avg:v.length?round(v.reduce((a,b)=>a+b,0)/v.length):null};});}
@@ -617,13 +620,13 @@
     $('analyticsWeeklyStats').innerHTML=`<div class="note" style="margin-bottom:10px">Текущая неделя: <b>${done} из ${total}</b> целей · <b>${pct}%</b></div><table class="table"><thead><tr><th>Неделя</th><th>Выполнено</th><th>%</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${r.label}</td><td><b>${r.done} из ${r.total}</b></td><td><b>${r.pct}%</b></td></tr>`).join('')}</tbody></table>`;
   }
 
-  function renderAnalytics(){const end=state.ui.analyticsDate||todayStr(),period=state.ui.analyticsPeriod||'week',key=state.ui.analyticsMetric||'steps';$('analyticsDate').value=end;$('analyticsPeriod').value=period;$('analyticsMetric').value=key;const unit=JOURNAL_UNITS[key],rows=buckets(end,period,key),good=rows.filter(x=>x.avg!=null),vals=good.map(x=>x.avg),avg=vals.length?round(vals.reduce((a,b)=>a+b,0)/vals.length):null,delta=vals.length>1?round(vals.at(-1)-vals[0]):null;$('analyticsSummary').innerHTML=avg!=null?`<div class="grid2"><div class="metric"><div class="k">Среднее за выбранный период</div><div class="v">${avg} ${unit}</div><div class="s">${JOURNAL_LABELS[key]}</div></div><div class="metric"><div class="k">Изменение от первого периода</div><div class="v">${delta==null?'—':(delta>0?'+':'')+delta+' '+unit}</div><div class="s">к последнему периоду</div></div></div>`:'<div class="empty">Нет данных за выбранный период.</div>';$('analyticsChart').innerHTML=analyticsChart(rows,unit);$('analyticsTable').innerHTML=good.length?`<table class="table"><thead><tr><th>Период</th><th>Среднее</th><th>Изменение</th></tr></thead><tbody>${good.map((x,i)=>`<tr><td>${x.label}</td><td><b>${x.avg} ${unit}</b></td><td>${i?((x.avg-good[i-1].avg)>0?'+':'')+round(x.avg-good[i-1].avg)+' '+unit:'—'}</td></tr>`).join('')}</tbody></table>`:'';const keys=['calories','protein','fat','carbs','steps','water','activity'];$('analyticsOverview').innerHTML=`<table class="table"><thead><tr><th>Параметр</th><th>Среднее</th><th>Изменение</th></tr></thead><tbody>${keys.map(k=>{const rr=buckets(end,period,k).filter(x=>x.avg!=null),v=rr.length?round(rr.reduce((a,b)=>a+b.avg,0)/rr.length):null,d=rr.length>1?round(rr.at(-1).avg-rr[0].avg):null;return `<tr><td>${JOURNAL_LABELS[k]}</td><td>${v==null?'—':v+' '+JOURNAL_UNITS[k]}</td><td>${d==null?'—':(d>0?'+':'')+d+' '+JOURNAL_UNITS[k]}</td></tr>`}).join('')}</tbody></table>`;renderAnalyticsWeeklyStats();}
+  function renderAnalytics(){const end=state.ui.analyticsDate||todayStr(),period=state.ui.analyticsPeriod||'week',key=state.ui.analyticsMetric||'steps';$('analyticsDate').value=end;$('analyticsPeriod').value=period;$('analyticsMetric').value=key;const unit=JOURNAL_UNITS[key],rows=buckets(end,period,key),good=rows.filter(x=>x.avg!=null),vals=good.map(x=>x.avg),avg=vals.length?round(vals.reduce((a,b)=>a+b,0)/vals.length):null,delta=vals.length>1?round(vals.at(-1)-vals[0]):null;$('analyticsSummary').innerHTML=avg!=null?`<div class="grid2"><div class="metric"><div class="k">Среднее за выбранный период</div><div class="v">${avg} ${unit}</div><div class="s">${JOURNAL_LABELS[key]}</div></div><div class="metric"><div class="k">Изменение от первого периода</div><div class="v">${delta==null?'—':(delta>0?'+':'')+delta+' '+unit}</div><div class="s">к последнему периоду</div></div></div>`:'<div class="empty">Нет данных за выбранный период.</div>';$('analyticsChart').innerHTML=analyticsChart(rows,unit);$('analyticsTable').innerHTML=good.length?`<table class="table"><thead><tr><th>Период</th><th>Среднее</th><th>Изменение</th></tr></thead><tbody>${good.map((x,i)=>`<tr><td>${x.label}</td><td><b>${x.avg} ${unit}</b></td><td>${i?((x.avg-good[i-1].avg)>0?'+':'')+round(x.avg-good[i-1].avg)+' '+unit:'—'}</td></tr>`).join('')}</tbody></table>`:'';const keys=['weight','calories','protein','fat','carbs','steps','water','activity'];$('analyticsOverview').innerHTML=`<table class="table"><thead><tr><th>Параметр</th><th>Среднее</th><th>Изменение</th></tr></thead><tbody>${keys.map(k=>{const rr=buckets(end,period,k).filter(x=>x.avg!=null),v=rr.length?round(rr.reduce((a,b)=>a+b.avg,0)/rr.length):null,d=rr.length>1?round(rr.at(-1).avg-rr[0].avg):null;return `<tr><td>${JOURNAL_LABELS[k]}</td><td>${v==null?'—':v+' '+JOURNAL_UNITS[k]}</td><td>${d==null?'—':(d>0?'+':'')+d+' '+JOURNAL_UNITS[k]}</td></tr>`}).join('')}</tbody></table>`;renderAnalyticsWeeklyStats();}
   function bind(){
     document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{
       document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
       document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
       b.classList.add('active');$('view-'+b.dataset.tab).classList.add('active');
-      if(b.dataset.tab==='home'){renderHome();renderMeasurements();}
+      if(b.dataset.tab==='home'){renderHome();}
       if(b.dataset.tab==='journal')renderJournal();
       if(b.dataset.tab==='week'){renderWeek();renderMeasurements();}
       if(b.dataset.tab==='analytics')renderAnalytics();
@@ -649,19 +652,14 @@
       const d=$('journalDate').value||todayStr();
       if(state.profile.registrationDate&&d<state.profile.registrationDate)return alert('Нельзя вносить данные до даты регистрации.');
       if(d>todayStr())return alert('Нельзя вносить данные в будущее.');
-      const j={};[['calories','jCalories'],['protein','jProtein'],['fat','jFat'],['carbs','jCarbs'],['steps','jSteps'],['water','jWater']].forEach(([k,id])=>{const v=n($(id).value);if(v!=null)j[k]=v;});
-      j.activity=$('jActivity').checked;state.journal[d]=j;state.ui.journalDate=d;save();renderJournal();renderAnalytics();toast('Данные сохранены');
+      const j={};[['weight','jWeight'],['calories','jCalories'],['protein','jProtein'],['fat','jFat'],['carbs','jCarbs'],['steps','jSteps'],['water','jWater']].forEach(([k,id])=>{const v=n($(id).value);if(v!=null)j[k]=v;});
+      j.activity=$('jActivity').checked;
+      if(j.weight!=null){state.weights[d]=j.weight;if(d===todayStr())state.profile.weight=j.weight;}
+      state.journal[d]=j;state.ui.journalDate=d;state.ui.habitDate=d;save();renderJournal();renderAnalytics();renderHome();toast('Данные сохранены');
     });
-    $('journalDate').addEventListener('change',()=>{state.ui.journalDate=$('journalDate').value;renderJournal();});
-    $('habitDate').addEventListener('change',()=>{state.ui.habitDate=$('habitDate').value;save();renderDailyGoals();});
+    $('journalDate').addEventListener('change',()=>{state.ui.journalDate=$('journalDate').value;state.ui.habitDate=$('journalDate').value;save();renderJournal();});
     $('addDaily').addEventListener('click',()=>{const t=$('newDaily').value.trim();if(!t)return;state.dailyGoals.push({id:'d_'+Date.now(),label:t,fixed:false});$('newDaily').value='';ensureDay(state.ui.habitDate||todayStr());save();renderDailyGoals();});
     $('addWeekly').addEventListener('click',()=>{const t=$('newWeekly').value.trim();if(!t)return;const id='w_'+Date.now();state.weeklyGoals.push({id,label:t,fixed:false});state.weeklyDone[id]=false;$('newWeekly').value='';save();renderWeek();renderAnalytics();});
-    $('saveWeight').addEventListener('click',()=>{
-      const d=$('wDate').value,v=n($('wValue').value);if(!d||v==null||v<20||v>300)return alert('Введите корректную дату и вес.');
-      if(state.profile.registrationDate&&d<state.profile.registrationDate)return alert('Нельзя добавлять замер до даты регистрации.');
-      if(d>todayStr())return alert('Нельзя добавлять замер в будущее.');
-      state.weights[d]=v;if(d===todayStr())state.profile.weight=v;save();renderMeasurements();renderHome();toast('Данные сохранены');
-    });
     $('saveMeasurement').addEventListener('click',()=>{
       const d=$('mDate').value;if(!d)return alert('Выберите дату.');
       if(state.profile.registrationDate&&d<state.profile.registrationDate)return alert('Нельзя добавлять замер до даты регистрации.');
@@ -680,7 +678,7 @@
     load();renderMeasurementFields();bind();renderProfileFields();renderHome();renderWeek();renderJournal();renderAnalytics();
     setInterval(()=>{if(todayStr()!==state._lastDay){state._lastDay=todayStr();rolloverWeek();state.ui.habitDate=todayStr();state.ui.journalDate=todayStr();save();renderHome();renderJournal();renderWeek();renderAnalytics();}},30000);
     if ('serviceWorker' in navigator) {
-      const APP_VERSION='2.10.0', UPDATE_CHECK_MS=2*60*1000; let reloadingForUpdate=false;
+      const APP_VERSION='2.10.2', UPDATE_CHECK_MS=2*60*1000; let reloadingForUpdate=false;
       async function checkRemoteVersion(registration){try{const res=await fetch('./version.json?t='+Date.now(),{cache:'no-store'});if(!res.ok)return;const data=await res.json();if(data&&data.version&&data.version!==APP_VERSION){if(registration&&navigator.serviceWorker.controller)navigator.serviceWorker.controller.postMessage({type:'CLEAR_CACHES_AND_RELOAD'});else location.reload();}}catch(_){}}
       window.addEventListener('load',async()=>{try{const registration=await navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'});if(registration.waiting)registration.waiting.postMessage({type:'SKIP_WAITING'});registration.addEventListener('updatefound',()=>{const worker=registration.installing;if(!worker)return;worker.addEventListener('statechange',()=>{if(worker.state==='installed'&&navigator.serviceWorker.controller)worker.postMessage({type:'SKIP_WAITING'});});});await registration.update();await checkRemoteVersion(registration);setInterval(async()=>{try{await registration.update();}catch(_){}await checkRemoteVersion(registration);},UPDATE_CHECK_MS);document.addEventListener('visibilitychange',async()=>{if(document.visibilityState==='visible'){try{await registration.update();}catch(_){}await checkRemoteVersion(registration);}});}catch(_){}});
       navigator.serviceWorker.addEventListener('message',event=>{if(event.data&&event.data.type==='RELOAD_AFTER_UPDATE'){if(reloadingForUpdate)return;reloadingForUpdate=true;location.reload();}});
