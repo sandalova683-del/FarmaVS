@@ -682,11 +682,34 @@
     load();renderMeasurementFields();bind();renderProfileFields();renderHome();renderWeek();renderJournal();renderAnalytics();
     setInterval(()=>{if(todayStr()!==state._lastDay){state._lastDay=todayStr();rolloverWeek();state.ui.habitDate=todayStr();state.ui.journalDate=todayStr();save();renderHome();renderJournal();renderWeek();renderAnalytics();}},30000);
     if ('serviceWorker' in navigator) {
-      const APP_VERSION='2.10.3', UPDATE_CHECK_MS=2*60*1000; let reloadingForUpdate=false;
-      async function checkRemoteVersion(registration){try{const res=await fetch('./version.json?t='+Date.now(),{cache:'no-store'});if(!res.ok)return;const data=await res.json();if(data&&data.version&&data.version!==APP_VERSION){if(registration&&navigator.serviceWorker.controller)navigator.serviceWorker.controller.postMessage({type:'CLEAR_CACHES_AND_RELOAD'});else location.reload();}}catch(_){}}
-      window.addEventListener('load',async()=>{try{const registration=await navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'});if(registration.waiting)registration.waiting.postMessage({type:'SKIP_WAITING'});registration.addEventListener('updatefound',()=>{const worker=registration.installing;if(!worker)return;worker.addEventListener('statechange',()=>{if(worker.state==='installed'&&navigator.serviceWorker.controller)worker.postMessage({type:'SKIP_WAITING'});});});await registration.update();await checkRemoteVersion(registration);setInterval(async()=>{try{await registration.update();}catch(_){}await checkRemoteVersion(registration);},UPDATE_CHECK_MS);document.addEventListener('visibilitychange',async()=>{if(document.visibilityState==='visible'){try{await registration.update();}catch(_){}await checkRemoteVersion(registration);}});}catch(_){}});
-      navigator.serviceWorker.addEventListener('message',event=>{if(event.data&&event.data.type==='RELOAD_AFTER_UPDATE'){if(reloadingForUpdate)return;reloadingForUpdate=true;location.reload();}});
-      navigator.serviceWorker.addEventListener('controllerchange',()=>{if(reloadingForUpdate)return;reloadingForUpdate=true;location.reload();});
+      const APP_VERSION='2.10.5';
+      let reloadScheduled = false;
+      function reloadOnceAfterUpdate(){
+        if(reloadScheduled) return;
+        if(sessionStorage.getItem('formulavs_update_reload')===APP_VERSION) return;
+        reloadScheduled=true;
+        sessionStorage.setItem('formulavs_update_reload',APP_VERSION);
+        setTimeout(()=>location.reload(),100);
+      }
+      window.addEventListener('load',async()=>{
+        try{
+          const registration=await navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'});
+          registration.addEventListener('updatefound',()=>{
+            const worker=registration.installing;
+            if(!worker)return;
+            worker.addEventListener('statechange',()=>{
+              if(worker.state==='installed'&&navigator.serviceWorker.controller) worker.postMessage({type:'SKIP_WAITING'});
+            });
+          });
+          if(registration.waiting) registration.waiting.postMessage({type:'SKIP_WAITING'});
+          await registration.update();
+          setInterval(async()=>{try{await registration.update();}catch(_){}},2*60*1000);
+          document.addEventListener('visibilitychange',async()=>{
+            if(document.visibilityState==='visible'){try{await registration.update();}catch(_){}}
+          });
+        }catch(_){}
+      });
+      navigator.serviceWorker.addEventListener('controllerchange',reloadOnceAfterUpdate);
     }
   }
   init();

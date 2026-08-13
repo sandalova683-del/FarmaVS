@@ -1,12 +1,6 @@
-const APP_CACHE = 'formulavs-shell-v6';
-const APP_VERSION = '2.10.4';
-const CORE_ASSETS = [
-  './',
-  './index.html',
-  './manifest.webmanifest',
-  './icon.svg',
-  './version.json'
-];
+const APP_CACHE = 'formulavs-shell-v2.10.5';
+const APP_VERSION = '2.10.5';
+const CORE_ASSETS = ['./','./index.html','./manifest.webmanifest','./icon.svg','./version.json'];
 
 self.addEventListener('install', event => {
   event.waitUntil(
@@ -26,7 +20,7 @@ self.addEventListener('activate', event => {
 
 async function networkFirst(request) {
   try {
-    const response = await fetch(request, {cache: 'no-store'});
+    const response = await fetch(request, {cache:'no-store'});
     if (response && response.ok) {
       const cache = await caches.open(APP_CACHE);
       await cache.put(request, response.clone());
@@ -62,25 +56,13 @@ self.addEventListener('fetch', event => {
     event.respondWith(networkFirst(event.request));
     return;
   }
-
   if (event.request.mode === 'navigate') {
     event.respondWith(networkFirst(new Request('./index.html', {method:'GET', headers:event.request.headers})));
     return;
   }
-
   event.respondWith(cacheFirst(event.request));
 });
 
 self.addEventListener('message', event => {
-  if (!event.data) return;
-  if (event.data.type === 'SKIP_WAITING') self.skipWaiting();
-  if (event.data.type === 'CLEAR_CACHES_AND_RELOAD') {
-    event.waitUntil(
-      caches.keys()
-        .then(keys => Promise.all(keys.map(k => caches.delete(k))))
-        .then(() => self.clients.matchAll({type:'window', includeUncontrolled:true}))
-        .then(clients => clients.forEach(client => client.postMessage({type:'RELOAD_AFTER_UPDATE'})))
-        .then(() => self.skipWaiting())
-    );
-  }
+  if (event.data && event.data.type === 'SKIP_WAITING') self.skipWaiting();
 });
