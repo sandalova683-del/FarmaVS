@@ -38,7 +38,7 @@
     .grid2{display:grid;grid-template-columns:1fr 1fr;gap:11px}
     .journal-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 11px}
     .journal-grid .field{margin-bottom:0}
-    .journal-card .check{margin-top:13px}
+    .journal-card .check{margin-top:13px}.journal-date-field input{font-weight:800}.journal-date-field label{font-weight:800}.journal-goals{margin-top:16px;padding-top:16px;border-top:1px solid var(--line)}.journal-goals-title{font-size:.95rem;margin-bottom:10px}.journal-save{margin-top:16px}
     .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
     .field{margin-bottom:11px}.field label{display:block;color:#64748b;font-size:.78rem;font-weight:650;margin:0 0 5px}
     input,select{width:100%;border:1px solid #d8dee8;background:#fbfcfe;color:var(--ink);border-radius:14px;padding:11px 12px;outline:none}
@@ -67,7 +67,7 @@
     .calendarHead{display:flex;justify-content:space-between;align-items:center;gap:8px}.calendarHead button{border:1px solid var(--line);background:#fff;border-radius:12px;padding:7px 10px}
     .weekdays,.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}.weekdays{margin:10px 0 5px;color:#94a3b8;font-size:.68rem;text-align:center}
     .day{min-height:38px;border:1px solid transparent;border-radius:11px;background:#f1f5f9;display:grid;place-items:center;font-size:.76rem;position:relative}
-    .day.click{cursor:pointer}.day.today{outline:2px solid #111827}.day.sel{border-color:var(--accent)}.day.future{opacity:.4}
+    .day.click{cursor:pointer}.day.today{outline:2px solid #111827}.day.sel{border:3px solid var(--accent);box-shadow:0 0 0 2px rgba(37,99,235,.12);font-weight:800}.day.future{opacity:.4}
     .day.preReg{background:#f1f5f9;color:#cbd5e1}.day.p0{background:#fee2e2}.day.p1{background:#ffedd5}.day.p2{background:#fef3c7}.day.p3{background:#dcfce7}.day.p4{background:#bbf7d0}
     .chart{border:1px solid var(--line);border-radius:17px;background:#fafbfc;padding:10px;overflow:hidden}.chart svg{display:block;width:100%;height:auto}
     .table{width:100%;border-collapse:collapse;font-size:.78rem}.table th,.table td{text-align:left;padding:8px 5px;border-bottom:1px solid #eef1f5}.table th{color:#64748b;font-weight:650}
@@ -108,10 +108,10 @@
 
     <section id="view-journal" class="view">
       <div class="card journal-card">
-        <div class="title">📝 Дневник дня</div>
+        <div class="title">📝 Данные за день</div>
         <div class="journal-grid">
-          <div class="field"><label>Дата</label><input id="journalDate" type="date"></div>
-          <div class="field"><label>Вес, кг</label><input id="jWeight" type="number" min="20" max="300" step=".1" placeholder="Последний внесённый вес"></div>
+          <div class="field journal-date-field"><label>Дата</label><input id="journalDate" type="date"></div>
+          <div class="field"><label>Вес, кг</label><input id="jWeight" type="number" min="20" max="300" step=".1" placeholder="Последний вес"></div>
           <div class="field"><label>Ккал</label><input id="jCalories" type="number" min="0"></div>
           <div class="field"><label>Б, г</label><input id="jProtein" type="number" min="0" step=".1"></div>
           <div class="field"><label>Ж, г</label><input id="jFat" type="number" min="0" step=".1"></div>
@@ -120,14 +120,14 @@
           <div class="field"><label>Шаги</label><input id="jSteps" type="number" min="0"></div>
         </div>
         <label class="check journal-activity"><input id="jActivity" type="checkbox"><span>Была тренировка / физическая активность</span></label>
-        <button class="btn green" id="saveJournal" style="margin-top:10px">Сохранить день</button>
-      </div>
 
-      <div class="card">
-        <div class="title">Ежедневные цели</div>
-        <div id="dailyList" class="list"></div>
-        <div class="add"><input id="newDaily" placeholder="Например: 8 000 шагов"><button id="addDaily">+</button></div>
-        <div class="note" style="margin-top:10px">Цели отмечаются за сегодняшний день.</div>
+        <div class="journal-goals">
+          <div class="journal-goals-title">Ежедневные цели</div>
+          <div id="dailyList" class="list"></div>
+          <div class="add"><input id="newDaily" placeholder="Новая ежедневная цель"><button id="addDaily">+</button></div>
+        </div>
+
+        <button class="btn green journal-save" id="saveJournal">Сохранить день</button>
       </div>
     </section>
 
@@ -544,14 +544,21 @@
   }
 
   function renderDailyGoals(){
-    const d=todayStr();
-    state.ui.habitDate=d;
-    ensureDay(d);
-    $('dailyList').innerHTML=state.dailyGoals.map(g=>`<div class="check"><input type="checkbox" data-id="${esc(g.id)}" ${state.dailyDone[d][g.id]?'checked':''}><label>${esc(g.label)}</label>${g.fixed?'':`<button class="x" data-del="${esc(g.id)}">×</button>`}</div>`).join('');
-    $('dailyList').querySelectorAll('[data-id]').forEach(cb=>cb.addEventListener('change',()=>{state.dailyDone[d][cb.dataset.id]=cb.checked;save();renderDailyGoals();renderAnalytics();}));
-    $('dailyList').querySelectorAll('[data-del]').forEach(btn=>btn.addEventListener('click',()=>{state.dailyGoals=state.dailyGoals.filter(g=>g.id!==btn.dataset.del);Object.values(state.dailyDone).forEach(x=>delete x[btn.dataset.del]);save();renderDailyGoals();renderAnalytics();}));
+    const d=state.ui.journalDate||todayStr();
+    const canEdit=!(state.profile.registrationDate&&d<state.profile.registrationDate)&&d<=todayStr();
+    const saved=state.dailyDone[d]||{};
+    $('dailyList').innerHTML=state.dailyGoals.map(g=>`<div class="check"><input type="checkbox" data-id="${esc(g.id)}" ${saved[g.id]===true?'checked':''} ${canEdit?'':'disabled'}><label>${esc(g.label)}</label>${g.fixed?'':`<button class="x" data-del="${esc(g.id)}" type="button">×</button>`}</div>`).join('');
+    $('dailyList').querySelectorAll('[data-id]').forEach(cb=>cb.addEventListener('change',()=>{
+      if(!state.dailyDone[d]) state.dailyDone[d]={};
+      state.dailyDone[d][cb.dataset.id]=cb.checked;
+      save(); renderDailyGoals(); renderCalendar(); renderAnalytics();
+    }));
+    $('dailyList').querySelectorAll('[data-del]').forEach(btn=>btn.addEventListener('click',()=>{
+      state.dailyGoals=state.dailyGoals.filter(g=>g.id!==btn.dataset.del);
+      Object.values(state.dailyDone).forEach(x=>delete x[btn.dataset.del]);
+      save(); renderDailyGoals(); renderAnalytics();
+    }));
   }
-
 
   function renderMeasurements(){
     $('wDate').value=todayStr();$('mDate').value=todayStr();$('wDate').max=todayStr();$('mDate').max=todayStr();
@@ -577,7 +584,9 @@
 
 
   function dayPercent(d){
-    ensureDay(d); if(state.profile.registrationDate&&d<state.profile.registrationDate)return null; ensureDay(d); const total=state.dailyGoals.length, done=state.dailyGoals.filter(g=>state.dailyDone[d][g.id]).length;
+    if(state.profile.registrationDate&&d<state.profile.registrationDate)return null;
+    const doneMap=state.dailyDone[d]||{};
+    const total=state.dailyGoals.length, done=state.dailyGoals.filter(g=>doneMap[g.id]===true).length;
     return total?Math.round(done/total*100):0;
   }
   function renderCalendar(){
@@ -592,7 +601,7 @@
       h+=`<div class="${cls} ${ds<=todayStr()?'click':''}" data-day="${ds}">${d}</div>`;
     }
     $('habitCalendar').innerHTML=h;
-    $('habitCalendar').querySelectorAll('.click').forEach(el=>el.addEventListener('click',()=>{state.ui.habitDate=el.dataset.day;save();renderDayDetail();}));
+    $('habitCalendar').querySelectorAll('.click').forEach(el=>el.addEventListener('click',()=>{state.ui.habitDate=el.dataset.day;save();renderCalendar();}));
     renderDayDetail();
   }
   function renderDayDetail(){
@@ -604,14 +613,27 @@
   const JOURNAL_UNITS={weight:'кг',calories:'ккал',protein:'г',fat:'г',carbs:'г',steps:'шагов',water:'л',activity:'раз'};
   function renderJournal(){
     const d=state.ui.journalDate||todayStr(),j=state.journal[d]||{};
-    $('journalDate').value=d;$('journalDate').min=state.profile.registrationDate||todayStr();$('journalDate').max=todayStr();
-    const weight=state.weights[d]??j.weight??null;
-    $('jWeight').value=weight??'';
-    const lastWeight=Object.keys(state.weights).sort().at(-1);
-    $('jWeight').placeholder=lastWeight?String(state.weights[lastWeight]):'Введите вес';
-    $('jCalories').value=j.calories??'';$('jProtein').value=j.protein??'';$('jFat').value=j.fat??'';$('jCarbs').value=j.carbs??'';$('jSteps').value=j.steps??'';$('jWater').value=j.water??'';$('jActivity').checked=!!j.activity;
+    $('journalDate').value=d;
+    $('journalDate').min=state.profile.registrationDate||todayStr();
+    $('journalDate').max=todayStr();
+
+    const savedWeight=state.weights[d]??j.weight;
+    let previousWeight=null;
+    if(savedWeight==null){
+      const prev=Object.keys(state.weights).filter(x=>x<d).sort().at(-1);
+      if(prev) previousWeight=state.weights[prev];
+    }
+    $('jWeight').value=savedWeight??'';
+    $('jWeight').placeholder=previousWeight!=null?String(previousWeight):'Введите вес';
+    $('jCalories').value=j.calories??'';
+    $('jProtein').value=j.protein??'';
+    $('jFat').value=j.fat??'';
+    $('jCarbs').value=j.carbs??'';
+    $('jSteps').value=j.steps??'';
+    $('jWater').value=j.water??'';
+    $('jActivity').checked=!!j.activity;
     renderDailyGoals();
-}
+  }
   function journalValue(d,k){const j=state.journal[d];if(!j)return null;return k==='activity'?(j.activity?1:0):n(j[k]);}
   function rangeFor(end,period){const e=parseDate(end),s=new Date(e);if(period==='week')s.setDate(s.getDate()-6);else if(period==='month')s.setDate(s.getDate()-29);else if(period==='halfyear')s.setMonth(s.getMonth()-5),s.setDate(1);else if(period==='year')s.setMonth(s.getMonth()-11),s.setDate(1);else if(state.profile.registrationDate)return [parseDate(state.profile.registrationDate),e];return [s,e];}
   function buckets(end,period,key){const [s,e]=rangeFor(end,period),out=[];if(period==='week'){for(let d=new Date(s);d<=e;d.setDate(d.getDate()+1))out.push({label:fmt(iso(d)),dates:[iso(d)]});}else{let cur=new Date(s);while(cur<=e){let a=new Date(cur),b=new Date(cur);if(period==='month')b.setDate(b.getDate()+6);else b.setMonth(b.getMonth()+1),b.setDate(0);if(b>e)b=new Date(e);let ds=[];for(let d=new Date(a);d<=b;d.setDate(d.getDate()+1))ds.push(iso(d));out.push({label:fmt(iso(a))+' — '+fmt(iso(b)),dates:ds});cur=new Date(b);cur.setDate(cur.getDate()+1);}}return out.map(x=>{const v=x.dates.map(d=>journalValue(d,key)).filter(v=>v!=null);return {...x,avg:v.length?round(v.reduce((a,b)=>a+b,0)/v.length):null};});}
@@ -656,13 +678,19 @@
       const d=$('journalDate').value||todayStr();
       if(state.profile.registrationDate&&d<state.profile.registrationDate)return alert('Нельзя вносить данные до даты регистрации.');
       if(d>todayStr())return alert('Нельзя вносить данные в будущее.');
-      const j={};[['weight','jWeight'],['calories','jCalories'],['protein','jProtein'],['fat','jFat'],['carbs','jCarbs'],['steps','jSteps'],['water','jWater']].forEach(([k,id])=>{const v=n($(id).value);if(v!=null)j[k]=v;});
+      const j={};
+      [['weight','jWeight'],['calories','jCalories'],['protein','jProtein'],['fat','jFat'],['carbs','jCarbs'],['steps','jSteps'],['water','jWater']].forEach(([k,id])=>{const v=n($(id).value);j[k]=v;});
       j.activity=$('jActivity').checked;
+      state.journal[d]=j;
       if(j.weight!=null){state.weights[d]=j.weight;if(d===todayStr())state.profile.weight=j.weight;}
-      state.journal[d]=j;state.ui.journalDate=d;save();renderJournal();renderDailyGoals();renderAnalytics();renderHome();toast('Данные сохранены');
+      else delete state.weights[d];
+      state.dailyDone[d]={...(state.dailyDone[d]||{})};
+      for(const g of state.dailyGoals){ if(typeof state.dailyDone[d][g.id]!=='boolean') state.dailyDone[d][g.id]=false; }
+      state.ui.journalDate=d; state.ui.habitDate=d; save();
+      renderJournal(); renderCalendar(); renderAnalytics(); renderHome(); toast('Данные сохранены');
     });
-    $('journalDate').addEventListener('change',()=>{state.ui.journalDate=$('journalDate').value;save();renderJournal();});
-    $('addDaily').addEventListener('click',()=>{const t=$('newDaily').value.trim();if(!t)return;state.dailyGoals.push({id:'d_'+Date.now(),label:t,fixed:false});$('newDaily').value='';ensureDay(todayStr());save();renderDailyGoals();});
+    $('journalDate').addEventListener('change',()=>{state.ui.journalDate=$('journalDate').value;state.ui.habitDate=$('journalDate').value;save();renderJournal();renderCalendar();});
+    $('addDaily').addEventListener('click',()=>{const t=$('newDaily').value.trim();if(!t)return;state.dailyGoals.push({id:'d_'+Date.now(),label:t,fixed:false});$('newDaily').value='';save();renderDailyGoals();renderCalendar();});
     $('addWeekly').addEventListener('click',()=>{const t=$('newWeekly').value.trim();if(!t)return;const id='w_'+Date.now();state.weeklyGoals.push({id,label:t,fixed:false});state.weeklyDone[id]=false;$('newWeekly').value='';save();renderWeek();renderAnalytics();});
     $('saveMeasurement').addEventListener('click',()=>{
       const d=$('mDate').value;if(!d)return alert('Выберите дату.');
