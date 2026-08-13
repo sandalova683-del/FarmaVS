@@ -6,8 +6,8 @@
   <meta name="theme-color" content="#111827">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="FormaVS">
-  <title>FormaVS — здоровье без лишнего шума</title>
+  <meta name="apple-mobile-web-app-title" content="FormulaVS">
+  <title>FormulaVS — Формула жизненной силы и стройности</title>
   <link rel="manifest" href="manifest.webmanifest">
   <style>
     :root{
@@ -27,7 +27,8 @@
     .mark:before{content:"";position:absolute;width:28px;height:4px;border-radius:99px;background:#60a5fa;transform:rotate(-35deg);right:-5px;top:9px;opacity:.9}
     .mark:after{content:"";position:absolute;width:20px;height:20px;border:2px solid rgba(255,255,255,.18);border-radius:50%;left:-7px;bottom:-7px}
     h1{font-size:1.72rem;letter-spacing:-.6px;margin:0}
-    .tagline{margin:4px 0 0;color:var(--muted);font-size:.92rem}
+    .brand-en{margin-top:2px;color:#94a3b8;font-size:.67rem;font-weight:750;letter-spacing:.12em;text-transform:uppercase}
+    .tagline{margin:3px 0 0;color:#475569;font-size:.86rem;font-weight:650}
     .tabs{display:flex;gap:7px;overflow:auto;padding:4px 0 13px;position:sticky;top:0;background:rgba(245,247,251,.94);backdrop-filter:blur(10px);z-index:10}
     .tab{border:1px solid var(--line);background:#fff;border-radius:14px;padding:9px 12px;white-space:nowrap;color:#475569}
     .tab.active{background:#111827;color:#fff;border-color:#111827}
@@ -35,6 +36,9 @@
     .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px;margin:0 0 14px;box-shadow:var(--shadow)}
     .title{font-weight:750;font-size:1.03rem;margin-bottom:14px;display:flex;align-items:center;gap:8px}
     .grid2{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+    .journal-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 11px}
+    .journal-grid .field{margin-bottom:0}
+    .journal-card .check{margin-top:13px}
     .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
     .field{margin-bottom:11px}.field label{display:block;color:#64748b;font-size:.78rem;font-weight:650;margin:0 0 5px}
     input,select{width:100%;border:1px solid #d8dee8;background:#fbfcfe;color:var(--ink);border-radius:14px;padding:11px 12px;outline:none}
@@ -84,6 +88,7 @@
       <div class="mark" aria-label="FormulaVS">VS</div>
       <div>
         <h1>FormulaVS</h1>
+        <div class="brand-en">Formula Vitality Slimness</div>
         <div class="tagline">Формула жизненной силы и стройности</div>
       </div>
     </div>
@@ -92,7 +97,7 @@
   <nav class="tabs">
     <button class="tab active" data-tab="home">Я сегодня</button>
     <button class="tab" data-tab="journal">Дневник дня</button>
-    <button class="tab" data-tab="week">Неделя</button>
+    <button class="tab" data-tab="week">Дневник недели</button>
     <button class="tab" data-tab="analytics">Динамика</button>
     <button class="tab" data-tab="profile">Профиль</button>
   </nav>
@@ -103,28 +108,27 @@
     </section>
 
     <section id="view-journal" class="view">
-      <div class="card">
+      <div class="card journal-card">
         <div class="title">📝 Дневник дня</div>
-        <div class="field"><label>Дата</label><input id="journalDate" type="date"></div>
-        <div class="grid2">
+        <div class="journal-grid">
+          <div class="field"><label>Дата</label><input id="journalDate" type="date"></div>
           <div class="field"><label>Вес, кг</label><input id="jWeight" type="number" min="20" max="300" step=".1" placeholder="Последний внесённый вес"></div>
-          <div class="field"><label>Калории, ккал</label><input id="jCalories" type="number" min="0"></div>
-          <div class="field"><label>Белок, г</label><input id="jProtein" type="number" min="0" step=".1"></div>
-          <div class="field"><label>Жиры, г</label><input id="jFat" type="number" min="0" step=".1"></div>
-          <div class="field"><label>Углеводы, г</label><input id="jCarbs" type="number" min="0" step=".1"></div>
-          <div class="field"><label>Шаги</label><input id="jSteps" type="number" min="0"></div>
+          <div class="field"><label>Ккал</label><input id="jCalories" type="number" min="0"></div>
+          <div class="field"><label>Б, г</label><input id="jProtein" type="number" min="0" step=".1"></div>
+          <div class="field"><label>Ж, г</label><input id="jFat" type="number" min="0" step=".1"></div>
+          <div class="field"><label>У, г</label><input id="jCarbs" type="number" min="0" step=".1"></div>
           <div class="field"><label>Вода, л</label><input id="jWater" type="number" min="0" step=".1"></div>
+          <div class="field"><label>Шаги</label><input id="jSteps" type="number" min="0"></div>
         </div>
-        <label class="check"><input id="jActivity" type="checkbox"><span>Была тренировка / физическая активность</span></label>
+        <label class="check journal-activity"><input id="jActivity" type="checkbox"><span>Была тренировка / физическая активность</span></label>
         <button class="btn green" id="saveJournal" style="margin-top:10px">Сохранить день</button>
       </div>
 
       <div class="card">
         <div class="title">Ежедневные цели</div>
-        <div class="field"><label>День</label><input id="habitDate" type="date"></div>
         <div id="dailyList" class="list"></div>
         <div class="add"><input id="newDaily" placeholder="Например: 8 000 шагов"><button id="addDaily">+</button></div>
-        <div class="note" style="margin-top:10px">Можно открыть любой прошедший день после регистрации и внести то, что забыли отметить.</div>
+        <div class="note" style="margin-top:10px">Цели отмечаются за сегодняшний день.</div>
       </div>
     </section>
 
@@ -216,14 +220,14 @@
       </div>
     </section>
   </main>
-  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormaVS · v2.10.0</span></div>
+  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v2.10.3</span></div>
 </div>
 
 <script>
 (() => {
   'use strict';
 
-  const APP_VERSION = '2.10.2';
+  const APP_VERSION = '2.10.3';
   const KEY = 'formavs_v2';
   const LEGACY_KEY = 'forma_v2';
   const todayStr = () => {
@@ -541,8 +545,9 @@
   }
 
   function renderDailyGoals(){
-    const d=state.ui.journalDate||todayStr(); state.ui.habitDate=d; ensureDay(d);
-    $('habitDate').value=d; $('habitDate').min=state.profile.registrationDate||todayStr(); $('habitDate').max=todayStr();
+    const d=todayStr();
+    state.ui.habitDate=d;
+    ensureDay(d);
     $('dailyList').innerHTML=state.dailyGoals.map(g=>`<div class="check"><input type="checkbox" data-id="${esc(g.id)}" ${state.dailyDone[d][g.id]?'checked':''}><label>${esc(g.label)}</label>${g.fixed?'':`<button class="x" data-del="${esc(g.id)}">×</button>`}</div>`).join('');
     $('dailyList').querySelectorAll('[data-id]').forEach(cb=>cb.addEventListener('change',()=>{state.dailyDone[d][cb.dataset.id]=cb.checked;save();renderDailyGoals();renderAnalytics();}));
     $('dailyList').querySelectorAll('[data-del]').forEach(btn=>btn.addEventListener('click',()=>{state.dailyGoals=state.dailyGoals.filter(g=>g.id!==btn.dataset.del);Object.values(state.dailyDone).forEach(x=>delete x[btn.dataset.del]);save();renderDailyGoals();renderAnalytics();}));
@@ -655,10 +660,10 @@
       const j={};[['weight','jWeight'],['calories','jCalories'],['protein','jProtein'],['fat','jFat'],['carbs','jCarbs'],['steps','jSteps'],['water','jWater']].forEach(([k,id])=>{const v=n($(id).value);if(v!=null)j[k]=v;});
       j.activity=$('jActivity').checked;
       if(j.weight!=null){state.weights[d]=j.weight;if(d===todayStr())state.profile.weight=j.weight;}
-      state.journal[d]=j;state.ui.journalDate=d;state.ui.habitDate=d;save();renderJournal();renderAnalytics();renderHome();toast('Данные сохранены');
+      state.journal[d]=j;state.ui.journalDate=d;save();renderJournal();renderDailyGoals();renderAnalytics();renderHome();toast('Данные сохранены');
     });
-    $('journalDate').addEventListener('change',()=>{state.ui.journalDate=$('journalDate').value;state.ui.habitDate=$('journalDate').value;save();renderJournal();});
-    $('addDaily').addEventListener('click',()=>{const t=$('newDaily').value.trim();if(!t)return;state.dailyGoals.push({id:'d_'+Date.now(),label:t,fixed:false});$('newDaily').value='';ensureDay(state.ui.habitDate||todayStr());save();renderDailyGoals();});
+    $('journalDate').addEventListener('change',()=>{state.ui.journalDate=$('journalDate').value;save();renderJournal();});
+    $('addDaily').addEventListener('click',()=>{const t=$('newDaily').value.trim();if(!t)return;state.dailyGoals.push({id:'d_'+Date.now(),label:t,fixed:false});$('newDaily').value='';ensureDay(todayStr());save();renderDailyGoals();});
     $('addWeekly').addEventListener('click',()=>{const t=$('newWeekly').value.trim();if(!t)return;const id='w_'+Date.now();state.weeklyGoals.push({id,label:t,fixed:false});state.weeklyDone[id]=false;$('newWeekly').value='';save();renderWeek();renderAnalytics();});
     $('saveMeasurement').addEventListener('click',()=>{
       const d=$('mDate').value;if(!d)return alert('Выберите дату.');
@@ -678,7 +683,7 @@
     load();renderMeasurementFields();bind();renderProfileFields();renderHome();renderWeek();renderJournal();renderAnalytics();
     setInterval(()=>{if(todayStr()!==state._lastDay){state._lastDay=todayStr();rolloverWeek();state.ui.habitDate=todayStr();state.ui.journalDate=todayStr();save();renderHome();renderJournal();renderWeek();renderAnalytics();}},30000);
     if ('serviceWorker' in navigator) {
-      const APP_VERSION='2.10.2', UPDATE_CHECK_MS=2*60*1000; let reloadingForUpdate=false;
+      const APP_VERSION='2.10.3', UPDATE_CHECK_MS=2*60*1000; let reloadingForUpdate=false;
       async function checkRemoteVersion(registration){try{const res=await fetch('./version.json?t='+Date.now(),{cache:'no-store'});if(!res.ok)return;const data=await res.json();if(data&&data.version&&data.version!==APP_VERSION){if(registration&&navigator.serviceWorker.controller)navigator.serviceWorker.controller.postMessage({type:'CLEAR_CACHES_AND_RELOAD'});else location.reload();}}catch(_){}}
       window.addEventListener('load',async()=>{try{const registration=await navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'});if(registration.waiting)registration.waiting.postMessage({type:'SKIP_WAITING'});registration.addEventListener('updatefound',()=>{const worker=registration.installing;if(!worker)return;worker.addEventListener('statechange',()=>{if(worker.state==='installed'&&navigator.serviceWorker.controller)worker.postMessage({type:'SKIP_WAITING'});});});await registration.update();await checkRemoteVersion(registration);setInterval(async()=>{try{await registration.update();}catch(_){}await checkRemoteVersion(registration);},UPDATE_CHECK_MS);document.addEventListener('visibilitychange',async()=>{if(document.visibilityState==='visible'){try{await registration.update();}catch(_){}await checkRemoteVersion(registration);}});}catch(_){}});
       navigator.serviceWorker.addEventListener('message',event=>{if(event.data&&event.data.type==='RELOAD_AFTER_UPDATE'){if(reloadingForUpdate)return;reloadingForUpdate=true;location.reload();}});
