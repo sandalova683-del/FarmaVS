@@ -7,7 +7,7 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="FormulaVS">
-  <title>FormulaVS — Формула жизненной силы и стройности</title>
+  <title>FormulaVS</title>
   <link rel="manifest" href="manifest.webmanifest">
   <style>
     :root{
@@ -89,7 +89,6 @@
       <div>
         <h1>FormulaVS</h1>
         <div class="brand-en">Formula Vitality Slimness</div>
-        <div class="tagline">Формула жизненной силы и стройности</div>
       </div>
     </div>
   </header>
@@ -243,7 +242,7 @@
   const fmt = s => parseDate(s).toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric'});
   const esc = s => String(s ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const n = v => Number.isFinite(Number(v)) ? Number(v) : null;
-  const round = (v,d=1) => Math.round(v*10**d)/10;
+  const round = (v,d=1) => Math.round(v*10**d)/10**d;
   const clamp = (v,a,b) => Math.min(b,Math.max(a,v));
 
   const DEFAULT_DAILY = [{id:'veg',label:'🌿 500 г растительной пищи',fixed:true}];
@@ -526,6 +525,13 @@
       <div class="metric"><div class="k">ИМТ</div><div class="v">${nut?nut.bmi.toFixed(1):'—'}</div><div class="s">${nut?bmiCategory(nut.bmi):''}</div></div></div>`;
     if(pr) h+=`<div style="margin-top:13px;display:flex;justify-content:space-between;font-size:.78rem"><span>🎯 ${p.goal==='lose'?'Снизить вес':p.goal==='gain'?'Набрать вес':'Поддержка веса'}</span><b>${pr.pct}%</b></div><div class="progress"><i style="width:${pr.pct}%"></i></div>`;
     h+=`</div>`;
+    if(comp) h+=`<div class="card"><div class="title">🧬 Состав тела</div><div class="metrics">
+      <div class="metric"><div class="k">% жира</div><div class="v">${comp.bf}%</div><div class="s">${comp.bfN!=null?'US Navy':'оценка по ИМТ'}</div></div>
+      <div class="metric"><div class="k">Жировая масса</div><div class="v">${comp.fatMass} кг</div><div class="s">оценка</div></div>
+      <div class="metric"><div class="k">Безжировая масса</div><div class="v">${comp.ffm} кг</div><div class="s">не равна мышечной массе</div></div>
+      <div class="metric"><div class="k">Ориентир по возрасту</div><div class="v"><span class="badge ${comp.cls}">${comp.status}</span></div><div class="s">${comp.range?`${comp.range[0]}–${comp.range[1]}%`:''}</div></div>
+    </div></div>`;
+    else h+=`<div class="card"><div class="title">🧬 Состав тела</div><div class="note">Для US Navy нужны талия + шея; для женщин ещё бёдра. Их можно внести в профиле.</div></div>`;
     if(nut) h+=`<div class="card"><div class="title">🥗 Ориентир питания</div><div class="metrics">
       <div class="metric"><div class="k">BMR</div><div class="v">${Math.round(nut.bmr)}</div><div class="s">ккал/сутки</div></div>
       <div class="metric"><div class="k">Целевая калорийность</div><div class="v">${nut.calories}</div><div class="s">ккал/сутки</div></div>
@@ -534,13 +540,6 @@
       <div class="metric"><div class="k">Углеводы</div><div class="v">${nut.carbs} г</div><div class="s">остаток калорий</div></div>
       <div class="metric"><div class="k">Вода</div><div class="v">${nut.waterL} л</div><div class="s">≈ 35 мл/кг</div></div>
     </div><div class="note" style="margin-top:10px">КБЖУ пересчитываются в начале новой недели по средней динамике веса. Калорийность не опускается ниже BMR + 10%.</div>${nut.safety?`<div class="note warn" style="margin-top:10px">${esc(nut.safety)}</div>`:''}</div>`;
-    if(comp) h+=`<div class="card"><div class="title">🧬 Состав тела</div><div class="metrics">
-      <div class="metric"><div class="k">% жира</div><div class="v">${comp.bf}%</div><div class="s">${comp.bfN!=null?'US Navy':'оценка по ИМТ'}</div></div>
-      <div class="metric"><div class="k">Жировая масса</div><div class="v">${comp.fatMass} кг</div><div class="s">оценка</div></div>
-      <div class="metric"><div class="k">Безжировая масса</div><div class="v">${comp.ffm} кг</div><div class="s">не равна мышечной массе</div></div>
-      <div class="metric"><div class="k">Ориентир по возрасту</div><div class="v"><span class="badge ${comp.cls}">${comp.status}</span></div><div class="s">${comp.range?`${comp.range[0]}–${comp.range[1]}%`:''}</div></div>
-    </div></div>`;
-    else h+=`<div class="card"><div class="title">🧬 Состав тела</div><div class="note">Для US Navy нужны талия + шея; для женщин ещё бёдра. Их можно внести в профиле.</div></div>`;
     $('homeContent').innerHTML=h;
   }
 
@@ -625,7 +624,7 @@
     $('analyticsWeeklyStats').innerHTML=`<div class="note" style="margin-bottom:10px">Текущая неделя: <b>${done} из ${total}</b> целей · <b>${pct}%</b></div><table class="table"><thead><tr><th>Неделя</th><th>Выполнено</th><th>%</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${r.label}</td><td><b>${r.done} из ${r.total}</b></td><td><b>${r.pct}%</b></td></tr>`).join('')}</tbody></table>`;
   }
 
-  function renderAnalytics(){const end=state.ui.analyticsDate||todayStr(),period=state.ui.analyticsPeriod||'week',key=state.ui.analyticsMetric||'steps';$('analyticsDate').value=end;$('analyticsPeriod').value=period;$('analyticsMetric').value=key;const unit=JOURNAL_UNITS[key],rows=buckets(end,period,key),good=rows.filter(x=>x.avg!=null),vals=good.map(x=>x.avg),avg=vals.length?round(vals.reduce((a,b)=>a+b,0)/vals.length):null,delta=vals.length>1?round(vals.at(-1)-vals[0]):null;$('analyticsSummary').innerHTML=avg!=null?`<div class="grid2"><div class="metric"><div class="k">Среднее за выбранный период</div><div class="v">${avg} ${unit}</div><div class="s">${JOURNAL_LABELS[key]}</div></div><div class="metric"><div class="k">Изменение от первого периода</div><div class="v">${delta==null?'—':(delta>0?'+':'')+delta+' '+unit}</div><div class="s">к последнему периоду</div></div></div>`:'<div class="empty">Нет данных за выбранный период.</div>';$('analyticsChart').innerHTML=analyticsChart(rows,unit);$('analyticsTable').innerHTML=good.length?`<table class="table"><thead><tr><th>Период</th><th>Среднее</th><th>Изменение</th></tr></thead><tbody>${good.map((x,i)=>`<tr><td>${x.label}</td><td><b>${x.avg} ${unit}</b></td><td>${i?((x.avg-good[i-1].avg)>0?'+':'')+round(x.avg-good[i-1].avg)+' '+unit:'—'}</td></tr>`).join('')}</tbody></table>`:'';const keys=['weight','calories','protein','fat','carbs','steps','water','activity'];$('analyticsOverview').innerHTML=`<table class="table"><thead><tr><th>Параметр</th><th>Среднее</th><th>Изменение</th></tr></thead><tbody>${keys.map(k=>{const rr=buckets(end,period,k).filter(x=>x.avg!=null),v=rr.length?round(rr.reduce((a,b)=>a+b.avg,0)/rr.length):null,d=rr.length>1?round(rr.at(-1).avg-rr[0].avg):null;return `<tr><td>${JOURNAL_LABELS[k]}</td><td>${v==null?'—':v+' '+JOURNAL_UNITS[k]}</td><td>${d==null?'—':(d>0?'+':'')+d+' '+JOURNAL_UNITS[k]}</td></tr>`}).join('')}</tbody></table>`;renderAnalyticsWeeklyStats();}
+  function renderAnalytics(){const end=state.ui.analyticsDate||todayStr(),period=state.ui.analyticsPeriod||'week',key=state.ui.analyticsMetric||'steps';$('analyticsDate').value=end;$('analyticsPeriod').value=period;$('analyticsMetric').value=key;const unit=JOURNAL_UNITS[key],rows=buckets(end,period,key),good=rows.filter(x=>x.avg!=null),vals=good.map(x=>x.avg),avg=vals.length?round(vals.reduce((a,b)=>a+b,0)/vals.length):null,delta=vals.length>1?round(vals.at(-1)-vals[0]):null;$('analyticsSummary').innerHTML=avg!=null?`<div class="grid2"><div class="metric"><div class="k">Среднее за выбранный период</div><div class="v">${avg} ${unit}</div><div class="s">${JOURNAL_LABELS[key]}</div></div><div class="metric"><div class="k">Изменение от первого периода</div><div class="v">${delta==null?'—':(delta>0?'+':'')+delta+' '+unit}</div><div class="s">к последнему периоду</div></div></div>`:'<div class="empty">Нет данных за выбранный период.</div>';$('analyticsChart').innerHTML=analyticsChart(rows,unit);$('analyticsTable').innerHTML=good.length?`<table class="table"><thead><tr><th>Период</th><th>Среднее</th><th>Изменение</th></tr></thead><tbody>${good.map((x,i)=>`<tr><td>${x.label}</td><td><b>${x.avg} ${unit}</b></td><td>${i?((x.avg-good[i-1].avg)>0?'+':'')+round(x.avg-good[i-1].avg)+' '+unit:'—'}</td></tr>`).join('')}</tbody></table>`:'';const keys=['weight','calories','protein','fat','carbs','steps','water','activity'];$('analyticsOverview').innerHTML=`<table class="table"><thead><tr><th>Параметр</th><th>Среднее</th><th>Изменение</th></tr></thead><tbody>${keys.map(k=>{const rr=buckets(end,period,k).filter(x=>x.avg!=null),v=rr.length?round(rr.reduce((a,b)=>a+b.avg,0)/rr.length):null,d=rr.length>1?round(rr.at(-1).avg-rr[0].avg):null;return `<tr><td>${JOURNAL_LABELS[k]}</td><td>${v==null?'—':v+' '+JOURNAL_UNITS[k]}</td><td>${d==null?'—':(d>0?'+':'')+d+' '+JOURNAL_UNITS[k]}</td></tr>`}).join('')}</tbody></table>`;renderAnalyticsWeeklyStats();renderCalendar();}
   function bind(){
     document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{
       document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
