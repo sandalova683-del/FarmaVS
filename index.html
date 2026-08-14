@@ -109,20 +109,20 @@
     <section id="view-journal" class="view">
       <div class="card journal-card">
         <div class="title">📝 Данные за день</div>
+        <div class="note journal-hint">Выбери день, чтобы внести данные или изменить уже сохранённые данные.</div>
         <div class="journal-grid">
           <div class="field journal-date-field"><label>Дата</label><input id="journalDate" type="date"></div>
           <div class="field"><label>Вес, кг</label><input id="jWeight" type="number" min="20" max="300" step=".1" placeholder="Последний вес"></div>
           <div class="field"><label>Ккал</label><input id="jCalories" type="number" min="0"></div>
-          <div class="field"><label>Б, г</label><input id="jProtein" type="number" min="0" step=".1"></div>
-          <div class="field"><label>Ж, г</label><input id="jFat" type="number" min="0" step=".1"></div>
-          <div class="field"><label>У, г</label><input id="jCarbs" type="number" min="0" step=".1"></div>
+          <div class="field"><label>Белки, г</label><input id="jProtein" type="number" min="0" step=".1"></div>
+          <div class="field"><label>Жиры, г</label><input id="jFat" type="number" min="0" step=".1"></div>
+          <div class="field"><label>Углеводы, г</label><input id="jCarbs" type="number" min="0" step=".1"></div>
           <div class="field"><label>Вода, л</label><input id="jWater" type="number" min="0" step=".1"></div>
           <div class="field"><label>Шаги</label><input id="jSteps" type="number" min="0"></div>
         </div>
         <label class="check journal-activity"><input id="jActivity" type="checkbox"><span>Была тренировка / физическая активность</span></label>
 
         <div class="journal-goals">
-          <div class="note">Выбери день выше, чтобы внести данные за выбранный день или изменить уже сохранённые данные.</div>
           <div id="dailyList" class="list"></div>
           <div class="add"><input id="newDaily" placeholder="Новая ежедневная цель"><button id="addDaily">+</button></div>
         </div>
@@ -176,6 +176,7 @@
     <section id="view-profile" class="view">
       <div class="card">
         <div class="title">👤 Профиль</div>
+        <div class="note" style="margin-top:10px"><b>Заполненные значения после сохранения становятся недоступны для изменения. Пустые поля можно будет заполнить позже.</b></div>
         <div class="grid2">
           <div class="field"><label>Дата регистрации</label><input id="registrationDate" type="date" disabled></div>
           <div class="field"><label>Имя / ник</label><input id="name"></div>
@@ -204,32 +205,27 @@
             </select>
           </div>
         </div>
-        <div class="note">Дата регистрации фиксируется при первом сохранении профиля. Данные остаются в твоём ЛК.</div>
+        <div class="note">Дата регистрации фиксируется при сохранении профиля. Данные остаются в твоём ЛК.</div>
       </div>
 
       <div class="card">
         <div class="title">🧬 Исходные объёмы для оценки % жира</div>
-        <div class="note">Заполненные значения после сохранения становятся недоступны для изменения. Пустые поля можно будет заполнить позже.</div>
         <div class="grid2" id="profileMeasurementFields" style="margin-top:10px"></div>
       </div>
 
-      <div class="card">
-        <div class="title">⚙️ Данные</div>
-        <div class="actions"><button class="btn ghost" id="exportData">Экспорт JSON</button><button class="btn danger" id="resetData">Удалить всё</button></div>
-        <input id="importData" type="file" accept="application/json" class="hidden">
-        <button class="btn ghost" id="chooseImport" style="margin-top:8px">Импорт JSON</button>
-      </div>
-      <button class="btn secondary" id="saveProfile" style="margin-top:2px">Сохранить профиль</button>
+      <div class="note" style="margin-top:12px">Дата регистрации фиксируется при сохранении профиля. Данные остаются в твоём ЛК.</div>
+      <button class="btn secondary" id="saveProfile" style="margin-top:12px">Сохранить профиль</button>
+      <button class="btn danger" id="resetData" style="margin-top:10px">Удалить всё</button>
     </section>
   </main>
-  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v2.10.7</span></div>
+  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v2.10.9</span></div>
 </div>
 
 <script>
 (() => {
   'use strict';
 
-  const APP_VERSION = '2.10.7';
+  const APP_VERSION = '2.10.9';
   const KEY = 'formavs_v2';
   const LEGACY_KEY = 'forma_v2';
   const todayStr = () => {
@@ -683,6 +679,13 @@
       if(b.dataset.tab==='profile')renderProfileFields();
     }));
     setInterval(()=>{try{recalcWeeklyNutrition();const t=document.querySelector('.tab.active')?.dataset.tab;if(t==='home')renderHome();if(t==='analytics')renderAnalytics();if(t==='week')renderWeek();}catch(e){}},60000);
+
+    $('resetData').addEventListener('click',()=>{
+      if(!confirm('Подтвердить удаление? Данные не смогут быть восстановленны')) return;
+      localStorage.removeItem(KEY);
+      localStorage.removeItem(LEGACY_KEY);
+      location.reload();
+    });
 
     $('saveProfile').addEventListener('click',()=>{
       initProfileLocks();
