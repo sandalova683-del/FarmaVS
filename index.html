@@ -72,6 +72,30 @@
     .chart{border:1px solid var(--line);border-radius:17px;background:#fafbfc;padding:10px;overflow:hidden}.chart svg{display:block;width:100%;height:auto}
     .table{width:100%;border-collapse:collapse;font-size:.78rem}.table th,.table td{text-align:left;padding:8px 5px;border-bottom:1px solid #eef1f5}.table th{color:#64748b;font-weight:650}
     .empty{padding:15px;color:#94a3b8;text-align:center;border:1px dashed #d9dee7;border-radius:14px}
+
+    /* Analytics / Progress redesign */
+    .progress-page .title{font-size:1.18rem;margin-bottom:8px}
+    .progress-heading{font-size:1.42rem;font-weight:800;letter-spacing:-.4px;margin:0 0 14px}
+    .progress-section-title{font-size:1.12rem;font-weight:800;margin:2px 0 12px}
+    .progress-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px}
+    .progress-stat{min-width:0}
+    .progress-stat .label{color:#6b7280;font-size:.88rem;margin-bottom:6px}
+    .progress-stat .value{font-size:1.35rem;font-weight:500;letter-spacing:-.3px;white-space:nowrap}
+    .trend-down{color:#16a34a;font-weight:800}.trend-up{color:#ef5b68;font-weight:800}.trend-flat{color:#6b7280;font-weight:800}
+    .progress-metric-tabs{display:flex;gap:10px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:none}
+    .progress-metric-tabs::-webkit-scrollbar{display:none}
+    .progress-metric{border:0;background:#f1f1f1;color:#707070;border-radius:999px;padding:9px 17px;font-weight:600;white-space:nowrap}
+    .progress-metric.active{background:#5b6fe8;color:#fff}
+    .progress-chart-wrap{position:relative;margin:4px 0 0;padding:0 0 2px}
+    .progress-chart{border:0;background:#fff;padding:0;overflow:hidden}
+    .progress-chart svg{width:100%;height:auto;display:block}
+    .progress-legend{display:flex;flex-direction:column;gap:6px;margin:8px 0 15px;color:#6b7280;font-size:.86rem}
+    .legend-dot,.legend-line{display:inline-block;vertical-align:middle;margin-right:8px}.legend-dot{width:10px;height:10px;border-radius:50%;background:#6f83e8}.legend-line{width:18px;height:3px;border-radius:3px;background:#5b6fe8}
+    .progress-periods{display:flex;gap:8px;overflow-x:auto;padding:0 0 10px;scrollbar-width:none}.progress-periods::-webkit-scrollbar{display:none}
+    .progress-period{border:0;background:#f1f1f1;color:#777;border-radius:999px;padding:9px 18px;font-weight:600;white-space:nowrap}.progress-period.active{background:#5b6fe8;color:#fff}
+    .progress-range{display:flex;align-items:center;justify-content:center;gap:14px;margin:3px 0 26px;color:#5b5b5b;font-size:.86rem}.progress-range button{border:0;background:#f1f1f1;color:#aaa;width:38px;height:38px;border-radius:50%;font-size:1.45rem;line-height:1}.progress-range button:not(:disabled){color:#aaa}.progress-range button:disabled{opacity:.55}
+    .weekly-report-list{display:grid;gap:12px}.weekly-report{border:1px solid #e7eaf0;border-radius:18px;padding:15px;background:#fff}.weekly-report-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.weekly-report-date{font-size:1.02rem;font-weight:800}.weekly-report-pct{font-weight:800;padding:7px 13px;border-radius:999px;background:#fef0d5;color:#c4510a}.weekly-report-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}.weekly-report-item .wk-label{font-size:.78rem;color:#6b7280}.weekly-report-item .wk-value{font-size:1.05rem;font-weight:750;margin-top:2px}.weekly-report-item .wk-diff{font-size:.72rem}.progress-empty{padding:20px 8px;color:#94a3b8;text-align:center}
+    @media(max-width:560px){.progress-summary{gap:10px}.progress-stat .label{font-size:.78rem}.progress-stat .value{font-size:1.12rem}.weekly-report-grid{grid-template-columns:repeat(3,1fr);gap:8px}.weekly-report{padding:13px}.progress-heading{font-size:1.3rem}}
     .footerNote{color:#94a3b8;font-size:.68rem;text-align:center;margin:20px 0}
     .hidden{display:none!important}
     @media(max-width:520px){.grid2{grid-template-columns:1fr}.grid3{grid-template-columns:1fr 1fr}.app{padding-left:11px;padding-right:11px}}
@@ -147,29 +171,46 @@
       </div>
     </section>
 
-    <section id="view-analytics" class="view">
+    <section id="view-analytics" class="view progress-page">
       <div class="card">
-        <div class="title">📊 Аналитика и динамика</div>
-        <div class="grid2">
-          <div class="field"><label>Период</label><select id="analyticsPeriod"><option value="week">Неделя</option><option value="month">Месяц</option><option value="halfyear">Полгода</option><option value="year">Год</option><option value="all">Весь период</option></select></div>
-          <div class="field"><label>Параметр</label><select id="analyticsMetric"><option value="weight">Вес, кг</option><option value="calories">Калории, ккал</option><option value="protein">Белок, г</option><option value="fat">Жиры, г</option><option value="carbs">Углеводы, г</option><option value="steps">Шаги</option><option value="water">Вода, л</option><option value="activity">Тренировки</option></select></div>
+        <div class="progress-heading">Прогресс</div>
+        <div class="progress-section-title">Динамика показателей</div>
+        <div id="progressSummary" class="progress-summary"></div>
+        <div id="progressMetricTabs" class="progress-metric-tabs">
+          <button class="progress-metric active" data-metric="weight">Вес</button>
+          <button class="progress-metric" data-metric="fatPercent">% Жира</button>
+          <button class="progress-metric" data-metric="calories">Ккал</button>
+          <button class="progress-metric" data-metric="steps">Шаги</button>
         </div>
-        <div class="field"><label>Дата окончания периода</label><input id="analyticsDate" type="date"></div>
-        <div id="analyticsSummary"></div><div id="analyticsChart" style="margin-top:12px"></div><div id="analyticsTable" style="margin-top:12px"></div>
+        <div id="analyticsChart" class="progress-chart-wrap"></div>
+        <div class="progress-legend">
+          <div><span class="legend-dot"></span><span id="progressLegendPrimary">Вес — ежедневные измерения</span></div>
+          <div><span class="legend-line"></span><span>Тренд — сглаженное изменение</span></div>
+        </div>
+        <div id="progressPeriods" class="progress-periods">
+          <button class="progress-period active" data-period="week">1 нед</button>
+          <button class="progress-period" data-period="month">1 мес</button>
+          <button class="progress-period" data-period="3month">3 мес</button>
+          <button class="progress-period" data-period="halfyear">6 мес</button>
+          <button class="progress-period" data-period="year">1 год</button>
+          <button class="progress-period" data-period="all">Весь период</button>
+        </div>
+        <div class="progress-range"><button id="progressPrev" aria-label="Предыдущий период">‹</button><strong id="progressRangeLabel"></strong><button id="progressNext" aria-label="Следующий период">›</button></div>
       </div>
-      <div class="card"><div class="title">📋 Сводка за выбранный период</div><div id="analyticsOverview"></div></div>
+
       <div class="card">
-        <div class="title">Ежедневные цели — календарь</div>
+        <div class="progress-section-title">Анализ еженедельных отчётов</div>
+        <div id="analyticsWeeklyStats" class="weekly-report-list"></div>
+      </div>
+
+      <div class="card">
+        <div class="progress-section-title">Ежедневные цели — календарь</div>
         <div class="calendarHead">
           <button id="prevMonth">‹</button><strong id="monthTitle"></strong><button id="nextMonth">›</button>
         </div>
         <div class="weekdays"><span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span></div>
         <div id="habitCalendar" class="calendar"></div>
         <div id="dayDetail" style="margin-top:11px"></div>
-      </div>
-      <div class="card">
-        <div class="title">Недельные цели — выполнение</div>
-        <div id="analyticsWeeklyStats"></div>
       </div>
     </section>
 
@@ -218,14 +259,14 @@
       <button class="btn danger" id="resetData" style="margin-top:10px">Удалить всё</button>
     </section>
   </main>
-  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v2.10.9</span></div>
+  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v2.11.0</span></div>
 </div>
 
 <script>
 (() => {
   'use strict';
 
-  const APP_VERSION = '2.10.9';
+  const APP_VERSION = '2.11.0';
   const KEY = 'formavs_v2';
   const LEGACY_KEY = 'forma_v2';
   const todayStr = () => {
@@ -239,6 +280,8 @@
   const iso = d => [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');
   const addDays = (s,n) => { const d=parseDate(s); d.setDate(d.getDate()+n); return iso(d); };
   const fmt = s => parseDate(s).toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric'});
+  const fmtLong = s => parseDate(s).toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric'});
+  const fmtWeekday = s => { const x=parseDate(s).toLocaleDateString('ru-RU',{weekday:'short'}); return x.charAt(0).toUpperCase()+x.slice(1); };
   const esc = s => String(s ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const n = v => Number.isFinite(Number(v)) ? Number(v) : null;
   const round = (v,d=1) => Math.round(v*10**d)/10**d;
@@ -259,7 +302,7 @@
   let state = {
     profile:{name:'',gender:'female',birth:'',height:'',weight:'',target:'',goal:'maintain',steps:'',activity:'1.2',registrationDate:null,baseMeasurements:{},locks:{}},
     weights:{}, measurements:{}, journal:{}, nutritionWeekly:{}, dailyGoals:structuredClone(DEFAULT_DAILY), weeklyGoals:structuredClone(DEFAULT_WEEKLY),
-    dailyDone:{}, weeklyDone:{}, weeklyHistory:{}, ui:{month:todayStr().slice(0,7),habitDate:todayStr(),journalDate:todayStr(),analyticsDate:todayStr(),analyticsPeriod:'week',analyticsMetric:'steps'}
+    dailyDone:{}, weeklyDone:{}, weeklyHistory:{}, ui:{month:todayStr().slice(0,7),habitDate:todayStr(),journalDate:todayStr(),analyticsDate:todayStr(),analyticsPeriod:'week',analyticsMetric:'weight'}
   };
 
   const $ = id => document.getElementById(id);
@@ -629,8 +672,8 @@
     $('dayDetail').innerHTML=`<div class="note"><b>${fmt(d)}</b> · выполнено ${dayPercent(d)}%<div class="list" style="margin-top:7px">${state.dailyGoals.map(g=>`<div class="row"><span>${esc(g.label)}</span><span>${state.dailyDone[d][g.id]?'✅':'—'}</span></div>`).join('')}</div></div>`;
   }
 
-  const JOURNAL_LABELS={weight:'Вес, кг',calories:'Калории, ккал',protein:'Белок, г',fat:'Жиры, г',carbs:'Углеводы, г',steps:'Шаги',water:'Вода, л',activity:'Тренировки'};
-  const JOURNAL_UNITS={weight:'кг',calories:'ккал',protein:'г',fat:'г',carbs:'г',steps:'шагов',water:'л',activity:'раз'};
+  const JOURNAL_LABELS={weight:'Вес',calories:'Ккал',protein:'Белки',fat:'Жиры',carbs:'Углеводы',steps:'Шаги',water:'Вода',activity:'Тренировки',fatPercent:'% Жира'};
+  const JOURNAL_UNITS={weight:'кг',calories:'ккал',protein:'г',fat:'г',carbs:'г',steps:'шагов',water:'л',activity:'раз',fatPercent:'%'};
   function renderJournal(){
     const d=state.ui.journalDate||todayStr(),j=state.journal[d]||{};
     $('journalDate').value=d;
@@ -654,19 +697,125 @@
     $('jActivity').checked=!!j.activity;
     renderDailyGoals();
   }
-  function journalValue(d,k){const j=state.journal[d];if(!j)return null;return k==='activity'?(j.activity?1:0):n(j[k]);}
-  function rangeFor(end,period){const e=parseDate(end),s=new Date(e);if(period==='week')s.setDate(s.getDate()-6);else if(period==='month')s.setDate(s.getDate()-29);else if(period==='halfyear')s.setMonth(s.getMonth()-5),s.setDate(1);else if(period==='year')s.setMonth(s.getMonth()-11),s.setDate(1);else if(state.profile.registrationDate)return [parseDate(state.profile.registrationDate),e];return [s,e];}
+  function bodyFatAt(date){
+    const w=n(state.weights[date] ?? state.journal[date]?.weight);
+    const m=state.measurements[date];
+    if(w==null || !m || !state.profile.height || !state.profile.birth) return null;
+    const p={...state.profile,weight:w};
+    return navyBodyFat(p,m) ?? deurenberg(p);
+  }
+  function journalValue(d,k){const j=state.journal[d];if(k==='fatPercent')return bodyFatAt(d);if(!j)return null;return k==='activity'?(j.activity?1:0):n(j[k]);}
+  function rangeFor(end,period){const e=parseDate(end),s=new Date(e);if(period==='week')s.setDate(s.getDate()-6);else if(period==='month')s.setDate(s.getDate()-29);else if(period==='3month')s.setMonth(s.getMonth()-2),s.setDate(1);else if(period==='halfyear')s.setMonth(s.getMonth()-5),s.setDate(1);else if(period==='year')s.setMonth(s.getMonth()-11),s.setDate(1);else if(state.profile.registrationDate)return [parseDate(state.profile.registrationDate),e];return [s,e];}
   function buckets(end,period,key){const [s,e]=rangeFor(end,period),out=[];if(period==='week'){for(let d=new Date(s);d<=e;d.setDate(d.getDate()+1))out.push({label:fmt(iso(d)),dates:[iso(d)]});}else{let cur=new Date(s);while(cur<=e){let a=new Date(cur),b=new Date(cur);if(period==='month')b.setDate(b.getDate()+6);else b.setMonth(b.getMonth()+1),b.setDate(0);if(b>e)b=new Date(e);let ds=[];for(let d=new Date(a);d<=b;d.setDate(d.getDate()+1))ds.push(iso(d));out.push({label:fmt(iso(a))+' — '+fmt(iso(b)),dates:ds});cur=new Date(b);cur.setDate(cur.getDate()+1);}}return out.map(x=>{const v=x.dates.map(d=>journalValue(d,key)).filter(v=>v!=null);return {...x,avg:v.length?round(v.reduce((a,b)=>a+b,0)/v.length):null};});}
   function analyticsChart(rows,unit){const r=rows.filter(x=>x.avg!=null);if(r.length<2)return '<div class="empty">Нужно минимум два периода с данными для графика.</div>';const W=640,H=250,p=38,vs=r.map(x=>x.avg),mi=Math.min(...vs),ma=Math.max(...vs),rg=ma-mi||1,pts=r.map((x,i)=>[p+i/(r.length-1)*(W-p-20),25+(1-(x.avg-mi)/rg)*(H-70),x]);const path=pts.map((x,i)=>(i?'L':'M')+x[0].toFixed(1)+' '+x[1].toFixed(1)).join(' ');return `<div class="chart"><svg viewBox="0 0 ${W} ${H}"><line x1="${p}" y1="${H-35}" x2="${W-10}" y2="${H-35}" stroke="#dbe1e8"/><path d="${path}" fill="none" stroke="#2563eb" stroke-width="4" stroke-linecap="round"/>${pts.map(x=>`<circle cx="${x[0]}" cy="${x[1]}" r="4" fill="#fff" stroke="#2563eb" stroke-width="3"><title>${esc(x[2].label)}: ${x[2].avg} ${unit}</title></circle>`).join('')}</svg></div>`;}
-  function renderAnalyticsWeeklyStats(){
-    const currentStart=weekStartDate(todayStr()), total=state.weeklyGoals.length, done=state.weeklyGoals.filter(g=>state.weeklyDone[g.id]).length, pct=total?Math.round(done/total*100):0;
-    const history=Object.entries(state.weeklyHistory||{}).sort((a,b)=>a[0].localeCompare(b[0]));
-    const rows=history.slice(-12).map(([k,v])=>({label:`${fmt(v.start)} — ${fmt(v.end)}`,done:v.goals.filter(g=>g.done).length,total:v.goals.length,pct:v.percent}));
-    rows.push({label:`${fmt(currentStart)} — ${fmt(addDays(currentStart,6))}`,done,total,pct});
-    $('analyticsWeeklyStats').innerHTML=`<div class="note" style="margin-bottom:10px">Текущая неделя: <b>${done} из ${total}</b> целей · <b>${pct}%</b></div><table class="table"><thead><tr><th>Неделя</th><th>Выполнено</th><th>%</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${r.label}</td><td><b>${r.done} из ${r.total}</b></td><td><b>${r.pct}%</b></td></tr>`).join('')}</tbody></table>`;
+  function analyticsPeriodDays(period){
+    if(period==='week') return 6;
+    if(period==='month') return 29;
+    if(period==='3month') return 89;
+    if(period==='halfyear') return 179;
+    if(period==='year') return 364;
+    return null;
   }
-
-  function renderAnalytics(){const end=state.ui.analyticsDate||todayStr(),period=state.ui.analyticsPeriod||'week',key=state.ui.analyticsMetric||'steps';$('analyticsDate').value=end;$('analyticsPeriod').value=period;$('analyticsMetric').value=key;const unit=JOURNAL_UNITS[key],rows=buckets(end,period,key),good=rows.filter(x=>x.avg!=null),vals=good.map(x=>x.avg),avg=vals.length?round(vals.reduce((a,b)=>a+b,0)/vals.length):null,delta=vals.length>1?round(vals.at(-1)-vals[0]):null;$('analyticsSummary').innerHTML=avg!=null?`<div class="grid2"><div class="metric"><div class="k">Среднее за выбранный период</div><div class="v">${avg} ${unit}</div><div class="s">${JOURNAL_LABELS[key]}</div></div><div class="metric"><div class="k">Изменение от первого периода</div><div class="v">${delta==null?'—':(delta>0?'+':'')+delta+' '+unit}</div><div class="s">к последнему периоду</div></div></div>`:'<div class="empty">Нет данных за выбранный период.</div>';$('analyticsChart').innerHTML=analyticsChart(rows,unit);$('analyticsTable').innerHTML=good.length?`<table class="table"><thead><tr><th>Период</th><th>Среднее</th><th>Изменение</th></tr></thead><tbody>${good.map((x,i)=>`<tr><td>${x.label}</td><td><b>${x.avg} ${unit}</b></td><td>${i?((x.avg-good[i-1].avg)>0?'+':'')+round(x.avg-good[i-1].avg)+' '+unit:'—'}</td></tr>`).join('')}</tbody></table>`:'';const keys=['weight','calories','protein','fat','carbs','steps','water','activity'];$('analyticsOverview').innerHTML=`<table class="table"><thead><tr><th>Параметр</th><th>Среднее</th><th>Изменение</th></tr></thead><tbody>${keys.map(k=>{const rr=buckets(end,period,k).filter(x=>x.avg!=null),v=rr.length?round(rr.reduce((a,b)=>a+b.avg,0)/rr.length):null,d=rr.length>1?round(rr.at(-1).avg-rr[0].avg):null;return `<tr><td>${JOURNAL_LABELS[k]}</td><td>${v==null?'—':v+' '+JOURNAL_UNITS[k]}</td><td>${d==null?'—':(d>0?'+':'')+d+' '+JOURNAL_UNITS[k]}</td></tr>`}).join('')}</tbody></table>`;renderAnalyticsWeeklyStats();renderCalendar();}
+  function periodStartEnd(end,period){
+    const e=parseDate(end);
+    if(period==='all'){
+      const start=state.profile.registrationDate||Object.keys(state.weights)[0]||end;
+      return [start,end];
+    }
+    const s=new Date(e); s.setDate(s.getDate()-analyticsPeriodDays(period));
+    return [iso(s),end];
+  }
+  function shiftAnalyticsPeriod(dir){
+    const period=state.ui.analyticsPeriod||'week';
+    if(period==='all') return;
+    const end=parseDate(state.ui.analyticsDate||todayStr());
+    const days=analyticsPeriodDays(period)+1;
+    end.setDate(end.getDate()+dir*days);
+    const today=parseDate(todayStr());
+    if(end>today) end.setTime(today.getTime());
+    state.ui.analyticsDate=iso(end); save(); renderAnalytics();
+  }
+  function progressMetricRows(key,end,period){
+    const [start,endDate]=periodStartEnd(end,period);
+    const rows=buckets(endDate,period,key).filter(x=>x.avg!=null);
+    return {start,end:endDate,rows};
+  }
+  function measurementValuesInRange(key,start,end){
+    return Object.keys(state.measurements||{}).filter(d=>d>=start&&d<=end).sort().map(d=>({date:d,value:n(state.measurements[d]?.[key])})).filter(x=>x.value!=null);
+  }
+  function weightValuesInRange(start,end){
+    return Object.keys(state.weights||{}).filter(d=>d>=start&&d<=end).sort().map(d=>({date:d,value:n(state.weights[d])})).filter(x=>x.value!=null);
+  }
+  function changeArrow(diff, unit, invert=false){
+    if(diff==null) return '<span class="trend-flat">—</span>';
+    if(Math.abs(diff)<0.05) return `<span class="trend-flat">0 ${unit} →</span>`;
+    const up=diff>0;
+    const positive=invert?!up:!up;
+    const cls=positive?'trend-down':'trend-up';
+    return `<span class="${cls}">${diff>0?'+':''}${round(diff)} ${unit} ${up?'↑':'↓'}</span>`;
+  }
+  function periodSummary(start,end){
+    const w=weightValuesInRange(start,end);
+    const m=measurementValuesInRange('waist',start,end);
+    const f=Object.keys(state.measurements||{}).filter(d=>d>=start&&d<=end).sort().map(d=>({date:d,value:bodyFatAt(d)})).filter(x=>x.value!=null);
+    const summary=(arr,unit)=>{if(arr.length<2)return `<span class="trend-flat">0 ${unit} →</span>`;const d=round(arr.at(-1).value-arr[0].value);const cls=d<0?'trend-down':d>0?'trend-up':'trend-flat';const arrow=d<0?'↓':d>0?'↑':'→';return `<span class="${cls}">${d>0?'+':''}${d} ${unit} ${arrow}</span>`};
+    return `<div class="progress-stat"><div class="label">Вес</div><div class="value">${summary(w,'кг')}</div></div>
+      <div class="progress-stat"><div class="label">Талия</div><div class="value">${summary(m,'см')}</div></div>
+      <div class="progress-stat"><div class="label">% Жира</div><div class="value">${summary(f,'%')}</div></div>`;
+  }
+  function renderProgressChart(key,end,period){
+    const data=progressMetricRows(key,end,period).rows;
+    if(!data.length) return '<div class="progress-empty">Нет данных за выбранный период.</div>';
+    const W=760,H=285,left=42,right=16,top=18,bottom=48;
+    const vals=data.map(x=>x.avg), min=Math.min(...vals), max=Math.max(...vals), range=max-min||1;
+    const x=i=>data.length===1?(W+left-right)/2:left+i/(data.length-1)*(W-left-right);
+    const y=v=>top+(1-(v-min)/range)*(H-top-bottom);
+    const pts=data.map((d,i)=>[x(i),y(d.avg),d]);
+    const smooth=pts.map((p,i)=>{let a=Math.max(0,i-1),b=Math.min(pts.length-1,i+1);return [p[0],(pts[a][1]+p[1]+pts[b][1])/3,p[2]]});
+    const path=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
+    const trend=smooth.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
+    const grid=[0,1,2,3].map(i=>{const yy=top+i*(H-top-bottom)/3;const v=max-(range*i/3);return `<line x1="${left}" y1="${yy}" x2="${W-right}" y2="${yy}" stroke="#edf0f4" stroke-dasharray="5 6"/><text x="4" y="${yy+5}" fill="#8a8f98" font-size="13">${round(v)}</text>`}).join('');
+    const labels=pts.map((p,i)=>{if(data.length>10&&i%Math.ceil(data.length/7)!==0&&i!==data.length-1)return '';const lab=period==='week'?fmtWeekday(p[2].dates[0]):p[2].label.split(' — ')[0];return `<text x="${p[0]}" y="${H-13}" text-anchor="middle" fill="#8a8f98" font-size="12">${esc(lab)}</text>`}).join('');
+    const circles=pts.map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="4.6" fill="#7184e7" stroke="#fff" stroke-width="2"><title>${esc(p[2].label)}: ${p[2].avg} ${JOURNAL_UNITS[key]}</title></circle>`).join('');
+    const unit=JOURNAL_UNITS[key];
+    return `<div class="progress-chart"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="График ${esc(JOURNAL_LABELS[key])}">${grid}<path d="${path}" fill="none" stroke="#9fb0f2" stroke-width="2" opacity=".65"/><path d="${trend}" fill="none" stroke="#5b6fe8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>${circles}${labels}</svg></div>`;
+  }
+  function weeklyReportData(){
+    const entries=Object.entries(state.weeklyHistory||{}).sort((a,b)=>a[0].localeCompare(b[0]));
+    const current=weekStartDate(todayStr());
+    const all=entries.map(([key,v])=>({key,start:v.start,end:v.end,goals:v.goals||[],pct:v.percent??0}));
+    if(!all.some(x=>x.key===current)){
+      const goals=state.weeklyGoals.map(g=>({id:g.id,label:g.label,fixed:g.fixed,done:!!state.weeklyDone[g.id]}));
+      all.push({key:current,start:current,end:addDays(current,6),goals,pct:goals.length?Math.round(goals.filter(g=>g.done).length/goals.length*100):0});
+    }
+    return all.sort((a,b)=>a.start.localeCompare(b.start)).slice(-12).reverse();
+  }
+  function weeklyReportMetrics(start,end){
+    const weights=weightValuesInRange(start,end), measures=measurementValuesInRange('waist',start,end), fats=Object.keys(state.measurements||{}).filter(d=>d>=start&&d<=end).sort().map(d=>({date:d,value:bodyFatAt(d)})).filter(x=>x.value!=null);
+    const avg=weights.length?round(weights.reduce((a,b)=>a+b.value,0)/weights.length):null;
+    const min=weights.length?Math.min(...weights.map(x=>x.value)):null;
+    const waist=measures.length?measures.at(-1).value:null;
+    const fat=fats.length?fats.at(-1).value:null;
+    return {avg,min,waist,fat};
+  }
+  function renderAnalyticsWeeklyStats(){
+    const rows=weeklyReportData();
+    if(!rows.length){$('analyticsWeeklyStats').innerHTML='<div class="progress-empty">Пока нет завершённых недельных отчётов.</div>';return;}
+    $('analyticsWeeklyStats').innerHTML=rows.map(r=>{const m=weeklyReportMetrics(r.start,r.end);const done=r.goals.filter(g=>g.done).length,total=r.goals.length,pct=total?Math.round(done/total*100):0;return `<div class="weekly-report"><div class="weekly-report-head"><div class="weekly-report-date">${fmtLong(r.start)} — ${fmtLong(r.end)}</div><div class="weekly-report-pct">${pct}%</div></div><div class="weekly-report-grid"><div class="weekly-report-item"><div class="wk-label">% Жира</div><div class="wk-value">${m.fat!=null?m.fat+' %':'—'}</div></div><div class="weekly-report-item"><div class="wk-label">Средний вес</div><div class="wk-value">${m.avg!=null?m.avg+' кг':'—'}</div></div><div class="weekly-report-item"><div class="wk-label">Мин. вес</div><div class="wk-value">${m.min!=null?m.min+' кг':'—'}</div></div><div class="weekly-report-item"><div class="wk-label">Талия</div><div class="wk-value">${m.waist!=null?m.waist+' см':'—'}</div></div><div class="weekly-report-item"><div class="wk-label">Недельные цели</div><div class="wk-value">${done} из ${total}</div></div><div class="weekly-report-item"><div class="wk-label">Статус</div><div class="wk-value">${pct===100?'✓ Выполнено':pct>0?'В процессе':'Не выполнено'}</div></div></div><div class="list" style="margin-top:10px">${r.goals.map(g=>`<div class="row"><span>${esc(g.label)}</span><span class="${g.done?'text-success':'text-danger'}">${g.done?'✓ Выполнено':'✕ Не выполнено'}</span></div>`).join('')}</div></div>`}).join('');
+  }
+  function renderAnalytics(){
+    const end=state.ui.analyticsDate||todayStr(),period=state.ui.analyticsPeriod||'week',key=state.ui.analyticsMetric||'weight';
+    const [start,endDate]=periodStartEnd(end,period);
+    $('progressSummary').innerHTML=periodSummary(start,endDate);
+    document.querySelectorAll('.progress-metric').forEach(b=>b.classList.toggle('active',b.dataset.metric===key));
+    document.querySelectorAll('.progress-period').forEach(b=>b.classList.toggle('active',b.dataset.period===period));
+    $('progressLegendPrimary').textContent=`${JOURNAL_LABELS[key]} — ${key==='weight'?'ежедневные измерения':'значения за период'}`;
+    $('analyticsChart').innerHTML=renderProgressChart(key,endDate,period);
+    $('progressRangeLabel').textContent=`${fmtLong(start)} — ${fmtLong(endDate)}`;
+    const today=todayStr();$('progressNext').disabled=period==='all'||endDate>=today;
+    renderAnalyticsWeeklyStats();
+    renderCalendar();
+  }
   function bind(){
     document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{
       document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
@@ -733,9 +882,10 @@
       if(!Object.keys(m).length)return alert('Введите хотя бы один объём.');
       state.measurements[d]=m;state.ui.measureDate=d;save();renderWeek();toast('Данные сохранены');
     });
-    $('analyticsPeriod').addEventListener('change',()=>{state.ui.analyticsPeriod=$('analyticsPeriod').value;save();renderAnalytics();});
-    $('analyticsMetric').addEventListener('change',()=>{state.ui.analyticsMetric=$('analyticsMetric').value;save();renderAnalytics();});
-    $('analyticsDate').addEventListener('change',()=>{state.ui.analyticsDate=$('analyticsDate').value;save();renderAnalytics();});
+    document.querySelectorAll('.progress-metric').forEach(b=>b.addEventListener('click',()=>{state.ui.analyticsMetric=b.dataset.metric;save();renderAnalytics();}));
+    document.querySelectorAll('.progress-period').forEach(b=>b.addEventListener('click',()=>{state.ui.analyticsPeriod=b.dataset.period;save();renderAnalytics();}));
+    $('progressPrev').addEventListener('click',()=>shiftAnalyticsPeriod(-1));
+    $('progressNext').addEventListener('click',()=>shiftAnalyticsPeriod(1));
     $('prevMonth').addEventListener('click',()=>{const [y,m]=state.ui.month.split('-').map(Number);const d=new Date(y,m-2,1);state.ui.month=iso(d).slice(0,7);save();renderCalendar();});
     $('nextMonth').addEventListener('click',()=>{const [y,m]=state.ui.month.split('-').map(Number);const d=new Date(y,m,1);state.ui.month=iso(d).slice(0,7);save();renderCalendar();});
   }
