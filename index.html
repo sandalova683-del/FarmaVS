@@ -94,8 +94,8 @@
     .progress-periods{display:flex;gap:8px;overflow-x:auto;padding:0 0 10px;scrollbar-width:none}.progress-periods::-webkit-scrollbar{display:none}
     .progress-period{border:0;background:#f1f1f1;color:#777;border-radius:999px;padding:9px 18px;font-weight:600;white-space:nowrap}.progress-period.active{background:#5b6fe8;color:#fff}
     .progress-range{display:flex;align-items:center;justify-content:center;gap:14px;margin:3px 0 26px;color:#5b5b5b;font-size:.86rem}.progress-range button{border:0;background:#f1f1f1;color:#aaa;width:38px;height:38px;border-radius:50%;font-size:1.45rem;line-height:1}.progress-range button:not(:disabled){color:#aaa}.progress-range button:disabled{opacity:.55}
-    .weekly-report-list{display:grid;gap:12px}.weekly-report{border:1px solid #e7eaf0;border-radius:18px;padding:15px;background:#fff}.weekly-report-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.weekly-report-date{font-size:1.02rem;font-weight:800}.weekly-report-pct{font-weight:800;padding:7px 13px;border-radius:999px;background:#fef0d5;color:#c4510a}.weekly-report-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}.weekly-report-item .wk-label{font-size:.78rem;color:#6b7280}.weekly-report-item .wk-value{font-size:1.05rem;font-weight:750;margin-top:2px}.weekly-report-item .wk-diff{font-size:.72rem}.progress-empty{padding:20px 8px;color:#94a3b8;text-align:center}
-    @media(max-width:560px){.progress-summary{gap:10px}.progress-stat .label{font-size:.78rem}.progress-stat .value{font-size:1.12rem}.weekly-report-grid{grid-template-columns:repeat(3,1fr);gap:8px}.weekly-report{padding:13px}.progress-heading{font-size:1.3rem}}
+    .weekly-report-list{display:grid;gap:12px}.weekly-report{border:1px solid #e7eaf0;border-radius:18px;padding:15px;background:#fff}.weekly-report-date{font-size:1.02rem;font-weight:800;margin-bottom:14px}.weekly-report-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px 12px}.weekly-report-item .wk-label{font-size:.78rem;color:#6b7280}.weekly-report-item .wk-value{font-size:1.02rem;font-weight:750;margin-top:2px}.weekly-report-bottom{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px 12px;margin-top:13px;align-items:end}.weekly-goal-summary{margin:0;font-size:.92rem}.weekly-goal-summary b{font-size:1rem}.weekly-training{font-size:.82rem;color:#475569;font-weight:600;text-align:right;align-self:end}.weekly-goals-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 18px;margin-top:9px}.weekly-goal{display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0;font-size:.74rem;color:#475569}.weekly-goal-label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.weekly-goal-status{font-size:.9rem;font-weight:800;flex:0 0 auto}.weekly-goal-status.done{color:#16a34a}.weekly-goal-status.not-done{color:#f43f5e}.progress-empty{padding:20px 8px;color:#94a3b8;text-align:center}
+    @media(max-width:560px){.progress-summary{gap:10px}.progress-stat .label{font-size:.78rem}.progress-stat .value{font-size:1.12rem}.weekly-report-grid{grid-template-columns:repeat(3,1fr);gap:12px 8px}.weekly-report-bottom{grid-template-columns:1fr 1fr 1fr;gap:10px 8px}.weekly-report{padding:13px}.weekly-goals-grid{gap:6px 10px}.weekly-goal{font-size:.72rem}.progress-heading{font-size:1.3rem}}
     .footerNote{color:#94a3b8;font-size:.68rem;text-align:center;margin:20px 0}
     .hidden{display:none!important}
     @media(max-width:520px){.grid2{grid-template-columns:1fr}.grid3{grid-template-columns:1fr 1fr}.app{padding-left:11px;padding-right:11px}}
@@ -791,17 +791,35 @@
     return all.sort((a,b)=>a.start.localeCompare(b.start)).slice(-12).reverse();
   }
   function weeklyReportMetrics(start,end){
-    const weights=weightValuesInRange(start,end), measures=measurementValuesInRange('waist',start,end), fats=Object.keys(state.measurements||{}).filter(d=>d>=start&&d<=end).sort().map(d=>({date:d,value:bodyFatAt(d)})).filter(x=>x.value!=null);
+    const weights=weightValuesInRange(start,end);
     const avg=weights.length?round(weights.reduce((a,b)=>a+b.value,0)/weights.length):null;
     const min=weights.length?Math.min(...weights.map(x=>x.value)):null;
-    const waist=measures.length?measures.at(-1).value:null;
-    const fat=fats.length?fats.at(-1).value:null;
-    return {avg,min,waist,fat};
+    const latestMeasurement=(key)=>{const rows=measurementValuesInRange(key,start,end);return rows.length?rows.at(-1).value:null;};
+    const fatRows=Object.keys(state.measurements||{}).filter(d=>d>=start&&d<=end).sort().map(d=>({date:d,value:bodyFatAt(d)})).filter(x=>x.value!=null);
+    return {
+      fat:fatRows.length?fatRows.at(-1).value:null,
+      avg,min,
+      waist:latestMeasurement('waist'),hips:latestMeasurement('hips'),chest:latestMeasurement('chest'),
+      armR:latestMeasurement('armR'),armL:latestMeasurement('armL'),legR:latestMeasurement('legR'),legL:latestMeasurement('legL')
+    };
   }
   function renderAnalyticsWeeklyStats(){
     const rows=weeklyReportData();
     if(!rows.length){$('analyticsWeeklyStats').innerHTML='<div class="progress-empty">Пока нет завершённых недельных отчётов.</div>';return;}
-    $('analyticsWeeklyStats').innerHTML=rows.map(r=>{const m=weeklyReportMetrics(r.start,r.end);const done=r.goals.filter(g=>g.done).length,total=r.goals.length,pct=total?Math.round(done/total*100):0;return `<div class="weekly-report"><div class="weekly-report-head"><div class="weekly-report-date">${fmtLong(r.start)} — ${fmtLong(r.end)}</div><div class="weekly-report-pct">${pct}%</div></div><div class="weekly-report-grid"><div class="weekly-report-item"><div class="wk-label">% Жира</div><div class="wk-value">${m.fat!=null?m.fat+' %':'—'}</div></div><div class="weekly-report-item"><div class="wk-label">Средний вес</div><div class="wk-value">${m.avg!=null?m.avg+' кг':'—'}</div></div><div class="weekly-report-item"><div class="wk-label">Мин. вес</div><div class="wk-value">${m.min!=null?m.min+' кг':'—'}</div></div><div class="weekly-report-item"><div class="wk-label">Талия</div><div class="wk-value">${m.waist!=null?m.waist+' см':'—'}</div></div><div class="weekly-report-item"><div class="wk-label">Недельные цели</div><div class="wk-value">${done} из ${total}</div></div><div class="weekly-report-item"><div class="wk-label">Статус</div><div class="wk-value">${pct===100?'✓ Выполнено':pct>0?'В процессе':'Не выполнено'}</div></div></div><div class="list" style="margin-top:10px">${r.goals.map(g=>`<div class="row"><span>${esc(g.label)}</span><span class="${g.done?'text-success':'text-danger'}">${g.done?'✓ Выполнено':'✕ Не выполнено'}</span></div>`).join('')}</div></div>`}).join('');
+    const metric=(label,value,unit='')=>`<div class="weekly-report-item"><div class="wk-label">${label}</div><div class="wk-value">${value!=null?value+' '+unit:'—'}</div></div>`;
+    $('analyticsWeeklyStats').innerHTML=rows.map(r=>{
+      const m=weeklyReportMetrics(r.start,r.end);
+      const done=r.goals.filter(g=>g.done).length,total=r.goals.length,pct=total?Math.round(done/total*100):0;
+      const goals=r.goals.map(g=>`<div class="weekly-goal"><span class="weekly-goal-label">${esc(g.label)}</span><span class="weekly-goal-status ${g.done?'done':'not-done'}">${g.done?'✓':'✕'}</span></div>`).join('');
+      let trainingCount=0;
+      for(let d=parseDate(r.start); d<=parseDate(r.end); d.setDate(d.getDate()+1)){ const day=state.journal[iso(d)]; if(day && day.activity) trainingCount++; }
+      return `<div class="weekly-report"><div class="weekly-report-date">${fmtLong(r.start)} — ${fmtLong(r.end)}</div><div class="weekly-report-grid">
+        ${metric('% Жира',m.fat,'%')} ${metric('Средний вес',m.avg,'кг')} ${metric('Мин. вес',m.min,'кг')}
+        ${metric('Талия',m.waist,'см')} ${metric('Бёдра',m.hips,'см')} ${metric('Грудь',m.chest,'см')}
+        ${metric('Пр. рука',m.armR,'см')} ${metric('Лев. рука',m.armL,'см')}
+        ${metric('Пр. нога',m.legR,'см')} ${metric('Лев. нога',m.legL,'см')}
+      </div><div class="weekly-report-bottom"><div class="weekly-goal-summary"><b>${done}/${total}</b> целей · <b>${pct}%</b><div class="weekly-goals-grid">${goals}</div></div><div class="weekly-training">Кол-во тренировок: ${trainingCount}</div></div></div>`;
+    }).join('');
   }
   function renderAnalytics(){
     const end=state.ui.analyticsDate||todayStr(),period=state.ui.analyticsPeriod||'week',key=state.ui.analyticsMetric||'weight';
