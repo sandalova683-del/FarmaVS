@@ -268,14 +268,14 @@
       <button class="btn danger" id="resetData" style="margin-top:10px">Удалить всё</button>
     </section>
   </main>
-  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v2.11.8</span></div>
+  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v2.11.9</span></div>
 </div>
 
 <script>
 (() => {
   'use strict';
 
-  const APP_VERSION = '2.11.8';
+  const APP_VERSION = '2.11.9';
   const KEY = 'formavs_v2';
   const LEGACY_KEY = 'forma_v2';
   const todayStr = () => {
@@ -338,20 +338,35 @@
     const p=state.profile;
     if(!p.registrationDate) return;
     const keys=['name','gender','birth','height','weight','target','goal','steps','activity'];
+    const d=p.registrationDate;
+    const registrationDayWeight=n(state.weights?.[d] ?? state.journal?.[d]?.weight);
+
+    // Migration/repair: the registration weight is the immutable starting point.
+    // If the old build accidentally replaced profile.weight with a later value,
+    // prefer the weight recorded on the registration date when it exists.
     if(!p.registrationSnapshot || typeof p.registrationSnapshot!=='object'){
       p.registrationSnapshot={};
       for(const key of keys){
+        if(key==='weight') continue;
         if(p[key]!=='' && p[key]!=null) p.registrationSnapshot[key]=p[key];
       }
+      if(registrationDayWeight!=null) p.registrationSnapshot.weight=String(registrationDayWeight);
+      else if(p.weight!=='' && p.weight!=null) p.registrationSnapshot.weight=p.weight;
     }
+
     const snap=p.registrationSnapshot;
+    // If a previous version created a snapshot from the already-updated profile
+    // weight, repair it from the registration-day record.
+    if(registrationDayWeight!=null && snap.weight!=null && n(snap.weight)!==registrationDayWeight){
+      snap.weight=String(registrationDayWeight);
+    }
+    if(snap.weight==null && registrationDayWeight!=null) snap.weight=String(registrationDayWeight);
+
     for(const key of keys){
       if(snap[key]!=='' && snap[key]!=null) p[key]=snap[key];
       else if(p[key]!=='' && p[key]!=null) snap[key]=p[key];
     }
-    const d=p.registrationDate;
-    const regWeight=n(state.weights?.[d] ?? state.journal?.[d]?.weight ?? snap.weight ?? p.weight);
-    if(regWeight!=null){ p.weight=String(snap.weight ?? regWeight); snap.weight=String(snap.weight ?? regWeight); }
+    if(snap.weight!=null) p.weight=String(snap.weight);
     save();
   }
   const PROFILE_LOCK_FIELDS=['name','gender','birth','height','weight','target','goal','steps','activity'];
@@ -582,7 +597,7 @@
   }
 
   function progress(p){
-    const target=n(p.target), start=state.weights[p.registrationDate]??n(p.weight), current=n(p.weight);
+    const target=n(p.target), start=n(p.registrationSnapshot?.weight ?? p.weight), current=n(state.weights?.[Object.keys(state.weights||{}).sort().at(-1)] ?? p.weight);
     if(target==null||start==null||current==null) return null;
     if(Math.abs(target-start)<0.01) return {pct:Math.abs(current-target)<0.5?100:0,diff:round(current-target,1),label:'Цель совпадает со стартовым весом'};
     const lose=target<start;
