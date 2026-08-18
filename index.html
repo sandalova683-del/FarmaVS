@@ -138,6 +138,7 @@
           <div class="field journal-date-field"><label>Дата</label><input id="journalDate" type="date"></div>
           <div class="field"><label>Вес, кг</label><input id="jWeight" type="number" min="20" max="300" step=".1" placeholder="Последний вес"></div>
           <div class="field"><label>Ккал</label><input id="jCalories" type="number" min="0"></div>
+          <div class="field"><label>Потраченные калории, ккал</label><input id="jBurnedCalories" type="number" min="0"></div>
           <div class="field"><label>Белки, г</label><input id="jProtein" type="number" min="0" step=".1"></div>
           <div class="field"><label>Жиры, г</label><input id="jFat" type="number" min="0" step=".1"></div>
           <div class="field"><label>Углеводы, г</label><input id="jCarbs" type="number" min="0" step=".1"></div>
@@ -145,6 +146,7 @@
           <div class="field"><label>Шаги</label><input id="jSteps" type="number" min="0"></div>
         </div>
         <label class="check journal-activity"><input id="jActivity" type="checkbox"><span>Была тренировка / физическая активность</span></label>
+        <div id="journalEnergySummary" class="note" style="margin-top:10px"></div>
 
         <div class="journal-goals">
           <div id="dailyList" class="list"></div>
@@ -182,6 +184,8 @@
           <button class="progress-metric" data-metric="fatPercent">% Жира</button>
           <button class="progress-metric" data-metric="calories">Ккал</button>
           <button class="progress-metric" data-metric="steps">Шаги</button>
+          <button class="progress-metric" data-metric="totalBurned">Всего потрачено</button>
+          <button class="progress-metric" data-metric="calorieBalance">Баланс ккал</button>
         </div>
         <div id="analyticsChart" class="progress-chart-wrap"></div>
         <div class="progress-legend">
@@ -264,14 +268,14 @@
       <button class="btn danger" id="resetData" style="margin-top:10px">Удалить всё</button>
     </section>
   </main>
-  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v2.11.5</span></div>
+  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v2.11.6</span></div>
 </div>
 
 <script>
 (() => {
   'use strict';
 
-  const APP_VERSION = '2.11.5';
+  const APP_VERSION = '2.11.6';
   const KEY = 'formavs_v2';
   const LEGACY_KEY = 'forma_v2';
   const todayStr = () => {
@@ -677,8 +681,8 @@
     $('dayDetail').innerHTML=`<div class="note"><b>${fmt(d)}</b> · выполнено ${dayPercent(d)}%<div class="list" style="margin-top:7px">${state.dailyGoals.map(g=>`<div class="row"><span>${esc(g.label)}</span><span>${state.dailyDone[d][g.id]?'✅':'—'}</span></div>`).join('')}</div></div>`;
   }
 
-  const JOURNAL_LABELS={weight:'Вес',calories:'Ккал',protein:'Белки',fat:'Жиры',carbs:'Углеводы',steps:'Шаги',water:'Вода',activity:'Тренировки',fatPercent:'% Жира'};
-  const JOURNAL_UNITS={weight:'кг',calories:'ккал',protein:'г',fat:'г',carbs:'г',steps:'шагов',water:'л',activity:'раз',fatPercent:'%'};
+  const JOURNAL_LABELS={weight:'Вес',calories:'Ккал',protein:'Белки',fat:'Жиры',carbs:'Углеводы',steps:'Шаги',water:'Вода',activity:'Тренировки',fatPercent:'% Жира',totalBurned:'Всего потрачено',calorieBalance:'Баланс ккал'};
+  const JOURNAL_UNITS={weight:'кг',calories:'ккал',protein:'г',fat:'г',carbs:'г',steps:'шагов',water:'л',activity:'раз',fatPercent:'%',totalBurned:'ккал',calorieBalance:'ккал'};
   function renderJournal(){
     const d=state.ui.journalDate||todayStr(),j=state.journal[d]||{};
     $('journalDate').value=d;
@@ -694,12 +698,15 @@
     $('jWeight').value=savedWeight??'';
     $('jWeight').placeholder=previousWeight!=null?String(previousWeight):'Введите вес';
     $('jCalories').value=j.calories??'';
+    $('jBurnedCalories').value=j.burnedCalories??'';
     $('jProtein').value=j.protein??'';
     $('jFat').value=j.fat??'';
     $('jCarbs').value=j.carbs??'';
     $('jSteps').value=j.steps??'';
     $('jWater').value=j.water??'';
     $('jActivity').checked=!!j.activity;
+    const total=totalBurnedAt(d), balance=calorieBalanceAt(d);
+    $('journalEnergySummary').innerHTML=total!=null ? `Всего потрачено: <b>${round(total,0)} ккал</b> (BMR + потраченные калории)${balance!=null?` · Баланс: <b>${balance>0?'+':''}${round(balance,0)} ккал</b>`:''}` : 'Всего потрачено рассчитается после ввода потраченных калорий и данных для расчёта BMR.';
     renderDailyGoals();
   }
   function bodyFatAt(date){
@@ -709,7 +716,22 @@
     const p={...state.profile,weight:w};
     return navyBodyFat(p,m) ?? deurenberg(p);
   }
-  function journalValue(d,k){const j=state.journal[d];if(k==='fatPercent')return bodyFatAt(d);if(!j)return null;return k==='activity'?(j.activity?1:0):n(j[k]);}
+  function dayBmrAt(date){
+    const j=state.journal[date]||{}, w=n(state.weights[date] ?? j.weight ?? state.profile.weight), h=n(state.profile.height), a=age(state.profile.birth);
+    if(w==null || h==null || a==null) return null;
+    return bmrMifflin(w,h,a,state.profile.gender==='male');
+  }
+  function totalBurnedAt(date){
+    const active=n(state.journal[date]?.burnedCalories), bmrV=dayBmrAt(date);
+    if(active==null || bmrV==null) return null;
+    return round(active+bmrV,0);
+  }
+  function calorieBalanceAt(date){
+    const consumed=n(state.journal[date]?.calories), total=totalBurnedAt(date);
+    if(consumed==null || total==null) return null;
+    return round(consumed-total,0);
+  }
+  function journalValue(d,k){const j=state.journal[d];if(k==='fatPercent')return bodyFatAt(d);if(k==='totalBurned')return totalBurnedAt(d);if(k==='calorieBalance')return calorieBalanceAt(d);if(!j)return null;return k==='activity'?(j.activity?1:0):n(j[k]);}
   function rangeFor(end,period){const e=parseDate(end),s=new Date(e);if(period==='week')s.setDate(s.getDate()-6);else if(period==='month')s.setDate(s.getDate()-29);else if(period==='3month')s.setMonth(s.getMonth()-2),s.setDate(1);else if(period==='halfyear')s.setMonth(s.getMonth()-5),s.setDate(1);else if(period==='year')s.setMonth(s.getMonth()-11),s.setDate(1);else if(state.profile.registrationDate)return [parseDate(state.profile.registrationDate),e];return [s,e];}
   function buckets(end,period,key){const [s,e]=rangeFor(end,period),out=[];if(period==='week'){for(let d=new Date(s);d<=e;d.setDate(d.getDate()+1))out.push({label:fmt(iso(d)),dates:[iso(d)]});}else{let cur=new Date(s);while(cur<=e){let a=new Date(cur),b=new Date(cur);if(period==='month')b.setDate(b.getDate()+6);else b.setMonth(b.getMonth()+1),b.setDate(0);if(b>e)b=new Date(e);let ds=[];for(let d=new Date(a);d<=b;d.setDate(d.getDate()+1))ds.push(iso(d));out.push({label:fmt(iso(a))+' — '+fmt(iso(b)),dates:ds});cur=new Date(b);cur.setDate(cur.getDate()+1);}}return out.map(x=>{const v=x.dates.map(d=>journalValue(d,key)).filter(v=>v!=null);return {...x,avg:v.length?round(v.reduce((a,b)=>a+b,0)/v.length):null};});}
   function analyticsChart(rows,unit){const r=rows.filter(x=>x.avg!=null);if(r.length<2)return '<div class="empty">Нужно минимум два периода с данными для графика.</div>';const W=640,H=250,p=38,vs=r.map(x=>x.avg),mi=Math.min(...vs),ma=Math.max(...vs),rg=ma-mi||1,pts=r.map((x,i)=>[p+i/(r.length-1)*(W-p-20),25+(1-(x.avg-mi)/rg)*(H-70),x]);const path=pts.map((x,i)=>(i?'L':'M')+x[0].toFixed(1)+' '+x[1].toFixed(1)).join(' ');return `<div class="chart"><svg viewBox="0 0 ${W} ${H}"><line x1="${p}" y1="${H-35}" x2="${W-10}" y2="${H-35}" stroke="#dbe1e8"/><path d="${path}" fill="none" stroke="#2563eb" stroke-width="4" stroke-linecap="round"/>${pts.map(x=>`<circle cx="${x[0]}" cy="${x[1]}" r="4" fill="#fff" stroke="#2563eb" stroke-width="3"><title>${esc(x[2].label)}: ${x[2].avg} ${unit}</title></circle>`).join('')}</svg></div>`;}
@@ -809,15 +831,17 @@
     const out=[];
     for(let d=parseDate(addDays(start,1)); d<=parseDate(end); d.setDate(d.getDate()+1)){
       const cur=iso(d), prev=addDays(cur,-1), weight=n(state.weights[cur] ?? state.journal[cur]?.weight);
-      const prevDay=state.journal[prev]||{};
-      const x=n(prevDay[kind]);
+      let x=null;
+      if(kind==='totalBurned') x=totalBurnedAt(prev);
+      else { const prevDay=state.journal[prev]||{}; x=n(prevDay[kind]); }
       if(weight!=null&&x!=null) out.push({x,y:weight,date:cur,prev});
     }
     return out;
   }
   function renderCorrelationCard(title,kind,start,end,unit){
     const pairs=correlationPairs(kind,start,end), r=pearsonCorrelation(pairs);
-    if(!pairs.length) return `<div class="correlation-card"><div class="correlation-title">${title}</div><div class="correlation-empty">Нет пары данных: нужны ${kind==='calories'?'ккал':'шаги'} за предыдущий день и вес следующего дня.</div></div>`;
+    const sourceLabel=kind==='calories'?'ккал':kind==='steps'?'шаги':'всего потраченных ккал';
+    if(!pairs.length) return `<div class="correlation-card"><div class="correlation-title">${title}</div><div class="correlation-empty">Нет пары данных: нужны ${sourceLabel} за предыдущий день и вес следующего дня.</div></div>`;
     if(pairs.length<3) return `<div class="correlation-card"><div class="correlation-title">${title}</div><div class="correlation-stat">Данных: <b>${pairs.length}</b>. Для расчёта r нужно минимум 3 пары.</div><div class="correlation-empty">Добавьте ещё данные в дневник.</div></div>`;
     const xs=pairs.map(p=>p.x),ys=pairs.map(p=>p.y),minX=Math.min(...xs),maxX=Math.max(...xs),minY=Math.min(...ys),maxY=Math.max(...ys);
     const rx=maxX-minX||1, ry=maxY-minY||1, W=330,H=190,l=34,rgt=10,t=12,b=28;
@@ -831,7 +855,7 @@
     return `<div class="correlation-card"><div class="correlation-title">${title}</div><div class="correlation-stat"><b>r = ${rr.toFixed(2)}</b> · пар данных: ${pairs.length}</div><div class="correlation-chart"><svg viewBox="0 0 ${W} ${H}" aria-label="${esc(title)}"><line x1="${l}" y1="${H-b}" x2="${W-rgt}" y2="${H-b}" stroke="#dbe1e8"/><line x1="${l}" y1="${t}" x2="${l}" y2="${H-b}" stroke="#dbe1e8"/><line x1="${px(x1)}" y1="${py(y1)}" x2="${px(x2)}" y2="${py(y2)}" stroke="#9fb0f2" stroke-width="2" stroke-dasharray="5 5"/>${dots}<text x="${W/2}" y="${H-7}" text-anchor="middle" fill="#8a8f98" font-size="11">${unit} за предыдущий день</text><text x="10" y="${H/2}" text-anchor="middle" fill="#8a8f98" font-size="11" transform="rotate(-90 10 ${H/2})">Вес текущего дня, кг</text></svg></div></div>`;
   }
   function renderWeightCorrelations(start,end){
-    $('weightCorrelations').innerHTML=renderCorrelationCard('Вчерашние калории → сегодняшний вес','calories',start,end,'ккал')+renderCorrelationCard('Вчерашние шаги → сегодняшний вес','steps',start,end,'шагов');
+    $('weightCorrelations').innerHTML=renderCorrelationCard('Вчерашние калории → сегодняшний вес','calories',start,end,'ккал')+renderCorrelationCard('Вчерашние шаги → сегодняшний вес','steps',start,end,'шагов')+renderCorrelationCard('Вчера всего потрачено → сегодняшний вес','totalBurned',start,end,'ккал');
   }
   function goalSnapshotForAnalyticsRange(start,end){
     const mid=addDays(start,3), calendarWeek=weekStartDate(mid);
@@ -941,7 +965,7 @@
       if(state.profile.registrationDate&&d<state.profile.registrationDate)return alert('Нельзя вносить данные до даты регистрации.');
       if(d>todayStr())return alert('Нельзя вносить данные в будущее.');
       const j={};
-      [['weight','jWeight'],['calories','jCalories'],['protein','jProtein'],['fat','jFat'],['carbs','jCarbs'],['steps','jSteps'],['water','jWater']].forEach(([k,id])=>{const v=n($(id).value);j[k]=v;});
+      [['weight','jWeight'],['calories','jCalories'],['burnedCalories','jBurnedCalories'],['protein','jProtein'],['fat','jFat'],['carbs','jCarbs'],['steps','jSteps'],['water','jWater']].forEach(([k,id])=>{const v=n($(id).value);j[k]=v;});
       j.activity=$('jActivity').checked;
       state.journal[d]=j;
       if(j.weight!=null){state.weights[d]=j.weight;if(d===todayStr())state.profile.weight=j.weight;}
@@ -978,7 +1002,7 @@
     load();renderMeasurementFields();bind();renderProfileFields();renderHome();renderWeek();renderJournal();renderAnalytics();
     setInterval(()=>{if(todayStr()!==state._lastDay){state._lastDay=todayStr();rolloverWeek();state.ui.habitDate=todayStr();state.ui.journalDate=todayStr();save();renderHome();renderJournal();renderWeek();renderAnalytics();}},30000);
     if ('serviceWorker' in navigator) {
-      const APP_VERSION='2.11.5';
+      const APP_VERSION='2.11.6';
       let reloadScheduled = false;
       function reloadOnceAfterUpdate(){
         if(reloadScheduled) return;
