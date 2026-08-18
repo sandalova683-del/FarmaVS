@@ -268,14 +268,14 @@
       <button class="btn danger" id="resetData" style="margin-top:10px">Удалить всё</button>
     </section>
   </main>
-  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v2.11.7</span></div>
+  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v2.11.8</span></div>
 </div>
 
 <script>
 (() => {
   'use strict';
 
-  const APP_VERSION = '2.11.7';
+  const APP_VERSION = '2.11.8';
   const KEY = 'formavs_v2';
   const LEGACY_KEY = 'forma_v2';
   const todayStr = () => {
@@ -309,7 +309,7 @@
   ];
 
   let state = {
-    profile:{name:'',gender:'female',birth:'',height:'',weight:'',target:'',goal:'maintain',steps:'',activity:'1.2',registrationDate:null,baseMeasurements:{},locks:{}},
+    profile:{name:'',gender:'female',birth:'',height:'',weight:'',target:'',goal:'maintain',steps:'',activity:'1.2',registrationDate:null,registrationSnapshot:null,baseMeasurements:{},locks:{}},
     weights:{}, measurements:{}, journal:{}, nutritionWeekly:{}, dailyGoals:structuredClone(DEFAULT_DAILY), weeklyGoals:structuredClone(DEFAULT_WEEKLY),
     dailyDone:{}, weeklyDone:{}, weeklyHistory:{}, ui:{month:todayStr().slice(0,7),habitDate:todayStr(),journalDate:todayStr(),analyticsDate:todayStr(),analyticsPeriod:'week',analyticsMetric:'weight',analyticsWeekStartDay:1}
   };
@@ -332,6 +332,27 @@
       }
     }catch(e){ console.warn(e); }
     ensureDefaults();
+    freezeRegistrationSnapshot();
+  }
+  function freezeRegistrationSnapshot(){
+    const p=state.profile;
+    if(!p.registrationDate) return;
+    const keys=['name','gender','birth','height','weight','target','goal','steps','activity'];
+    if(!p.registrationSnapshot || typeof p.registrationSnapshot!=='object'){
+      p.registrationSnapshot={};
+      for(const key of keys){
+        if(p[key]!=='' && p[key]!=null) p.registrationSnapshot[key]=p[key];
+      }
+    }
+    const snap=p.registrationSnapshot;
+    for(const key of keys){
+      if(snap[key]!=='' && snap[key]!=null) p[key]=snap[key];
+      else if(p[key]!=='' && p[key]!=null) snap[key]=p[key];
+    }
+    const d=p.registrationDate;
+    const regWeight=n(state.weights?.[d] ?? state.journal?.[d]?.weight ?? snap.weight ?? p.weight);
+    if(regWeight!=null){ p.weight=String(snap.weight ?? regWeight); snap.weight=String(snap.weight ?? regWeight); }
+    save();
   }
   const PROFILE_LOCK_FIELDS=['name','gender','birth','height','weight','target','goal','steps','activity'];
   function initProfileLocks(){
@@ -963,6 +984,7 @@
       initProfileLocks();
       const p=state.profile, l=p.locks;
       const values={name:$('name').value.trim(),gender:$('gender').value,birth:$('birth').value,height:$('height').value,weight:$('weight').value,target:$('target').value,goal:$('goal').value,steps:$('steps').value,activity:$('activity').value};
+      const wasRegistered=!!p.registrationDate;
       if(!p.registrationDate) p.registrationDate=todayStr();
       for(const key of PROFILE_LOCK_FIELDS){
         if(l[key]) continue;
@@ -975,6 +997,11 @@
       const m={...(p.baseMeasurements||{})};
       for(const [k] of MEASUREMENTS){const el=$('pm_'+k),v=n(el?.value);if(l['m_'+k]) continue;if(v!=null){m[k]=v;l['m_'+k]=true;}}
       p.baseMeasurements=m;
+      if(!wasRegistered){
+        p.registrationSnapshot={name:p.name,gender:p.gender,birth:p.birth,height:p.height,weight:p.weight,target:p.target,goal:p.goal,steps:p.steps,activity:p.activity};
+      } else {
+        freezeRegistrationSnapshot();
+      }
       const wk=weekStartDate(todayStr()),base=nutritionBase(p);
       if(state.nutritionWeekly[wk]==null && base) state.nutritionWeekly[wk]=base.calories;
       recalcWeeklyNutrition();save();renderProfileFields();renderHome();toast('Данные сохранены');
@@ -988,7 +1015,7 @@
       const waterMl=n($('jWater').value); j.water=waterMl!=null?waterMl/1000:null;
       j.activity=$('jActivity').checked;
       state.journal[d]=j;
-      if(j.weight!=null){state.weights[d]=j.weight;if(d===todayStr())state.profile.weight=j.weight;}
+      if(j.weight!=null){state.weights[d]=j.weight;}
       else delete state.weights[d];
       state.dailyDone[d]={...(state.dailyDone[d]||{})};
       for(const g of state.dailyGoals){ if(typeof state.dailyDone[d][g.id]!=='boolean') state.dailyDone[d][g.id]=false; }
@@ -1063,4 +1090,5 @@
 })();
 </script>
 </body>
-</html>
+</html>      if(!wasRegistered){ p.registrationSnapshot={name:p.name,gender:p.gender,birth:p.birth,height:p.height,weight:p.weight,target:p.target,goal:p.goal,steps:p.steps,activity:p.activity}; } else { freezeRegistrationSnapshot(); }
+
