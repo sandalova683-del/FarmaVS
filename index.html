@@ -175,6 +175,7 @@
       <div class="card">
         <div class="progress-heading">Прогресс</div>
         <div class="progress-section-title">Динамика показателей</div>
+        <div class="analytics-week-filter"><label for="analyticsWeekStart">Начало недели</label><select id="analyticsWeekStart"><option value="1">Понедельник</option><option value="2">Вторник</option><option value="3">Среда</option><option value="4">Четверг</option><option value="5">Пятница</option><option value="6">Суббота</option><option value="0">Воскресенье</option></select></div>
         <div id="progressSummary" class="progress-summary"></div>
         <div id="progressMetricTabs" class="progress-metric-tabs">
           <button class="progress-metric active" data-metric="weight">Вес</button>
@@ -196,6 +197,9 @@
           <button class="progress-period" data-period="all">Весь период</button>
         </div>
         <div class="progress-range"><button id="progressPrev" aria-label="Предыдущий период">‹</button><strong id="progressRangeLabel"></strong><button id="progressNext" aria-label="Следующий период">›</button></div>
+        <div class="progress-section-title" style="margin-top:20px">Связь питания и активности с весом</div>
+        <div class="note">Сравниваем калории и шаги за предыдущий день с весом следующего дня. Показатель <b>r</b> — корреляция от −1 до +1: чем ближе к ±1, тем сильнее линейная связь. Корреляция не доказывает причинность.</div>
+        <div id="weightCorrelations" class="correlation-grid"></div>
 
       <div class="card">
         <div class="progress-section-title">Ежедневные цели — календарь</div>
@@ -260,14 +264,14 @@
       <button class="btn danger" id="resetData" style="margin-top:10px">Удалить всё</button>
     </section>
   </main>
-  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v2.11.0</span></div>
+  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v2.11.5</span></div>
 </div>
 
 <script>
 (() => {
   'use strict';
 
-  const APP_VERSION = '2.11.0';
+  const APP_VERSION = '2.11.5';
   const KEY = 'formavs_v2';
   const LEGACY_KEY = 'forma_v2';
   const todayStr = () => {
@@ -303,7 +307,7 @@
   let state = {
     profile:{name:'',gender:'female',birth:'',height:'',weight:'',target:'',goal:'maintain',steps:'',activity:'1.2',registrationDate:null,baseMeasurements:{},locks:{}},
     weights:{}, measurements:{}, journal:{}, nutritionWeekly:{}, dailyGoals:structuredClone(DEFAULT_DAILY), weeklyGoals:structuredClone(DEFAULT_WEEKLY),
-    dailyDone:{}, weeklyDone:{}, weeklyHistory:{}, ui:{month:todayStr().slice(0,7),habitDate:todayStr(),journalDate:todayStr(),analyticsDate:todayStr(),analyticsPeriod:'week',analyticsMetric:'weight'}
+    dailyDone:{}, weeklyDone:{}, weeklyHistory:{}, ui:{month:todayStr().slice(0,7),habitDate:todayStr(),journalDate:todayStr(),analyticsDate:todayStr(),analyticsPeriod:'week',analyticsMetric:'weight',analyticsWeekStartDay:1}
   };
 
   const $ = id => document.getElementById(id);
@@ -717,8 +721,19 @@
     if(period==='year') return 364;
     return null;
   }
+  function analyticsWeekStartDate(s){
+    const d=parseDate(s), target=Number(state.ui.analyticsWeekStartDay ?? 1), day=d.getDay();
+    let diff=target-day; if(diff>0) diff-=7;
+    d.setDate(d.getDate()+diff);
+    return iso(d);
+  }
+  function analyticsWeekEndDate(s){ return addDays(analyticsWeekStartDate(s),6); }
   function periodStartEnd(end,period){
     const e=parseDate(end);
+    if(period==='week'){
+      const start=analyticsWeekStartDate(end);
+      return [start,addDays(start,6)];
+    }
     if(period==='all'){
       const start=state.profile.registrationDate||Object.keys(state.weights)[0]||end;
       return [start,end];
@@ -781,15 +796,59 @@
     const unit=JOURNAL_UNITS[key];
     return `<div class="progress-chart"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="График ${esc(JOURNAL_LABELS[key])}">${grid}<path d="${path}" fill="none" stroke="#9fb0f2" stroke-width="2" opacity=".65"/><path d="${trend}" fill="none" stroke="#5b6fe8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>${circles}${labels}</svg></div>`;
   }
-  function weeklyReportData(){
-    const entries=Object.entries(state.weeklyHistory||{}).sort((a,b)=>a[0].localeCompare(b[0]));
-    const current=weekStartDate(todayStr());
-    const all=entries.map(([key,v])=>({key,start:v.start,end:v.end,goals:v.goals||[],pct:v.percent??0}));
-    if(!all.some(x=>x.key===current)){
-      const goals=state.weeklyGoals.map(g=>({id:g.id,label:g.label,fixed:g.fixed,done:!!state.weeklyDone[g.id]}));
-      all.push({key:current,start:current,end:addDays(current,6),goals,pct:goals.length?Math.round(goals.filter(g=>g.done).length/goals.length*100):0});
+  function pearsonCorrelation(pairs){
+    if(pairs.length<3) return null;
+    const xs=pairs.map(p=>p.x), ys=pairs.map(p=>p.y);
+    const mx=xs.reduce((a,b)=>a+b,0)/xs.length, my=ys.reduce((a,b)=>a+b,0)/ys.length;
+    let num=0,dx=0,dy=0;
+    for(let i=0;i<pairs.length;i++){const ax=xs[i]-mx,by=ys[i]-my;num+=ax*by;dx+=ax*ax;dy+=by*by;}
+    if(dx===0||dy===0) return null;
+    return num/Math.sqrt(dx*dy);
+  }
+  function correlationPairs(kind,start,end){
+    const out=[];
+    for(let d=parseDate(addDays(start,1)); d<=parseDate(end); d.setDate(d.getDate()+1)){
+      const cur=iso(d), prev=addDays(cur,-1), weight=n(state.weights[cur] ?? state.journal[cur]?.weight);
+      const prevDay=state.journal[prev]||{};
+      const x=n(prevDay[kind]);
+      if(weight!=null&&x!=null) out.push({x,y:weight,date:cur,prev});
     }
-    return all.sort((a,b)=>a.start.localeCompare(b.start)).slice(-12).reverse();
+    return out;
+  }
+  function renderCorrelationCard(title,kind,start,end,unit){
+    const pairs=correlationPairs(kind,start,end), r=pearsonCorrelation(pairs);
+    if(!pairs.length) return `<div class="correlation-card"><div class="correlation-title">${title}</div><div class="correlation-empty">Нет пары данных: нужны ${kind==='calories'?'ккал':'шаги'} за предыдущий день и вес следующего дня.</div></div>`;
+    if(pairs.length<3) return `<div class="correlation-card"><div class="correlation-title">${title}</div><div class="correlation-stat">Данных: <b>${pairs.length}</b>. Для расчёта r нужно минимум 3 пары.</div><div class="correlation-empty">Добавьте ещё данные в дневник.</div></div>`;
+    const xs=pairs.map(p=>p.x),ys=pairs.map(p=>p.y),minX=Math.min(...xs),maxX=Math.max(...xs),minY=Math.min(...ys),maxY=Math.max(...ys);
+    const rx=maxX-minX||1, ry=maxY-minY||1, W=330,H=190,l=34,rgt=10,t=12,b=28;
+    const px=x=>l+(x-minX)/rx*(W-l-rgt), py=y=>t+(1-(y-minY)/ry)*(H-t-b);
+    const meanX=xs.reduce((a,b)=>a+b,0)/xs.length, meanY=ys.reduce((a,b)=>a+b,0)/ys.length;
+    const slope=xs.reduce((sum,x,i)=>sum+(x-meanX)*(ys[i]-meanY),0)/(xs.reduce((sum,x)=>sum+(x-meanX)**2,0)||1);
+    const intercept=meanY-slope*meanX;
+    const x1=minX,x2=maxX,y1=slope*x1+intercept,y2=slope*x2+intercept;
+    const dots=pairs.map(p=>`<circle cx="${px(p.x).toFixed(1)}" cy="${py(p.y).toFixed(1)}" r="4" fill="#7184e7" stroke="#fff" stroke-width="2"><title>${fmt(p.date)}: ${p.x} ${unit} → ${p.y} кг</title></circle>`).join('');
+    const rr=Math.max(-1,Math.min(1,r));
+    return `<div class="correlation-card"><div class="correlation-title">${title}</div><div class="correlation-stat"><b>r = ${rr.toFixed(2)}</b> · пар данных: ${pairs.length}</div><div class="correlation-chart"><svg viewBox="0 0 ${W} ${H}" aria-label="${esc(title)}"><line x1="${l}" y1="${H-b}" x2="${W-rgt}" y2="${H-b}" stroke="#dbe1e8"/><line x1="${l}" y1="${t}" x2="${l}" y2="${H-b}" stroke="#dbe1e8"/><line x1="${px(x1)}" y1="${py(y1)}" x2="${px(x2)}" y2="${py(y2)}" stroke="#9fb0f2" stroke-width="2" stroke-dasharray="5 5"/>${dots}<text x="${W/2}" y="${H-7}" text-anchor="middle" fill="#8a8f98" font-size="11">${unit} за предыдущий день</text><text x="10" y="${H/2}" text-anchor="middle" fill="#8a8f98" font-size="11" transform="rotate(-90 10 ${H/2})">Вес текущего дня, кг</text></svg></div></div>`;
+  }
+  function renderWeightCorrelations(start,end){
+    $('weightCorrelations').innerHTML=renderCorrelationCard('Вчерашние калории → сегодняшний вес','calories',start,end,'ккал')+renderCorrelationCard('Вчерашние шаги → сегодняшний вес','steps',start,end,'шагов');
+  }
+  function goalSnapshotForAnalyticsRange(start,end){
+    const mid=addDays(start,3), calendarWeek=weekStartDate(mid);
+    if(calendarWeek===weekStartDate(todayStr())) return state.weeklyGoals.map(g=>({id:g.id,label:g.label,fixed:g.fixed,done:!!state.weeklyDone[g.id]}));
+    const h=state.weeklyHistory?.[calendarWeek];
+    return h?.goals ? h.goals.map(g=>({...g})) : state.weeklyGoals.map(g=>({id:g.id,label:g.label,fixed:g.fixed,done:false}));
+  }
+  function weeklyReportData(){
+    const out=[];
+    const currentStart=analyticsWeekStartDate(todayStr());
+    for(let i=0;i<12;i++){
+      const start=addDays(currentStart,-7*i), end=addDays(start,6);
+      if(state.profile.registrationDate && end<state.profile.registrationDate) continue;
+      const goals=goalSnapshotForAnalyticsRange(start,end);
+      out.push({key:start,start,end,goals,pct:goals.length?Math.round(goals.filter(g=>g.done).length/goals.length*100):0});
+    }
+    return out;
   }
   function weeklyReportMetrics(start,end){
     const weights=weightValuesInRange(start,end);
@@ -824,6 +883,7 @@
   }
   function renderAnalytics(){
     const end=state.ui.analyticsDate||todayStr(),period=state.ui.analyticsPeriod||'week',key=state.ui.analyticsMetric||'weight';
+    const weekStartSelect=$('analyticsWeekStart'); if(weekStartSelect) weekStartSelect.value=String(state.ui.analyticsWeekStartDay ?? 1);
     const [start,endDate]=periodStartEnd(end,period);
     $('progressSummary').innerHTML=periodSummary(start,endDate);
     document.querySelectorAll('.progress-metric').forEach(b=>b.classList.toggle('active',b.dataset.metric===key));
@@ -832,6 +892,7 @@
     $('analyticsChart').innerHTML=renderProgressChart(key,endDate,period);
     $('progressRangeLabel').textContent=`${fmtLong(start)} — ${fmtLong(endDate)}`;
     const today=todayStr();$('progressNext').disabled=period==='all'||endDate>=today;
+    renderWeightCorrelations(start,endDate);
     renderAnalyticsWeeklyStats();
     renderCalendar();
   }
@@ -901,6 +962,11 @@
       if(!Object.keys(m).length)return alert('Введите хотя бы один объём.');
       state.measurements[d]=m;state.ui.measureDate=d;save();renderWeek();toast('Данные сохранены');
     });
+    $('analyticsWeekStart').addEventListener('change',()=>{
+      state.ui.analyticsWeekStartDay=Number($('analyticsWeekStart').value);
+      if((state.ui.analyticsPeriod||'week')==='week') state.ui.analyticsDate=todayStr();
+      save();renderAnalytics();
+    });
     document.querySelectorAll('.progress-metric').forEach(b=>b.addEventListener('click',()=>{state.ui.analyticsMetric=b.dataset.metric;save();renderAnalytics();}));
     document.querySelectorAll('.progress-period').forEach(b=>b.addEventListener('click',()=>{state.ui.analyticsPeriod=b.dataset.period;save();renderAnalytics();}));
     $('progressPrev').addEventListener('click',()=>shiftAnalyticsPeriod(-1));
@@ -912,7 +978,7 @@
     load();renderMeasurementFields();bind();renderProfileFields();renderHome();renderWeek();renderJournal();renderAnalytics();
     setInterval(()=>{if(todayStr()!==state._lastDay){state._lastDay=todayStr();rolloverWeek();state.ui.habitDate=todayStr();state.ui.journalDate=todayStr();save();renderHome();renderJournal();renderWeek();renderAnalytics();}},30000);
     if ('serviceWorker' in navigator) {
-      const APP_VERSION='2.10.7';
+      const APP_VERSION='2.11.5';
       let reloadScheduled = false;
       function reloadOnceAfterUpdate(){
         if(reloadScheduled) return;
