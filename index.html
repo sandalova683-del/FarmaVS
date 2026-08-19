@@ -145,11 +145,11 @@
           <div class="field"><label>Вода, мл</label><input id="jWater" type="number" min="0" step="50"></div>
           <div class="field"><label>Шаги</label><input id="jSteps" type="number" min="0"></div>
           <div class="field"><label>Потраченные ккал</label><input id="jBurnedCalories" type="number" min="0"></div>
+          <div class="field"><label>Тренировка</label><select id="jTrainingType"><option value="">Нет тренировки</option><option value="strength">Силовая</option><option value="cardio">Кардио</option></select></div>
+          <div class="field"><label>Продолжительность, мин</label><input id="jTrainingMinutes" type="number" min="0" step="5" placeholder="Например, 45"></div>
           <div class="field"><label>Всего потрачено ккал</label><div id="jTotalBurned" class="journal-calc">—</div></div>
           <div class="field"><label>Баланс ккал</label><div id="jCalorieBalance" class="journal-calc">—</div></div>
         </div>
-        <label class="check journal-activity"><input id="jActivity" type="checkbox"><span>Была тренировка / физическая активность</span></label>
-
         <div class="journal-goals">
           <div id="dailyList" class="list"></div>
           <div class="add"><input id="newDaily" placeholder="Новая ежедневная цель"><button id="addDaily">+</button></div>
@@ -270,14 +270,14 @@
       <button class="btn danger" id="resetData" style="margin-top:10px">Удалить всё</button>
     </section>
   </main>
-  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v2.11.9</span></div>
+  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v2.11.11</span></div>
 </div>
 
 <script>
 (() => {
   'use strict';
 
-  const APP_VERSION = '2.11.9';
+  const APP_VERSION = '2.11.11';
   const KEY = 'formavs_v2';
   const LEGACY_KEY = 'forma_v2';
   const todayStr = () => {
@@ -751,7 +751,10 @@
     $('jCarbs').value=j.carbs??'';
     $('jSteps').value=j.steps??'';
     $('jWater').value=j.water!=null?round(j.water*1000,0):'';
-    $('jActivity').checked=!!j.activity;
+    let trainingType=j.trainingType||'';
+    if(!trainingType && j.activity) trainingType='strength';
+    $('jTrainingType').value=trainingType;
+    $('jTrainingMinutes').value=trainingType?(j.trainingMinutes??''):'';
     const goal=weeklyNutritionTargetForDate(d);
     $('jCalorieGoal').textContent=goal!=null?`${round(goal,0)} ккал/сутки`:'—';
     const total=totalBurnedAt(d), balance=calorieBalanceAt(d);
@@ -788,7 +791,7 @@
     if(active==null || w==null || h==null || a==null) return null;
     return round(active+bmrMifflin(w,h,a,state.profile.gender==='male'),0);
   }
-  function journalValue(d,k){const j=state.journal[d];if(k==='fatPercent')return bodyFatAt(d);if(k==='totalBurned')return totalBurnedAt(d);if(k==='calorieBalance')return calorieBalanceAt(d);if(!j)return null;return k==='activity'?(j.activity?1:0):n(j[k]);}
+  function journalValue(d,k){const j=state.journal[d];if(k==='fatPercent')return bodyFatAt(d);if(k==='totalBurned')return totalBurnedAt(d);if(k==='calorieBalance')return calorieBalanceAt(d);if(!j)return null;if(k==='activity')return (j.trainingType||j.activity)?1:0;return k==='trainingMinutes'?n(j.trainingMinutes):n(j[k]);}
   function rangeFor(end,period){const e=parseDate(end),s=new Date(e);if(period==='week')s.setDate(s.getDate()-6);else if(period==='month')s.setDate(s.getDate()-29);else if(period==='3month')s.setMonth(s.getMonth()-2),s.setDate(1);else if(period==='halfyear')s.setMonth(s.getMonth()-5),s.setDate(1);else if(period==='year')s.setMonth(s.getMonth()-11),s.setDate(1);else if(state.profile.registrationDate)return [parseDate(state.profile.registrationDate),e];return [s,e];}
   function buckets(end,period,key){const [s,e]=rangeFor(end,period),out=[];if(period==='week'){for(let d=new Date(s);d<=e;d.setDate(d.getDate()+1))out.push({label:fmt(iso(d)),dates:[iso(d)]});}else{let cur=new Date(s);while(cur<=e){let a=new Date(cur),b=new Date(cur);if(period==='month')b.setDate(b.getDate()+6);else b.setMonth(b.getMonth()+1),b.setDate(0);if(b>e)b=new Date(e);let ds=[];for(let d=new Date(a);d<=b;d.setDate(d.getDate()+1))ds.push(iso(d));out.push({label:fmt(iso(a))+' — '+fmt(iso(b)),dates:ds});cur=new Date(b);cur.setDate(cur.getDate()+1);}}return out.map(x=>{const v=x.dates.map(d=>journalValue(d,key)).filter(v=>v!=null);return {...x,avg:v.length?round(v.reduce((a,b)=>a+b,0)/v.length):null};});}
   function analyticsChart(rows,unit){const r=rows.filter(x=>x.avg!=null);if(r.length<2)return '<div class="empty">Нужно минимум два периода с данными для графика.</div>';const W=640,H=250,p=38,vs=r.map(x=>x.avg),mi=Math.min(...vs),ma=Math.max(...vs),rg=ma-mi||1,pts=r.map((x,i)=>[p+i/(r.length-1)*(W-p-20),25+(1-(x.avg-mi)/rg)*(H-70),x]);const path=pts.map((x,i)=>(i?'L':'M')+x[0].toFixed(1)+' '+x[1].toFixed(1)).join(' ');return `<div class="chart"><svg viewBox="0 0 ${W} ${H}"><line x1="${p}" y1="${H-35}" x2="${W-10}" y2="${H-35}" stroke="#dbe1e8"/><path d="${path}" fill="none" stroke="#2563eb" stroke-width="4" stroke-linecap="round"/>${pts.map(x=>`<circle cx="${x[0]}" cy="${x[1]}" r="4" fill="#fff" stroke="#2563eb" stroke-width="3"><title>${esc(x[2].label)}: ${x[2].avg} ${unit}</title></circle>`).join('')}</svg></div>`;}
@@ -937,11 +940,24 @@
     const min=weights.length?Math.min(...weights.map(x=>x.value)):null;
     const latestMeasurement=(key)=>{const rows=measurementValuesInRange(key,start,end);return rows.length?rows.at(-1).value:null;};
     const fatRows=Object.keys(state.measurements||{}).filter(d=>d>=start&&d<=end).sort().map(d=>({date:d,value:bodyFatAt(d)})).filter(x=>x.value!=null);
+    let trainingCount=0, strengthCount=0, cardioCount=0, trainingMinutes=0, strengthMinutes=0, cardioMinutes=0;
+    for(let d=parseDate(start); d<=parseDate(end); d.setDate(d.getDate()+1)){
+      const day=state.journal[iso(d)]||{};
+      const type=day.trainingType || (day.activity?'strength':'');
+      const mins=n(day.trainingMinutes)||0;
+      if(type){
+        trainingCount++;
+        trainingMinutes+=mins;
+        if(type==='strength'){strengthCount++;strengthMinutes+=mins;}
+        if(type==='cardio'){cardioCount++;cardioMinutes+=mins;}
+      }
+    }
     return {
       fat:fatRows.length?fatRows.at(-1).value:null,
       avg,min,
-      waist:latestMeasurement('waist'),hips:latestMeasurement('hips'),chest:latestMeasurement('chest'),
-      armR:latestMeasurement('armR'),armL:latestMeasurement('armL'),legR:latestMeasurement('legR'),legL:latestMeasurement('legL')
+      neck:latestMeasurement('neck'),waist:latestMeasurement('waist'),hips:latestMeasurement('hips'),chest:latestMeasurement('chest'),
+      armR:latestMeasurement('armR'),armL:latestMeasurement('armL'),legR:latestMeasurement('legR'),legL:latestMeasurement('legL'),
+      trainingCount,strengthCount,cardioCount,trainingMinutes,strengthMinutes,cardioMinutes
     };
   }
   function renderAnalyticsWeeklyStats(){
@@ -952,14 +968,12 @@
       const m=weeklyReportMetrics(r.start,r.end);
       const done=r.goals.filter(g=>g.done).length,total=r.goals.length,pct=total?Math.round(done/total*100):0;
       const goals=r.goals.map(g=>`<div class="weekly-goal"><span class="weekly-goal-label">${esc(g.label)}</span><span class="weekly-goal-status ${g.done?'done':'not-done'}">${g.done?'✓':'✕'}</span></div>`).join('');
-      let trainingCount=0;
-      for(let d=parseDate(r.start); d<=parseDate(r.end); d.setDate(d.getDate()+1)){ const day=state.journal[iso(d)]; if(day && day.activity) trainingCount++; }
       return `<div class="weekly-report"><div class="weekly-report-date">${fmtLong(r.start)} — ${fmtLong(r.end)}</div><div class="weekly-report-grid">
         <div class="weekly-report-row cols3">${metric('% Жира',m.fat,'%')} ${metric('Средний вес',m.avg,'кг')} ${metric('Мин. вес',m.min,'кг')}</div>
-        <div class="weekly-report-row cols3">${metric('Талия',m.waist,'см')} ${metric('Бёдра',m.hips,'см')} ${metric('Грудь',m.chest,'см')}</div>
-        <div class="weekly-report-row cols2">${metric('Пр. рука',m.armR,'см')} ${metric('Лев. рука',m.armL,'см')}</div>
+        <div class="weekly-report-row cols3">${metric('Шея',m.neck,'см')} ${metric('Талия',m.waist,'см')} ${metric('Бёдра',m.hips,'см')}</div>
+        <div class="weekly-report-row cols3">${metric('Грудь',m.chest,'см')} ${metric('Пр. рука',m.armR,'см')} ${metric('Лев. рука',m.armL,'см')}</div>
         <div class="weekly-report-row cols2">${metric('Пр. нога',m.legR,'см')} ${metric('Лев. нога',m.legL,'см')}</div>
-      </div><div class="weekly-report-bottom"><div class="weekly-goal-summary"><b>${done}/${total}</b> целей · <b>${pct}%</b><div class="weekly-goals-grid">${goals}</div></div><div class="weekly-training">Кол-во тренировок: ${trainingCount}</div></div></div>`;
+      </div><div class="weekly-report-bottom"><div class="weekly-goal-summary"><b>${done}/${total}</b> целей · <b>${pct}%</b><div class="weekly-goals-grid">${goals}</div></div><div class="weekly-training"><b>Всего тренировок: ${m.trainingCount}</b> · ${m.trainingMinutes} мин<br>Силовые: ${m.strengthCount} · ${m.strengthMinutes} мин<br>Кардио: ${m.cardioCount} · ${m.cardioMinutes} мин</div></div></div>`;
     }).join('');
   }
   function renderAnalytics(){
@@ -1030,7 +1044,11 @@
       const j={};
       [['weight','jWeight'],['calories','jCalories'],['burnedCalories','jBurnedCalories'],['protein','jProtein'],['fat','jFat'],['carbs','jCarbs'],['steps','jSteps']].forEach(([k,id])=>{const v=n($(id).value);j[k]=v;});
       const waterMl=n($('jWater').value); j.water=waterMl!=null?waterMl/1000:null;
-      j.activity=$('jActivity').checked;
+      j.trainingType=$('jTrainingType').value||null;
+      j.trainingMinutes=n($('jTrainingMinutes').value);
+      if(j.trainingType && (j.trainingMinutes==null || j.trainingMinutes<=0)) return alert('Укажите продолжительность тренировки в минутах.');
+      j.activity=!!j.trainingType;
+      if(!j.trainingType) j.trainingMinutes=null;
       state.journal[d]=j;
       if(j.weight!=null){state.weights[d]=j.weight;}
       else delete state.weights[d];
@@ -1073,7 +1091,7 @@
     load();renderMeasurementFields();bind();renderProfileFields();renderHome();renderWeek();renderJournal();renderAnalytics();
     setInterval(()=>{if(todayStr()!==state._lastDay){state._lastDay=todayStr();rolloverWeek();state.ui.habitDate=todayStr();state.ui.journalDate=todayStr();save();renderHome();renderJournal();renderWeek();renderAnalytics();}},30000);
     if ('serviceWorker' in navigator) {
-      const APP_VERSION='2.11.7';
+      const APP_VERSION='2.11.11';
       let reloadScheduled = false;
       function reloadOnceAfterUpdate(){
         if(reloadScheduled) return;
