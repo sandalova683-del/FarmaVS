@@ -77,7 +77,7 @@
     .progress-page .title{font-size:1.18rem;margin-bottom:8px}
     .progress-heading{font-size:1.42rem;font-weight:800;letter-spacing:-.4px;margin:0 0 14px}
     .progress-section-title{font-size:1.12rem;font-weight:800;margin:2px 0 12px}
-    .progress-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px}
+    .progress-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}.progress-summary-title{grid-column:1/-1;font-size:.88rem;color:#64748b;font-weight:700;margin-bottom:2px}.progress-average-card{border:1px solid #dbe7ff;background:#f7faff;border-radius:15px;padding:11px 12px;min-width:0}.progress-average-card .label{font-size:.75rem;color:#64748b}.progress-average-card .value{font-size:1.08rem;font-weight:800;color:#111827;margin-top:3px;white-space:nowrap}.progress-average-card .change{font-size:.7rem;margin-top:3px}
     .progress-stat{min-width:0}
     .progress-stat .label{color:#6b7280;font-size:.88rem;margin-bottom:6px}
     .progress-stat .value{font-size:1.35rem;font-weight:500;letter-spacing:-.3px;white-space:nowrap}
@@ -85,17 +85,17 @@
     .progress-metric-tabs{display:flex;gap:10px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:none}
     .progress-metric-tabs::-webkit-scrollbar{display:none}
     .progress-metric{border:0;background:#f1f1f1;color:#707070;border-radius:999px;padding:9px 17px;font-weight:600;white-space:nowrap}
-    .progress-metric.active{background:var(--accent);color:#fff}
+    .progress-metric.active{background:#2563eb;color:#fff}.progress-metric:hover{background:#e8efff;color:#1d4ed8}.progress-metric.active:hover{background:#1d4ed8;color:#fff}
     .progress-chart-wrap{position:relative;margin:4px 0 0;padding:0 0 2px}
     .progress-chart{border:0;background:#fff;padding:0;overflow:hidden}
     .progress-chart svg{width:100%;height:auto;display:block}
     .progress-legend{display:flex;flex-direction:column;gap:6px;margin:8px 0 15px;color:#6b7280;font-size:.86rem}
-    .legend-dot,.legend-line{display:inline-block;vertical-align:middle;margin-right:8px}.legend-dot{width:10px;height:10px;border-radius:50%;background:#6f83e8}.legend-line{width:18px;height:3px;border-radius:3px;background:#2563eb}
+    .legend-dot,.legend-line{display:inline-block;vertical-align:middle;margin-right:8px}.legend-dot{width:10px;height:10px;border-radius:50%;background:#2563eb}.legend-line{width:18px;height:3px;border-radius:3px;background:#2563eb}
     .progress-periods{display:flex;gap:8px;overflow-x:auto;padding:0 0 10px;scrollbar-width:none}.progress-periods::-webkit-scrollbar{display:none}
     .progress-period{border:0;background:#f1f1f1;color:#777;border-radius:999px;padding:9px 18px;font-weight:600;white-space:nowrap}.progress-period.active{background:var(--accent);color:#fff}
     .progress-range{display:flex;align-items:center;justify-content:center;gap:14px;margin:3px 0 26px;color:#5b5b5b;font-size:.86rem}.progress-range button{border:0;background:#f1f1f1;color:#aaa;width:38px;height:38px;border-radius:50%;font-size:1.45rem;line-height:1}.progress-range button:not(:disabled){color:#aaa}.progress-range button:disabled{opacity:.55}
     .weekly-report-list{display:grid;gap:12px}.weekly-report{border:1px solid #e7eaf0;border-radius:18px;padding:15px;background:#fff}.weekly-report-date{font-size:1.02rem;font-weight:800;margin-bottom:14px}.weekly-report-grid{display:grid;gap:13px 12px}.weekly-report-row{display:grid;gap:13px 12px}.weekly-report-row.cols3{grid-template-columns:repeat(3,minmax(0,1fr))}.weekly-report-row.cols2{grid-template-columns:repeat(2,minmax(0,1fr))}.weekly-report-item .wk-label{font-size:.78rem;color:#6b7280}.weekly-report-item .wk-value{font-size:1.02rem;font-weight:750;margin-top:2px}.weekly-report-bottom{display:block;margin-top:15px}.weekly-goal-summary{width:100%;margin:0;font-size:.92rem}.weekly-goal-summary b{font-size:1rem}.weekly-training{margin-top:12px;font-size:.82rem;color:#475569;font-weight:600;text-align:left}.weekly-goals-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 18px;margin-top:9px}.weekly-goal{display:flex;align-items:center;justify-content:space-between;gap:12px;min-width:0;font-size:.76rem;color:#475569}.weekly-goal-label{white-space:normal;overflow:visible;text-overflow:clip}.weekly-goal-status{font-size:.9rem;font-weight:800;flex:0 0 auto}.weekly-goal-status.done{color:#16a34a}.weekly-goal-status.not-done{color:#f43f5e}.progress-empty{padding:20px 8px;color:#94a3b8;text-align:center}
-    @media(max-width:560px){.progress-summary{gap:10px}.progress-stat .label{font-size:.78rem}.progress-stat .value{font-size:1.12rem}.weekly-report-row{gap:12px 8px}.weekly-report-row.cols3{grid-template-columns:repeat(3,minmax(0,1fr))}.weekly-report-row.cols2{grid-template-columns:repeat(2,minmax(0,1fr))}.weekly-report{padding:13px}.weekly-goals-grid{gap:7px 18px}.weekly-goal{font-size:.72rem}.progress-heading{font-size:1.3rem}}
+    @media(max-width:560px){.progress-summary{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.progress-stat .label{font-size:.78rem}.progress-stat .value{font-size:1.12rem}.weekly-report-row{gap:12px 8px}.weekly-report-row.cols3{grid-template-columns:repeat(3,minmax(0,1fr))}.weekly-report-row.cols2{grid-template-columns:repeat(2,minmax(0,1fr))}.weekly-report{padding:13px}.weekly-goals-grid{gap:7px 18px}.weekly-goal{font-size:.72rem}.progress-heading{font-size:1.3rem}}
     .footerNote{color:#94a3b8;font-size:.68rem;text-align:center;margin:20px 0}
     .hidden{display:none!important}
     @media(max-width:520px){.grid2{grid-template-columns:1fr}.grid3{grid-template-columns:1fr 1fr}.app{padding-left:11px;padding-right:11px}}
@@ -185,9 +185,15 @@
           <button class="progress-metric active" data-metric="weight">Вес</button>
           <button class="progress-metric" data-metric="fatPercent">% Жира</button>
           <button class="progress-metric" data-metric="calories">Ккал</button>
+          <button class="progress-metric" data-metric="protein">Белки</button>
+          <button class="progress-metric" data-metric="fat">Жиры</button>
+          <button class="progress-metric" data-metric="carbs">Углеводы</button>
+          <button class="progress-metric" data-metric="water">Вода</button>
           <button class="progress-metric" data-metric="steps">Шаги</button>
+          <button class="progress-metric" data-metric="burnedCalories">Потраченные ккал</button>
           <button class="progress-metric" data-metric="totalBurned">Всего потрачено</button>
           <button class="progress-metric" data-metric="calorieBalance">Баланс ккал</button>
+          <button class="progress-metric" data-metric="trainingMinutes">Тренировки, мин</button>
         </div>
         <div id="analyticsChart" class="progress-chart-wrap"></div>
         <div class="progress-legend">
@@ -270,14 +276,14 @@
       <button class="btn danger" id="resetData" style="margin-top:10px">Удалить всё</button>
     </section>
   </main>
-  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v2.11.11</span></div>
+  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v2.11.12</span></div>
 </div>
 
 <script>
 (() => {
   'use strict';
 
-  const APP_VERSION = '2.11.11';
+  const APP_VERSION = '2.11.12';
   const KEY = 'formavs_v2';
   const LEGACY_KEY = 'forma_v2';
   const todayStr = () => {
@@ -728,8 +734,8 @@
     $('dayDetail').innerHTML=`<div class="note"><b>${fmt(d)}</b> · выполнено ${dayPercent(d)}%<div class="list" style="margin-top:7px">${state.dailyGoals.map(g=>`<div class="row"><span>${esc(g.label)}</span><span>${state.dailyDone[d][g.id]?'✅':'—'}</span></div>`).join('')}</div></div>`;
   }
 
-  const JOURNAL_LABELS={weight:'Вес',calories:'Ккал',protein:'Белки',fat:'Жиры',carbs:'Углеводы',steps:'Шаги',water:'Вода',activity:'Тренировки',fatPercent:'% Жира',totalBurned:'Всего потрачено',calorieBalance:'Баланс ккал'};
-  const JOURNAL_UNITS={weight:'кг',calories:'ккал',protein:'г',fat:'г',carbs:'г',steps:'шагов',water:'мл',activity:'раз',fatPercent:'%',totalBurned:'ккал',calorieBalance:'ккал'};
+  const JOURNAL_LABELS={weight:'Вес',calories:'Ккал',protein:'Белки',fat:'Жиры',carbs:'Углеводы',steps:'Шаги',water:'Вода',activity:'Тренировки',fatPercent:'% Жира',burnedCalories:'Потраченные ккал',totalBurned:'Всего потрачено',calorieBalance:'Баланс ккал',trainingMinutes:'Тренировки, мин'};
+  const JOURNAL_UNITS={weight:'кг',calories:'ккал',protein:'г',fat:'г',carbs:'г',steps:'шагов',water:'мл',activity:'раз',fatPercent:'%',burnedCalories:'ккал',totalBurned:'ккал',calorieBalance:'ккал',trainingMinutes:'мин'};
   function renderJournal(){
     const d=state.ui.journalDate||todayStr(),j=state.journal[d]||{};
     $('journalDate').value=d;
@@ -791,7 +797,7 @@
     if(active==null || w==null || h==null || a==null) return null;
     return round(active+bmrMifflin(w,h,a,state.profile.gender==='male'),0);
   }
-  function journalValue(d,k){const j=state.journal[d];if(k==='fatPercent')return bodyFatAt(d);if(k==='totalBurned')return totalBurnedAt(d);if(k==='calorieBalance')return calorieBalanceAt(d);if(!j)return null;if(k==='activity')return (j.trainingType||j.activity)?1:0;return k==='trainingMinutes'?n(j.trainingMinutes):n(j[k]);}
+  function journalValue(d,k){const j=state.journal[d];if(k==='weight')return n(state.weights[d] ?? j?.weight);if(k==='fatPercent')return bodyFatAt(d);if(k==='totalBurned')return totalBurnedAt(d);if(k==='calorieBalance')return calorieBalanceAt(d);if(!j)return null;if(k==='activity')return (j.trainingType||j.activity)?1:0;if(k==='trainingMinutes')return n(j.trainingMinutes);return n(j[k]);}
   function rangeFor(end,period){const e=parseDate(end),s=new Date(e);if(period==='week')s.setDate(s.getDate()-6);else if(period==='month')s.setDate(s.getDate()-29);else if(period==='3month')s.setMonth(s.getMonth()-2),s.setDate(1);else if(period==='halfyear')s.setMonth(s.getMonth()-5),s.setDate(1);else if(period==='year')s.setMonth(s.getMonth()-11),s.setDate(1);else if(state.profile.registrationDate)return [parseDate(state.profile.registrationDate),e];return [s,e];}
   function buckets(end,period,key){const [s,e]=rangeFor(end,period),out=[];if(period==='week'){for(let d=new Date(s);d<=e;d.setDate(d.getDate()+1))out.push({label:fmt(iso(d)),dates:[iso(d)]});}else{let cur=new Date(s);while(cur<=e){let a=new Date(cur),b=new Date(cur);if(period==='month')b.setDate(b.getDate()+6);else b.setMonth(b.getMonth()+1),b.setDate(0);if(b>e)b=new Date(e);let ds=[];for(let d=new Date(a);d<=b;d.setDate(d.getDate()+1))ds.push(iso(d));out.push({label:fmt(iso(a))+' — '+fmt(iso(b)),dates:ds});cur=new Date(b);cur.setDate(cur.getDate()+1);}}return out.map(x=>{const v=x.dates.map(d=>journalValue(d,key)).filter(v=>v!=null);return {...x,avg:v.length?round(v.reduce((a,b)=>a+b,0)/v.length):null};});}
   function analyticsChart(rows,unit){const r=rows.filter(x=>x.avg!=null);if(r.length<2)return '<div class="empty">Нужно минимум два периода с данными для графика.</div>';const W=640,H=250,p=38,vs=r.map(x=>x.avg),mi=Math.min(...vs),ma=Math.max(...vs),rg=ma-mi||1,pts=r.map((x,i)=>[p+i/(r.length-1)*(W-p-20),25+(1-(x.avg-mi)/rg)*(H-70),x]);const path=pts.map((x,i)=>(i?'L':'M')+x[0].toFixed(1)+' '+x[1].toFixed(1)).join(' ');return `<div class="chart"><svg viewBox="0 0 ${W} ${H}"><line x1="${p}" y1="${H-35}" x2="${W-10}" y2="${H-35}" stroke="#dbe1e8"/><path d="${path}" fill="none" stroke="#2563eb" stroke-width="4" stroke-linecap="round"/>${pts.map(x=>`<circle cx="${x[0]}" cy="${x[1]}" r="4" fill="#fff" stroke="#2563eb" stroke-width="3"><title>${esc(x[2].label)}: ${x[2].avg} ${unit}</title></circle>`).join('')}</svg></div>`;}
@@ -852,14 +858,25 @@
     const cls=positive?'trend-down':'trend-up';
     return `<span class="${cls}">${diff>0?'+':''}${round(diff)} ${unit} ${up?'↑':'↓'}</span>`;
   }
+  function periodValues(key,start,end){
+    if(key==='weight') return weightValuesInRange(start,end).map(x=>x.value);
+    if(key==='fatPercent') return Object.keys(state.journal||{}).filter(d=>d>=start&&d<=end).sort().map(d=>bodyFatAt(d)).filter(v=>v!=null);
+    if(MEASUREMENTS.some(([k])=>k===key)) return measurementValuesInRange(key,start,end).map(x=>x.value);
+    const vals=[]; for(let d=parseDate(start);d<=parseDate(end);d.setDate(d.getDate()+1)){const v=journalValue(iso(d),key);if(v!=null) vals.push(v);} return vals;
+  }
+  function averageValue(key,start,end){const vals=periodValues(key,start,end);return vals.length?round(vals.reduce((a,b)=>a+b,0)/vals.length):null;}
+  function periodChange(key,start,end){
+    const vals=periodValues(key,start,end); if(vals.length<2)return null; return round(vals.at(-1)-vals[0]);
+  }
+  function avgCard(key,start,end){
+    const avg=averageValue(key,start,end), ch=periodChange(key,start,end), unit=JOURNAL_UNITS[key]||'';
+    const value=avg==null?'—':`${avg} ${unit}`.trim();
+    const change=ch==null?'':`Изменение: <span class="${ch<0?'trend-down':ch>0?'trend-up':'trend-flat'}">${ch>0?'+':''}${ch} ${unit}</span>`;
+    return `<div class="progress-average-card"><div class="label">${esc(JOURNAL_LABELS[key])}</div><div class="value">${value}</div><div class="change">${change}</div></div>`;
+  }
   function periodSummary(start,end){
-    const w=weightValuesInRange(start,end);
-    const m=measurementValuesInRange('waist',start,end);
-    const f=Object.keys(state.measurements||{}).filter(d=>d>=start&&d<=end).sort().map(d=>({date:d,value:bodyFatAt(d)})).filter(x=>x.value!=null);
-    const summary=(arr,unit)=>{if(arr.length<2)return `<span class="trend-flat">0 ${unit} →</span>`;const d=round(arr.at(-1).value-arr[0].value);const cls=d<0?'trend-down':d>0?'trend-up':'trend-flat';const arrow=d<0?'↓':d>0?'↑':'→';return `<span class="${cls}">${d>0?'+':''}${d} ${unit} ${arrow}</span>`};
-    return `<div class="progress-stat"><div class="label">Вес</div><div class="value">${summary(w,'кг')}</div></div>
-      <div class="progress-stat"><div class="label">Талия</div><div class="value">${summary(m,'см')}</div></div>
-      <div class="progress-stat"><div class="label">% Жира</div><div class="value">${summary(f,'%')}</div></div>`;
+    const keys=['weight','fatPercent','calories','protein','fat','carbs','water','steps','burnedCalories','totalBurned','calorieBalance','trainingMinutes'];
+    return `<div class="progress-summary-title">Средние значения за выбранный период</div>${keys.map(k=>avgCard(k,start,end)).join('')}`;
   }
   function renderProgressChart(key,end,period){
     const data=progressMetricRows(key,end,period).rows;
@@ -893,6 +910,7 @@
       const cur=iso(d), prev=addDays(cur,-1), weight=n(state.weights[cur] ?? state.journal[cur]?.weight);
       let x=null;
       if(kind==='totalBurned') x=totalBurnedAt(prev);
+      else if(kind==='calorieBalance') x=calorieBalanceAt(prev);
       else { const prevDay=state.journal[prev]||{}; x=n(prevDay[kind]); }
       if(weight!=null&&x!=null) out.push({x,y:weight,date:cur,prev});
     }
@@ -900,7 +918,7 @@
   }
   function renderCorrelationCard(title,kind,start,end,unit){
     const pairs=correlationPairs(kind,start,end), r=pearsonCorrelation(pairs);
-    const sourceLabel=kind==='calories'?'ккал':kind==='steps'?'шаги':'всего потраченных ккал';
+    const sourceLabel=kind==='calories'?'ккал':kind==='steps'?'шаги':kind==='totalBurned'?'всего потраченных ккал':'баланс ккал';
     if(!pairs.length) return `<div class="correlation-card"><div class="correlation-title">${title}</div><div class="correlation-empty">Нет пары данных: нужны ${sourceLabel} за предыдущий день и вес следующего дня.</div></div>`;
     if(pairs.length<3) return `<div class="correlation-card"><div class="correlation-title">${title}</div><div class="correlation-stat">Данных: <b>${pairs.length}</b>. Для расчёта r нужно минимум 3 пары.</div><div class="correlation-empty">Добавьте ещё данные в дневник.</div></div>`;
     const xs=pairs.map(p=>p.x),ys=pairs.map(p=>p.y),minX=Math.min(...xs),maxX=Math.max(...xs),minY=Math.min(...ys),maxY=Math.max(...ys);
@@ -915,10 +933,10 @@
     return `<div class="correlation-card"><div class="correlation-title">${title}</div><div class="correlation-stat"><b>r = ${rr.toFixed(2)}</b> · пар данных: ${pairs.length}</div><div class="correlation-chart"><svg viewBox="0 0 ${W} ${H}" aria-label="${esc(title)}"><line x1="${l}" y1="${H-b}" x2="${W-rgt}" y2="${H-b}" stroke="#dbe1e8"/><line x1="${l}" y1="${t}" x2="${l}" y2="${H-b}" stroke="#dbe1e8"/><line x1="${px(x1)}" y1="${py(y1)}" x2="${px(x2)}" y2="${py(y2)}" stroke="#6ea0f2" stroke-width="2" stroke-dasharray="5 5"/>${dots}<text x="${W/2}" y="${H-7}" text-anchor="middle" fill="#8a8f98" font-size="11">${unit} за предыдущий день</text><text x="10" y="${H/2}" text-anchor="middle" fill="#8a8f98" font-size="11" transform="rotate(-90 10 ${H/2})">Вес текущего дня, кг</text></svg></div></div>`;
   }
   function renderWeightCorrelations(start,end){
-    $('weightCorrelations').innerHTML=renderCorrelationCard('Вчерашние калории → сегодняшний вес','calories',start,end,'ккал')+renderCorrelationCard('Вчерашние шаги → сегодняшний вес','steps',start,end,'шагов')+renderCorrelationCard('Вчера всего потрачено → сегодняшний вес','totalBurned',start,end,'ккал');
+    $('weightCorrelations').innerHTML=renderCorrelationCard('Вчерашние калории → сегодняшний вес','calories',start,end,'ккал')+renderCorrelationCard('Вчерашние шаги → сегодняшний вес','steps',start,end,'шагов')+renderCorrelationCard('Вчера всего потрачено → сегодняшний вес','totalBurned',start,end,'ккал')+renderCorrelationCard('Вчерашний баланс → сегодняшний вес','calorieBalance',start,end,'ккал');
   }
   function goalSnapshotForAnalyticsRange(start,end){
-    const mid=addDays(start,3), calendarWeek=weekStartDate(mid);
+    const mid=addDays(start,3), calendarWeek=analyticsWeekStartDate(mid);
     if(calendarWeek===weekStartDate(todayStr())) return state.weeklyGoals.map(g=>({id:g.id,label:g.label,fixed:g.fixed,done:!!state.weeklyDone[g.id]}));
     const h=state.weeklyHistory?.[calendarWeek];
     return h?.goals ? h.goals.map(g=>({...g})) : state.weeklyGoals.map(g=>({id:g.id,label:g.label,fixed:g.fixed,done:false}));
@@ -1091,7 +1109,7 @@
     load();renderMeasurementFields();bind();renderProfileFields();renderHome();renderWeek();renderJournal();renderAnalytics();
     setInterval(()=>{if(todayStr()!==state._lastDay){state._lastDay=todayStr();rolloverWeek();state.ui.habitDate=todayStr();state.ui.journalDate=todayStr();save();renderHome();renderJournal();renderWeek();renderAnalytics();}},30000);
     if ('serviceWorker' in navigator) {
-      const APP_VERSION='2.11.11';
+      const APP_VERSION='2.11.12';
       let reloadScheduled = false;
       function reloadOnceAfterUpdate(){
         if(reloadScheduled) return;
