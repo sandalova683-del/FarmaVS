@@ -176,59 +176,84 @@
     </section>
 
     <section id="view-analytics" class="view progress-page">
-      <div class="card">
+      <div class="card analytics-dashboard">
         <div class="progress-heading">Прогресс</div>
         <div class="progress-section-title">Динамика показателей</div>
         <div class="analytics-week-filter"><label for="analyticsWeekStart">Начало недели</label><select id="analyticsWeekStart"><option value="1">Понедельник</option><option value="2">Вторник</option><option value="3">Среда</option><option value="4">Четверг</option><option value="5">Пятница</option><option value="6">Суббота</option><option value="0">Воскресенье</option></select></div>
-        <div id="progressSummary" class="progress-summary"></div>
-        <div id="progressMetricTabs" class="progress-metric-tabs">
-          <button class="progress-metric active" data-metric="weight">Вес</button>
-          <button class="progress-metric" data-metric="fatPercent">% Жира</button>
-          <button class="progress-metric" data-metric="calories">Ккал</button>
-          <button class="progress-metric" data-metric="protein">Белки</button>
-          <button class="progress-metric" data-metric="fat">Жиры</button>
-          <button class="progress-metric" data-metric="carbs">Углеводы</button>
-          <button class="progress-metric" data-metric="water">Вода</button>
-          <button class="progress-metric" data-metric="steps">Шаги</button>
-          <button class="progress-metric" data-metric="burnedCalories">Потраченные ккал</button>
-          <button class="progress-metric" data-metric="totalBurned">Всего потрачено</button>
-          <button class="progress-metric" data-metric="calorieBalance">Баланс ккал</button>
-          <button class="progress-metric" data-metric="trainingMinutes">Тренировки, мин</button>
-        </div>
-        <div id="analyticsChart" class="progress-chart-wrap"></div>
-        <div class="progress-legend">
-          <div><span class="legend-dot"></span><span id="progressLegendPrimary">Вес — ежедневные измерения</span></div>
-          <div><span class="legend-line"></span><span>Тренд — сглаженное изменение</span></div>
-        </div>
-        <div id="progressPeriods" class="progress-periods">
-          <button class="progress-period active" data-period="week">1 нед</button>
-          <button class="progress-period" data-period="month">1 мес</button>
-          <button class="progress-period" data-period="3month">3 мес</button>
-          <button class="progress-period" data-period="halfyear">6 мес</button>
-          <button class="progress-period" data-period="year">1 год</button>
-          <button class="progress-period" data-period="all">Весь период</button>
+        <div class="progress-periods" id="progressPeriods">
+          <button class="progress-period active" data-period="week">1 нед</button><button class="progress-period" data-period="month">1 мес</button><button class="progress-period" data-period="3month">3 мес</button><button class="progress-period" data-period="halfyear">6 мес</button><button class="progress-period" data-period="year">1 год</button><button class="progress-period" data-period="all">Весь период</button>
         </div>
         <div class="progress-range"><button id="progressPrev" aria-label="Предыдущий период">‹</button><strong id="progressRangeLabel"></strong><button id="progressNext" aria-label="Следующий период">›</button></div>
-        <div class="progress-section-title" style="margin-top:20px">Связь питания и активности с весом</div>
-        <div class="note">Сравниваем калории и шаги за предыдущий день с весом следующего дня. Показатель <b>r</b> — корреляция от −1 до +1: чем ближе к ±1, тем сильнее линейная связь. Корреляция не доказывает причинность.</div>
-        <div id="weightCorrelations" class="correlation-grid"></div>
 
-      <div class="card">
-        <div class="progress-section-title">Ежедневные цели — календарь</div>
-        <div class="calendarHead">
-          <button id="prevMonth">‹</button><strong id="monthTitle"></strong><button id="nextMonth">›</button>
+        <div class="dashboard-section">
+          <div class="dashboard-section-title">Итоги периода</div>
+          <div class="period-caption" id="dashboardPeriodCaption"></div>
+          <div id="progressSummary" class="progress-summary"></div>
         </div>
-        <div class="weekdays"><span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span></div>
-        <div id="habitCalendar" class="calendar"></div>
-        <div id="dayDetail" style="margin-top:11px"></div>
-      </div>      </div>
 
-      <div class="card">
-        <div class="progress-section-title">Анализ еженедельных отчётов</div>
-        <div id="analyticsWeeklyStats" class="weekly-report-list"></div>
+        <div class="dashboard-section">
+          <div class="dashboard-section-title">Сравнение</div>
+          <div id="periodComparison"></div>
+        </div>
+
+        <div class="dashboard-section">
+          <div class="dashboard-section-title">⚖️ Вес</div>
+          <div id="weightDashboard"></div>
+          <div class="progress-metric-tabs" id="progressMetricTabs"><button class="progress-metric active" data-metric="weight">Вес</button><button class="progress-metric" data-metric="fatPercent">% Жира</button><button class="progress-metric" data-metric="calories">Ккал</button><button class="progress-metric" data-metric="protein">Белки</button><button class="progress-metric" data-metric="fat">Жиры</button><button class="progress-metric" data-metric="carbs">Углеводы</button><button class="progress-metric" data-metric="water">Вода</button><button class="progress-metric" data-metric="steps">Шаги</button><button class="progress-metric" data-metric="burnedCalories">Потраченные ккал</button><button class="progress-metric" data-metric="totalBurned">Всего потрачено</button><button class="progress-metric" data-metric="calorieBalance">Баланс ккал</button><button class="progress-metric" data-metric="trainingMinutes">Тренировки, мин</button></div>
+          <div id="analyticsChart" class="progress-chart-wrap"></div>
+          <div class="progress-legend"><div><span class="legend-dot"></span><span id="progressLegendPrimary">Вес — ежедневные измерения</span></div><div><span class="legend-line"></span><span>Тренд — сглаженное изменение</span></div></div>
+        </div>
+
+        <div class="dashboard-section">
+          <div class="dashboard-section-title">🍽 Питание</div>
+          <div id="nutritionDashboard" class="dashboard-kpis"></div>
+          <div class="mini-note">Средние значения рассчитываются только по дням, где соответствующий показатель заполнен.</div>
+        </div>
+
+        <div class="dashboard-section">
+          <div class="dashboard-section-title">⚡ Энергетический баланс</div>
+          <div id="energyDashboard" class="dashboard-kpis"></div>
+        </div>
+
+        <div class="dashboard-section">
+          <div class="dashboard-section-title">🏃 Активность и тренировки</div>
+          <div id="activityDashboard" class="training-kpis"></div>
+        </div>
+
+        <div class="dashboard-section">
+          <div class="dashboard-section-title">🧬 Состав тела</div>
+          <div id="bodyDashboard" class="dashboard-kpis"></div>
+        </div>
+
+        <div class="dashboard-section">
+          <div class="dashboard-section-title">📏 Объёмы</div>
+          <div id="volumeDashboard" class="volume-grid"></div>
+          <div class="mini-note">Если в выбранном периоде был один замер, показывается его значение; при нескольких замерах — среднее.</div>
+        </div>
+
+        <div class="dashboard-section">
+          <div class="dashboard-section-title">🔎 Связи показателей</div>
+          <div class="note">Сравниваем данные предыдущего дня с весом следующего дня. <b>r</b> — статистическая связь от −1 до +1 и не доказывает причинность.</div>
+          <div id="weightCorrelations" class="correlation-grid" style="margin-top:10px"></div>
+        </div>
+
+        <div class="dashboard-section">
+          <div class="progress-section-title" style="margin-top:0">Ежедневные цели — календарь</div>
+          <div class="calendarHead"><button id="prevMonth">‹</button><strong id="monthTitle"></strong><button id="nextMonth">›</button></div>
+          <div class="weekdays"><span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span></div>
+          <div id="habitCalendar" class="calendar"></div><div id="dayDetail" style="margin-top:11px"></div>
+        </div>
+
+        <div class="dashboard-section">
+          <div class="progress-section-title" style="margin-top:0">Недельные цели</div>
+          <div id="weeklyGoalDashboard"></div>
+        </div>
+
+        <div class="dashboard-section">
+          <div class="progress-section-title" style="margin-top:0">Анализ еженедельных отчётов</div>
+          <div id="analyticsWeeklyStats" class="weekly-report-list"></div>
+        </div>
       </div>
-
-
     </section>
 
     <section id="view-profile" class="view">
@@ -283,7 +308,7 @@
 (() => {
   'use strict';
 
-  const APP_VERSION = '2.11.12';
+  const APP_VERSION = '2.11.13';
   const KEY = 'formavs_v2';
   const LEGACY_KEY = 'forma_v2';
   const todayStr = () => {
@@ -868,16 +893,6 @@
   function periodChange(key,start,end){
     const vals=periodValues(key,start,end); if(vals.length<2)return null; return round(vals.at(-1)-vals[0]);
   }
-  function avgCard(key,start,end){
-    const avg=averageValue(key,start,end), ch=periodChange(key,start,end), unit=JOURNAL_UNITS[key]||'';
-    const value=avg==null?'—':`${avg} ${unit}`.trim();
-    const change=ch==null?'':`Изменение: <span class="${ch<0?'trend-down':ch>0?'trend-up':'trend-flat'}">${ch>0?'+':''}${ch} ${unit}</span>`;
-    return `<div class="progress-average-card"><div class="label">${esc(JOURNAL_LABELS[key])}</div><div class="value">${value}</div><div class="change">${change}</div></div>`;
-  }
-  function periodSummary(start,end){
-    const keys=['weight','fatPercent','calories','protein','fat','carbs','water','steps','burnedCalories','totalBurned','calorieBalance','trainingMinutes'];
-    return `<div class="progress-summary-title">Средние значения за выбранный период</div>${keys.map(k=>avgCard(k,start,end)).join('')}`;
-  }
   function renderProgressChart(key,end,period){
     const data=progressMetricRows(key,end,period).rows;
     if(!data.length) return '<div class="progress-empty">Нет данных за выбранный период.</div>';
@@ -891,9 +906,9 @@
     const trend=smooth.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
     const grid=[0,1,2,3].map(i=>{const yy=top+i*(H-top-bottom)/3;const v=max-(range*i/3);return `<line x1="${left}" y1="${yy}" x2="${W-right}" y2="${yy}" stroke="#edf0f4" stroke-dasharray="5 6"/><text x="4" y="${yy+5}" fill="#8a8f98" font-size="13">${round(v)}</text>`}).join('');
     const labels=pts.map((p,i)=>{if(data.length>10&&i%Math.ceil(data.length/7)!==0&&i!==data.length-1)return '';const lab=period==='week'?fmtWeekday(p[2].dates[0]):p[2].label.split(' — ')[0];return `<text x="${p[0]}" y="${H-13}" text-anchor="middle" fill="#8a8f98" font-size="12">${esc(lab)}</text>`}).join('');
-    const circles=pts.map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="4.6" fill="#3b82f6" stroke="#fff" stroke-width="2"><title>${esc(p[2].label)}: ${p[2].avg} ${JOURNAL_UNITS[key]}</title></circle>`).join('');
+    const circles=pts.map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="4.6" fill="#7184e7" stroke="#fff" stroke-width="2"><title>${esc(p[2].label)}: ${p[2].avg} ${JOURNAL_UNITS[key]}</title></circle>`).join('');
     const unit=JOURNAL_UNITS[key];
-    return `<div class="progress-chart"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="График ${esc(JOURNAL_LABELS[key])}">${grid}<path d="${path}" fill="none" stroke="#6ea0f2" stroke-width="2" opacity=".65"/><path d="${trend}" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>${circles}${labels}</svg></div>`;
+    return `<div class="progress-chart"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="График ${esc(JOURNAL_LABELS[key])}">${grid}<path d="${path}" fill="none" stroke="#9fb0f2" stroke-width="2" opacity=".65"/><path d="${trend}" fill="none" stroke="#5b6fe8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>${circles}${labels}</svg></div>`;
   }
   function pearsonCorrelation(pairs){
     if(pairs.length<3) return null;
@@ -918,7 +933,7 @@
   }
   function renderCorrelationCard(title,kind,start,end,unit){
     const pairs=correlationPairs(kind,start,end), r=pearsonCorrelation(pairs);
-    const sourceLabel=kind==='calories'?'ккал':kind==='steps'?'шаги':kind==='totalBurned'?'всего потраченных ккал':'баланс ккал';
+    const sourceLabel=kind==='calories'?'ккал':kind==='steps'?'шаги':kind==='calorieBalance'?'баланс ккал':'всего потраченных ккал';
     if(!pairs.length) return `<div class="correlation-card"><div class="correlation-title">${title}</div><div class="correlation-empty">Нет пары данных: нужны ${sourceLabel} за предыдущий день и вес следующего дня.</div></div>`;
     if(pairs.length<3) return `<div class="correlation-card"><div class="correlation-title">${title}</div><div class="correlation-stat">Данных: <b>${pairs.length}</b>. Для расчёта r нужно минимум 3 пары.</div><div class="correlation-empty">Добавьте ещё данные в дневник.</div></div>`;
     const xs=pairs.map(p=>p.x),ys=pairs.map(p=>p.y),minX=Math.min(...xs),maxX=Math.max(...xs),minY=Math.min(...ys),maxY=Math.max(...ys);
@@ -928,86 +943,131 @@
     const slope=xs.reduce((sum,x,i)=>sum+(x-meanX)*(ys[i]-meanY),0)/(xs.reduce((sum,x)=>sum+(x-meanX)**2,0)||1);
     const intercept=meanY-slope*meanX;
     const x1=minX,x2=maxX,y1=slope*x1+intercept,y2=slope*x2+intercept;
-    const dots=pairs.map(p=>`<circle cx="${px(p.x).toFixed(1)}" cy="${py(p.y).toFixed(1)}" r="4" fill="#3b82f6" stroke="#fff" stroke-width="2"><title>${fmt(p.date)}: ${p.x} ${unit} → ${p.y} кг</title></circle>`).join('');
+    const dots=pairs.map(p=>`<circle cx="${px(p.x).toFixed(1)}" cy="${py(p.y).toFixed(1)}" r="4" fill="#7184e7" stroke="#fff" stroke-width="2"><title>${fmt(p.date)}: ${p.x} ${unit} → ${p.y} кг</title></circle>`).join('');
     const rr=Math.max(-1,Math.min(1,r));
-    return `<div class="correlation-card"><div class="correlation-title">${title}</div><div class="correlation-stat"><b>r = ${rr.toFixed(2)}</b> · пар данных: ${pairs.length}</div><div class="correlation-chart"><svg viewBox="0 0 ${W} ${H}" aria-label="${esc(title)}"><line x1="${l}" y1="${H-b}" x2="${W-rgt}" y2="${H-b}" stroke="#dbe1e8"/><line x1="${l}" y1="${t}" x2="${l}" y2="${H-b}" stroke="#dbe1e8"/><line x1="${px(x1)}" y1="${py(y1)}" x2="${px(x2)}" y2="${py(y2)}" stroke="#6ea0f2" stroke-width="2" stroke-dasharray="5 5"/>${dots}<text x="${W/2}" y="${H-7}" text-anchor="middle" fill="#8a8f98" font-size="11">${unit} за предыдущий день</text><text x="10" y="${H/2}" text-anchor="middle" fill="#8a8f98" font-size="11" transform="rotate(-90 10 ${H/2})">Вес текущего дня, кг</text></svg></div></div>`;
+    return `<div class="correlation-card"><div class="correlation-title">${title}</div><div class="correlation-stat"><b>r = ${rr.toFixed(2)}</b> · пар данных: ${pairs.length}</div><div class="correlation-chart"><svg viewBox="0 0 ${W} ${H}" aria-label="${esc(title)}"><line x1="${l}" y1="${H-b}" x2="${W-rgt}" y2="${H-b}" stroke="#dbe1e8"/><line x1="${l}" y1="${t}" x2="${l}" y2="${H-b}" stroke="#dbe1e8"/><line x1="${px(x1)}" y1="${py(y1)}" x2="${px(x2)}" y2="${py(y2)}" stroke="#9fb0f2" stroke-width="2" stroke-dasharray="5 5"/>${dots}<text x="${W/2}" y="${H-7}" text-anchor="middle" fill="#8a8f98" font-size="11">${unit} за предыдущий день</text><text x="10" y="${H/2}" text-anchor="middle" fill="#8a8f98" font-size="11" transform="rotate(-90 10 ${H/2})">Вес текущего дня, кг</text></svg></div></div>`;
   }
   function renderWeightCorrelations(start,end){
     $('weightCorrelations').innerHTML=renderCorrelationCard('Вчерашние калории → сегодняшний вес','calories',start,end,'ккал')+renderCorrelationCard('Вчерашние шаги → сегодняшний вес','steps',start,end,'шагов')+renderCorrelationCard('Вчера всего потрачено → сегодняшний вес','totalBurned',start,end,'ккал')+renderCorrelationCard('Вчерашний баланс → сегодняшний вес','calorieBalance',start,end,'ккал');
   }
   function goalSnapshotForAnalyticsRange(start,end){
-    const mid=addDays(start,3), calendarWeek=analyticsWeekStartDate(mid);
+    const mid=addDays(start,3), calendarWeek=weekStartDate(mid);
     if(calendarWeek===weekStartDate(todayStr())) return state.weeklyGoals.map(g=>({id:g.id,label:g.label,fixed:g.fixed,done:!!state.weeklyDone[g.id]}));
     const h=state.weeklyHistory?.[calendarWeek];
     return h?.goals ? h.goals.map(g=>({...g})) : state.weeklyGoals.map(g=>({id:g.id,label:g.label,fixed:g.fixed,done:false}));
   }
+  function periodRangeDays(start,end){return Math.max(1,Math.round((parseDate(end)-parseDate(start))/86400000)+1);}
+  function previousPeriodStartEnd(start,end){
+    const days=periodRangeDays(start,end); const e=addDays(start,-1); return [addDays(e,-(days-1)),e];
+  }
+  function registrationDateValue(key){
+    const d=state.profile.registrationDate;if(!d)return null;
+    return key==='weight'?n(state.weights[d]??state.profile.weight):journalValue(d,key) ?? (MEASUREMENTS.some(([k])=>k===key)?n(state.measurements[d]?.[key]):null);
+  }
+  function signedDelta(a,b,unit=''){if(a==null||b==null)return '—';const d=round(a-b);return `${d>0?'+':''}${d} ${unit}`.trim();}
+  function goalAwareClass(key,diff){
+    if(diff==null||Math.abs(diff)<0.0001)return 'metric-neutral';
+    if(key==='weight'){
+      const g=state.profile.goal; if(g==='lose')return diff<0?'metric-good':'metric-bad'; if(g==='gain')return diff>0?'metric-good':'metric-bad'; return Math.abs(diff)<=0.2?'metric-good':'metric-bad';
+    }
+    return 'metric-neutral';
+  }
+  function avgCard(key,start,end){
+    const avg=averageValue(key,start,end), unit=JOURNAL_UNITS[key]||'';
+    const reg=registrationDateValue(key), delta=avg!=null&&reg!=null?round(avg-reg):null;
+    const value=avg==null?'—':`${avg} ${unit}`.trim();
+    const change=delta==null?'от регистрации: —':`от регистрации: <span class="${goalAwareClass(key,delta)}">${delta>0?'+':''}${delta} ${unit}</span>`;
+    return `<div class="progress-average-card"><div class="label">${esc(JOURNAL_LABELS[key])}</div><div class="value">${value}</div><div class="change">${change}</div></div>`;
+  }
+  function periodSummary(start,end){
+    const keys=['weight','calories','steps','water','totalBurned','calorieBalance'];
+    return `<div class="progress-summary-title">Средние значения за выбранный период</div>${keys.map(k=>avgCard(k,start,end)).join('')}`;
+  }
+  function renderComparison(start,end){
+    const period=state.ui.analyticsPeriod||'week', prev=previousPeriodStartEnd(start,end), reg=state.profile.registrationDate;
+    const rows=[];
+    const addRow=(k,label,unit=JOURNAL_UNITS[k]||'',special=null)=>{
+      const cur=special?special(start,end):averageValue(k,start,end), pv=period==='all'?null:(special?special(prev[0],prev[1]):averageValue(k,prev[0],prev[1])), rv=reg?registrationDateValue(k):null;
+      const dp=cur!=null&&pv!=null?round(cur-pv):null, dr=cur!=null&&rv!=null?round(cur-rv):null;
+      rows.push(`<tr><td>${esc(label)}</td><td>${cur!=null?cur+' '+unit:'—'}</td><td>${dp==null?'—':`<span class="${goalAwareClass(k,dp)}">${dp>0?'+':''}${dp} ${unit}</span>`}</td><td>${dr==null?'—':`${dr>0?'+':''}${dr} ${unit}`}</td></tr>`);
+    };
+    ['weight','calories','protein','fat','carbs','water','steps','burnedCalories','totalBurned','calorieBalance','trainingMinutes'].forEach(k=>addRow(k,k==='trainingMinutes'?'Время тренировок':JOURNAL_LABELS[k]));
+    addRow('fatPercent','% Жира','%');
+    MEASUREMENTS.forEach(([k,label])=>addRow(k,label,'см'));
+    addRow('activity','Тренировки','раз',(a,b)=>trainingStats(a,b).total);
+    $('periodComparison').innerHTML=`<table class="comparison-table"><thead><tr><th>Показатель</th><th>Текущий</th><th>К предыдущему</th><th>От регистрации</th></tr></thead><tbody>${rows.join('')}</tbody></table><div class="mini-note">Главное значение — среднее за выбранный период. Для тренировок показано количество за период. Для «Весь период» сравнение с предыдущим периодом не рассчитывается.</div>`;
+  }
+  function renderWeightDashboard(start,end){
+    const vals=weightValuesInRange(start,end).map(x=>x.value), avg=vals.length?round(vals.reduce((a,b)=>a+b,0)/vals.length):null;
+    const first=vals[0], last=vals.at(-1), diff=first!=null&&last!=null?round(last-first):null;
+    const target=n(state.profile.target), goal=state.profile.goal;
+    let targetText='—'; if(avg!=null&&target!=null) targetText=goal==='lose'?`${round(avg-target)} кг` : goal==='gain'?`${round(target-avg)} кг` : `${round(Math.abs(avg-target))} кг`;
+    $('weightDashboard').innerHTML=`<div class="dashboard-kpis"><div class="dashboard-kpi"><div class="label">Средний вес</div><div class="value">${avg!=null?avg+' кг':'—'}</div></div><div class="dashboard-kpi"><div class="label">Изменение в периоде</div><div class="value ${goalAwareClass('weight',diff)}">${diff==null?'—':(diff>0?'+':'')+diff+' кг'}</div></div><div class="dashboard-kpi"><div class="label">До цели</div><div class="value">${targetText}</div></div></div><div class="mini-note">Изменение: ${first!=null&&last!=null?first+' кг → '+last+' кг':'нет двух измерений'}${target!=null?' · цель '+target+' кг':''}</div>`;
+  }
+  function renderNutritionDashboard(start,end){
+    $('nutritionDashboard').innerHTML=['calories','protein','fat','carbs','water'].map(k=>avgCard(k,start,end)).join('');
+  }
+  function renderEnergyDashboard(start,end){
+    const vals=(k)=>averageValue(k,start,end); const a=vals('calories'), b=vals('burnedCalories'), t=vals('totalBurned'), bal=vals('calorieBalance');
+    $('energyDashboard').innerHTML=[['Потреблено',a,'ккал'],['Потрачено активностью',b,'ккал'],['Всего потрачено',t,'ккал'],['Баланс',bal,'ккал']].map(([l,v,u])=>`<div class="dashboard-kpi"><div class="label">${l}</div><div class="value">${v!=null?v+' '+u:'—'}</div><div class="sub">среднее за период</div></div>`).join('');
+  }
+  function trainingStats(start,end){
+    let total=0,strength=0,cardio=0,minutes=0,strengthMin=0,cardioMin=0;
+    for(let d=parseDate(start);d<=parseDate(end);d.setDate(d.getDate()+1)){const j=state.journal[iso(d)]||{},type=j.trainingType||(j.activity?'strength':'');const mins=n(j.trainingMinutes)||0;if(type){total++;minutes+=mins;if(type==='strength'){strength++;strengthMin+=mins}if(type==='cardio'){cardio++;cardioMin+=mins}}}
+    return {total,strength,cardio,minutes,strengthMin,cardioMin};
+  }
+  function renderActivityDashboard(start,end){
+    const s=trainingStats(start,end),days=periodRangeDays(start,end),steps=averageValue('steps',start,end),burn=averageValue('totalBurned',start,end);
+    $('activityDashboard').innerHTML=[['Шаги',steps!=null?round(steps):null,'в среднем / день'],['Тренировки',s.total,'за период'],['Время',s.minutes,'минут'],['Силовые',s.strength,`${s.strengthMin} мин`],['Кардио',s.cardio,`${s.cardioMin} мин`],['Всего потрачено',burn,'ккал / день']].map(([l,v,u])=>`<div class="training-kpi"><div class="label">${l}</div><div class="value">${v!=null?v:'—'}</div><div class="sub">${u}</div></div>`).join('');
+  }
+  function renderBodyDashboard(start,end){
+    const vals=Object.keys(state.journal||{}).filter(d=>d>=start&&d<=end).map(d=>bodyFatAt(d)).filter(v=>v!=null); const avg=vals.length?round(vals.reduce((a,b)=>a+b,0)/vals.length):null;
+    const fatMass=periodValues('weight',start,end).length&&avg!=null?round(averageValue('weight',start,end)*avg/100,1):null;
+    $('bodyDashboard').innerHTML=[['% Жира',avg,'%',true],['Жировая масса',fatMass,'кг',false],['Безжировая масса',avg!=null&&averageValue('weight',start,end)!=null?round(averageValue('weight',start,end)-fatMass,1):null,'кг',false]].map(([l,v,u])=>`<div class="dashboard-kpi"><div class="label">${l}</div><div class="value">${v!=null?v+' '+u:'—'}</div><div class="sub">${v!=null?'среднее за период':'нет данных'}</div></div>`).join('');
+  }
+  function renderVolumeDashboard(start,end){
+    $('volumeDashboard').innerHTML=MEASUREMENTS.map(([k,label])=>{const v=averageValue(k,start,end);return `<div class="volume-card"><div class="label">${esc(label)}</div><div class="value">${v!=null?v+' см':'—'}</div></div>`}).join('');
+  }
+  function renderWeeklyGoalDashboard(){
+    const start=analyticsWeekStartDate(state.ui.analyticsDate||todayStr()), goals=goalSnapshotForAnalyticsRange(start,addDays(start,6)), done=goals.filter(g=>g.done).length,total=goals.length,pct=total?Math.round(done/total*100):0;
+    const items=goals.map(g=>`<div class="weekly-goal"><span class="weekly-goal-label">${esc(g.label)}</span><span class="weekly-goal-status ${g.done?'done':'not-done'}">${g.done?'✓':'✕'}</span></div>`).join('');
+    $('weeklyGoalDashboard').innerHTML=`<div class="note ${pct===100?'good':''}"><b>${done}/${total}</b> целей · <b>${pct}%</b></div><div class="weekly-goals-grid">${items}</div>`;
+  }
   function weeklyReportData(){
-    const out=[];
-    const currentStart=analyticsWeekStartDate(todayStr());
-    for(let i=0;i<12;i++){
+    const out=[], currentStart=analyticsWeekStartDate(todayStr()), reg=state.profile.registrationDate;
+    for(let i=0;i<104;i++){
       const start=addDays(currentStart,-7*i), end=addDays(start,6);
-      if(state.profile.registrationDate && end<state.profile.registrationDate) continue;
+      if(reg && end<reg) break;
       const goals=goalSnapshotForAnalyticsRange(start,end);
       out.push({key:start,start,end,goals,pct:goals.length?Math.round(goals.filter(g=>g.done).length/goals.length*100):0});
     }
     return out;
   }
   function weeklyReportMetrics(start,end){
-    const weights=weightValuesInRange(start,end);
-    const avg=weights.length?round(weights.reduce((a,b)=>a+b.value,0)/weights.length):null;
-    const min=weights.length?Math.min(...weights.map(x=>x.value)):null;
-    const latestMeasurement=(key)=>{const rows=measurementValuesInRange(key,start,end);return rows.length?rows.at(-1).value:null;};
-    const fatRows=Object.keys(state.measurements||{}).filter(d=>d>=start&&d<=end).sort().map(d=>({date:d,value:bodyFatAt(d)})).filter(x=>x.value!=null);
-    let trainingCount=0, strengthCount=0, cardioCount=0, trainingMinutes=0, strengthMinutes=0, cardioMinutes=0;
-    for(let d=parseDate(start); d<=parseDate(end); d.setDate(d.getDate()+1)){
-      const day=state.journal[iso(d)]||{};
-      const type=day.trainingType || (day.activity?'strength':'');
-      const mins=n(day.trainingMinutes)||0;
-      if(type){
-        trainingCount++;
-        trainingMinutes+=mins;
-        if(type==='strength'){strengthCount++;strengthMinutes+=mins;}
-        if(type==='cardio'){cardioCount++;cardioMinutes+=mins;}
-      }
-    }
-    return {
-      fat:fatRows.length?fatRows.at(-1).value:null,
-      avg,min,
-      neck:latestMeasurement('neck'),waist:latestMeasurement('waist'),hips:latestMeasurement('hips'),chest:latestMeasurement('chest'),
-      armR:latestMeasurement('armR'),armL:latestMeasurement('armL'),legR:latestMeasurement('legR'),legL:latestMeasurement('legL'),
-      trainingCount,strengthCount,cardioCount,trainingMinutes,strengthMinutes,cardioMinutes
-    };
+    const weights=weightValuesInRange(start,end), avg=weights.length?round(weights.reduce((a,b)=>a+b.value,0)/weights.length):null, min=weights.length?Math.min(...weights.map(x=>x.value)):null;
+    const avgM=k=>averageValue(k,start,end); const s=trainingStats(start,end);
+    return {fat:avgM('fatPercent'),avg,min,neck:avgM('neck'),waist:avgM('waist'),hips:avgM('hips'),chest:avgM('chest'),armR:avgM('armR'),armL:avgM('armL'),legR:avgM('legR'),legL:avgM('legL'),trainingCount:s.total,strengthCount:s.strength,cardioCount:s.cardio,trainingMinutes:s.minutes,strengthMinutes:s.strengthMin,cardioMinutes:s.cardioMin};
   }
   function renderAnalyticsWeeklyStats(){
     const rows=weeklyReportData();
     if(!rows.length){$('analyticsWeeklyStats').innerHTML='<div class="progress-empty">Пока нет завершённых недельных отчётов.</div>';return;}
     const metric=(label,value,unit='')=>`<div class="weekly-report-item"><div class="wk-label">${label}</div><div class="wk-value">${value!=null?value+' '+unit:'—'}</div></div>`;
-    $('analyticsWeeklyStats').innerHTML=rows.map(r=>{
-      const m=weeklyReportMetrics(r.start,r.end);
-      const done=r.goals.filter(g=>g.done).length,total=r.goals.length,pct=total?Math.round(done/total*100):0;
-      const goals=r.goals.map(g=>`<div class="weekly-goal"><span class="weekly-goal-label">${esc(g.label)}</span><span class="weekly-goal-status ${g.done?'done':'not-done'}">${g.done?'✓':'✕'}</span></div>`).join('');
-      return `<div class="weekly-report"><div class="weekly-report-date">${fmtLong(r.start)} — ${fmtLong(r.end)}</div><div class="weekly-report-grid">
-        <div class="weekly-report-row cols3">${metric('% Жира',m.fat,'%')} ${metric('Средний вес',m.avg,'кг')} ${metric('Мин. вес',m.min,'кг')}</div>
-        <div class="weekly-report-row cols3">${metric('Шея',m.neck,'см')} ${metric('Талия',m.waist,'см')} ${metric('Бёдра',m.hips,'см')}</div>
-        <div class="weekly-report-row cols3">${metric('Грудь',m.chest,'см')} ${metric('Пр. рука',m.armR,'см')} ${metric('Лев. рука',m.armL,'см')}</div>
-        <div class="weekly-report-row cols2">${metric('Пр. нога',m.legR,'см')} ${metric('Лев. нога',m.legL,'см')}</div>
-      </div><div class="weekly-report-bottom"><div class="weekly-goal-summary"><b>${done}/${total}</b> целей · <b>${pct}%</b><div class="weekly-goals-grid">${goals}</div></div><div class="weekly-training"><b>Всего тренировок: ${m.trainingCount}</b> · ${m.trainingMinutes} мин<br>Силовые: ${m.strengthCount} · ${m.strengthMinutes} мин<br>Кардио: ${m.cardioCount} · ${m.cardioMinutes} мин</div></div></div>`;
-    }).join('');
+    $('analyticsWeeklyStats').innerHTML=rows.map(r=>{const m=weeklyReportMetrics(r.start,r.end),done=r.goals.filter(g=>g.done).length,total=r.goals.length,pct=total?Math.round(done/total*100):0,goals=r.goals.map(g=>`<div class="weekly-goal"><span class="weekly-goal-label">${esc(g.label)}</span><span class="weekly-goal-status ${g.done?'done':'not-done'}">${g.done?'✓':'✕'}</span></div>`).join('');return `<div class="weekly-report"><div class="weekly-report-date">${fmtLong(r.start)} — ${fmtLong(r.end)}</div><div class="weekly-report-grid"><div class="weekly-report-row cols3">${metric('% Жира',m.fat,'%')}${metric('Средний вес',m.avg,'кг')}${metric('Мин. вес',m.min,'кг')}</div><div class="weekly-report-row cols3">${metric('Талия',m.waist,'см')}${metric('Бёдра',m.hips,'см')}${metric('Грудь',m.chest,'см')}</div><div class="weekly-report-row cols2">${metric('Пр. рука',m.armR,'см')}${metric('Лев. рука',m.armL,'см')}</div><div class="weekly-report-row cols2">${metric('Пр. нога',m.legR,'см')}${metric('Лев. нога',m.legL,'см')}</div></div><div class="weekly-report-bottom"><div class="weekly-goal-summary"><b>${done}/${total}</b> целей · <b>${pct}%</b><div class="weekly-goals-grid">${goals}</div></div><div class="weekly-training"><b>Всего тренировок: ${m.trainingCount}</b> · ${m.trainingMinutes} мин<br>Силовые: ${m.strengthCount} · ${m.strengthMinutes} мин<br>Кардио: ${m.cardioCount} · ${m.cardioMinutes} мин</div></div></div>`}).join('');
   }
   function renderAnalytics(){
     const end=state.ui.analyticsDate||todayStr(),period=state.ui.analyticsPeriod||'week',key=state.ui.analyticsMetric||'weight';
-    const weekStartSelect=$('analyticsWeekStart'); if(weekStartSelect) weekStartSelect.value=String(state.ui.analyticsWeekStartDay ?? 1);
+    const weekStartSelect=$('analyticsWeekStart');if(weekStartSelect)weekStartSelect.value=String(state.ui.analyticsWeekStartDay??1);
     const [start,endDate]=periodStartEnd(end,period);
     $('progressSummary').innerHTML=periodSummary(start,endDate);
+    $('dashboardPeriodCaption').textContent=`${fmtLong(start)} — ${fmtLong(endDate)}`;
+    renderComparison(start,endDate);renderWeightDashboard(start,endDate);renderNutritionDashboard(start,endDate);renderEnergyDashboard(start,endDate);renderActivityDashboard(start,endDate);renderBodyDashboard(start,endDate);renderVolumeDashboard(start,endDate);
     document.querySelectorAll('.progress-metric').forEach(b=>b.classList.toggle('active',b.dataset.metric===key));
     document.querySelectorAll('.progress-period').forEach(b=>b.classList.toggle('active',b.dataset.period===period));
-    $('progressLegendPrimary').textContent=`${JOURNAL_LABELS[key]} — ${key==='weight'?'ежедневные измерения':'значения за период'}`;
+    $('progressLegendPrimary').textContent=`${JOURNAL_LABELS[key]} — ${key==='weight'?'ежедневные измерения':'средние значения'}`;
     $('analyticsChart').innerHTML=renderProgressChart(key,endDate,period);
     $('progressRangeLabel').textContent=`${fmtLong(start)} — ${fmtLong(endDate)}`;
     const today=todayStr();$('progressNext').disabled=period==='all'||endDate>=today;
-    renderWeightCorrelations(start,endDate);
-    renderAnalyticsWeeklyStats();
-    renderCalendar();
+    renderWeightCorrelations(start,endDate);renderWeeklyGoalDashboard();renderAnalyticsWeeklyStats();renderCalendar();
   }
   function bind(){
     document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{
@@ -1109,7 +1169,7 @@
     load();renderMeasurementFields();bind();renderProfileFields();renderHome();renderWeek();renderJournal();renderAnalytics();
     setInterval(()=>{if(todayStr()!==state._lastDay){state._lastDay=todayStr();rolloverWeek();state.ui.habitDate=todayStr();state.ui.journalDate=todayStr();save();renderHome();renderJournal();renderWeek();renderAnalytics();}},30000);
     if ('serviceWorker' in navigator) {
-      const APP_VERSION='2.11.12';
+      const APP_VERSION='2.11.13';
       let reloadScheduled = false;
       function reloadOnceAfterUpdate(){
         if(reloadScheduled) return;
