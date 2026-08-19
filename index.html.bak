@@ -3,14 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#2563eb">
+  <meta name="theme-color" content="#111827">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="FormulaVS">
   <title>FormulaVS</title>
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="icon" type="image/png" sizes="48x48" href="icon-48.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
   <style>
     :root{
       --bg:#f5f7fb;--card:#fff;--ink:#172033;--muted:#6b7280;--line:#e6eaf0;
@@ -85,14 +83,14 @@
     .progress-metric-tabs{display:flex;gap:10px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:none}
     .progress-metric-tabs::-webkit-scrollbar{display:none}
     .progress-metric{border:0;background:#f1f1f1;color:#707070;border-radius:999px;padding:9px 17px;font-weight:600;white-space:nowrap}
-    .progress-metric.active{background:var(--accent);color:#fff}
+    .progress-metric.active{background:#5b6fe8;color:#fff}
     .progress-chart-wrap{position:relative;margin:4px 0 0;padding:0 0 2px}
     .progress-chart{border:0;background:#fff;padding:0;overflow:hidden}
     .progress-chart svg{width:100%;height:auto;display:block}
     .progress-legend{display:flex;flex-direction:column;gap:6px;margin:8px 0 15px;color:#6b7280;font-size:.86rem}
-    .legend-dot,.legend-line{display:inline-block;vertical-align:middle;margin-right:8px}.legend-dot{width:10px;height:10px;border-radius:50%;background:#6f83e8}.legend-line{width:18px;height:3px;border-radius:3px;background:#2563eb}
+    .legend-dot,.legend-line{display:inline-block;vertical-align:middle;margin-right:8px}.legend-dot{width:10px;height:10px;border-radius:50%;background:#6f83e8}.legend-line{width:18px;height:3px;border-radius:3px;background:#5b6fe8}
     .progress-periods{display:flex;gap:8px;overflow-x:auto;padding:0 0 10px;scrollbar-width:none}.progress-periods::-webkit-scrollbar{display:none}
-    .progress-period{border:0;background:#f1f1f1;color:#777;border-radius:999px;padding:9px 18px;font-weight:600;white-space:nowrap}.progress-period.active{background:var(--accent);color:#fff}
+    .progress-period{border:0;background:#f1f1f1;color:#777;border-radius:999px;padding:9px 18px;font-weight:600;white-space:nowrap}.progress-period.active{background:#5b6fe8;color:#fff}
     .progress-range{display:flex;align-items:center;justify-content:center;gap:14px;margin:3px 0 26px;color:#5b5b5b;font-size:.86rem}.progress-range button{border:0;background:#f1f1f1;color:#aaa;width:38px;height:38px;border-radius:50%;font-size:1.45rem;line-height:1}.progress-range button:not(:disabled){color:#aaa}.progress-range button:disabled{opacity:.55}
     .weekly-report-list{display:grid;gap:12px}.weekly-report{border:1px solid #e7eaf0;border-radius:18px;padding:15px;background:#fff}.weekly-report-date{font-size:1.02rem;font-weight:800;margin-bottom:14px}.weekly-report-grid{display:grid;gap:13px 12px}.weekly-report-row{display:grid;gap:13px 12px}.weekly-report-row.cols3{grid-template-columns:repeat(3,minmax(0,1fr))}.weekly-report-row.cols2{grid-template-columns:repeat(2,minmax(0,1fr))}.weekly-report-item .wk-label{font-size:.78rem;color:#6b7280}.weekly-report-item .wk-value{font-size:1.02rem;font-weight:750;margin-top:2px}.weekly-report-bottom{display:block;margin-top:15px}.weekly-goal-summary{width:100%;margin:0;font-size:.92rem}.weekly-goal-summary b{font-size:1rem}.weekly-training{margin-top:12px;font-size:.82rem;color:#475569;font-weight:600;text-align:left}.weekly-goals-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 18px;margin-top:9px}.weekly-goal{display:flex;align-items:center;justify-content:space-between;gap:12px;min-width:0;font-size:.76rem;color:#475569}.weekly-goal-label{white-space:normal;overflow:visible;text-overflow:clip}.weekly-goal-status{font-size:.9rem;font-weight:800;flex:0 0 auto}.weekly-goal-status.done{color:#16a34a}.weekly-goal-status.not-done{color:#f43f5e}.progress-empty{padding:20px 8px;color:#94a3b8;text-align:center}
     @media(max-width:560px){.progress-summary{gap:10px}.progress-stat .label{font-size:.78rem}.progress-stat .value{font-size:1.12rem}.weekly-report-row{gap:12px 8px}.weekly-report-row.cols3{grid-template-columns:repeat(3,minmax(0,1fr))}.weekly-report-row.cols2{grid-template-columns:repeat(2,minmax(0,1fr))}.weekly-report{padding:13px}.weekly-goals-grid{gap:7px 18px}.weekly-goal{font-size:.72rem}.progress-heading{font-size:1.3rem}}
@@ -871,9 +869,9 @@
     const trend=smooth.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
     const grid=[0,1,2,3].map(i=>{const yy=top+i*(H-top-bottom)/3;const v=max-(range*i/3);return `<line x1="${left}" y1="${yy}" x2="${W-right}" y2="${yy}" stroke="#edf0f4" stroke-dasharray="5 6"/><text x="4" y="${yy+5}" fill="#8a8f98" font-size="13">${round(v)}</text>`}).join('');
     const labels=pts.map((p,i)=>{if(data.length>10&&i%Math.ceil(data.length/7)!==0&&i!==data.length-1)return '';const lab=period==='week'?fmtWeekday(p[2].dates[0]):p[2].label.split(' — ')[0];return `<text x="${p[0]}" y="${H-13}" text-anchor="middle" fill="#8a8f98" font-size="12">${esc(lab)}</text>`}).join('');
-    const circles=pts.map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="4.6" fill="#3b82f6" stroke="#fff" stroke-width="2"><title>${esc(p[2].label)}: ${p[2].avg} ${JOURNAL_UNITS[key]}</title></circle>`).join('');
+    const circles=pts.map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="4.6" fill="#7184e7" stroke="#fff" stroke-width="2"><title>${esc(p[2].label)}: ${p[2].avg} ${JOURNAL_UNITS[key]}</title></circle>`).join('');
     const unit=JOURNAL_UNITS[key];
-    return `<div class="progress-chart"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="График ${esc(JOURNAL_LABELS[key])}">${grid}<path d="${path}" fill="none" stroke="#6ea0f2" stroke-width="2" opacity=".65"/><path d="${trend}" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>${circles}${labels}</svg></div>`;
+    return `<div class="progress-chart"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="График ${esc(JOURNAL_LABELS[key])}">${grid}<path d="${path}" fill="none" stroke="#9fb0f2" stroke-width="2" opacity=".65"/><path d="${trend}" fill="none" stroke="#5b6fe8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>${circles}${labels}</svg></div>`;
   }
   function pearsonCorrelation(pairs){
     if(pairs.length<3) return null;
@@ -907,9 +905,9 @@
     const slope=xs.reduce((sum,x,i)=>sum+(x-meanX)*(ys[i]-meanY),0)/(xs.reduce((sum,x)=>sum+(x-meanX)**2,0)||1);
     const intercept=meanY-slope*meanX;
     const x1=minX,x2=maxX,y1=slope*x1+intercept,y2=slope*x2+intercept;
-    const dots=pairs.map(p=>`<circle cx="${px(p.x).toFixed(1)}" cy="${py(p.y).toFixed(1)}" r="4" fill="#3b82f6" stroke="#fff" stroke-width="2"><title>${fmt(p.date)}: ${p.x} ${unit} → ${p.y} кг</title></circle>`).join('');
+    const dots=pairs.map(p=>`<circle cx="${px(p.x).toFixed(1)}" cy="${py(p.y).toFixed(1)}" r="4" fill="#7184e7" stroke="#fff" stroke-width="2"><title>${fmt(p.date)}: ${p.x} ${unit} → ${p.y} кг</title></circle>`).join('');
     const rr=Math.max(-1,Math.min(1,r));
-    return `<div class="correlation-card"><div class="correlation-title">${title}</div><div class="correlation-stat"><b>r = ${rr.toFixed(2)}</b> · пар данных: ${pairs.length}</div><div class="correlation-chart"><svg viewBox="0 0 ${W} ${H}" aria-label="${esc(title)}"><line x1="${l}" y1="${H-b}" x2="${W-rgt}" y2="${H-b}" stroke="#dbe1e8"/><line x1="${l}" y1="${t}" x2="${l}" y2="${H-b}" stroke="#dbe1e8"/><line x1="${px(x1)}" y1="${py(y1)}" x2="${px(x2)}" y2="${py(y2)}" stroke="#6ea0f2" stroke-width="2" stroke-dasharray="5 5"/>${dots}<text x="${W/2}" y="${H-7}" text-anchor="middle" fill="#8a8f98" font-size="11">${unit} за предыдущий день</text><text x="10" y="${H/2}" text-anchor="middle" fill="#8a8f98" font-size="11" transform="rotate(-90 10 ${H/2})">Вес текущего дня, кг</text></svg></div></div>`;
+    return `<div class="correlation-card"><div class="correlation-title">${title}</div><div class="correlation-stat"><b>r = ${rr.toFixed(2)}</b> · пар данных: ${pairs.length}</div><div class="correlation-chart"><svg viewBox="0 0 ${W} ${H}" aria-label="${esc(title)}"><line x1="${l}" y1="${H-b}" x2="${W-rgt}" y2="${H-b}" stroke="#dbe1e8"/><line x1="${l}" y1="${t}" x2="${l}" y2="${H-b}" stroke="#dbe1e8"/><line x1="${px(x1)}" y1="${py(y1)}" x2="${px(x2)}" y2="${py(y2)}" stroke="#9fb0f2" stroke-width="2" stroke-dasharray="5 5"/>${dots}<text x="${W/2}" y="${H-7}" text-anchor="middle" fill="#8a8f98" font-size="11">${unit} за предыдущий день</text><text x="10" y="${H/2}" text-anchor="middle" fill="#8a8f98" font-size="11" transform="rotate(-90 10 ${H/2})">Вес текущего дня, кг</text></svg></div></div>`;
   }
   function renderWeightCorrelations(start,end){
     $('weightCorrelations').innerHTML=renderCorrelationCard('Вчерашние калории → сегодняшний вес','calories',start,end,'ккал')+renderCorrelationCard('Вчерашние шаги → сегодняшний вес','steps',start,end,'шагов')+renderCorrelationCard('Вчера всего потрачено → сегодняшний вес','totalBurned',start,end,'ккал');
@@ -1107,5 +1105,5 @@
 })();
 </script>
 </body>
-</html>
+</html>      if(!wasRegistered){ p.registrationSnapshot={name:p.name,gender:p.gender,birth:p.birth,height:p.height,weight:p.weight,target:p.target,goal:p.goal,steps:p.steps,activity:p.activity}; } else { freezeRegistrationSnapshot(); }
 

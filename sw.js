@@ -1,6 +1,6 @@
-const APP_CACHE = 'formulavs-shell-v2.11.9';
-const APP_VERSION = '2.11.9';
-const CORE_ASSETS = ['./','./index.html','./manifest.webmanifest','./icon.svg','./version.json'];
+const APP_CACHE = 'formulavs-shell-v2.11.10';
+const APP_VERSION = '2.11.10';
+const CORE_ASSETS = ['./','./index.html','./manifest.webmanifest','./icon.svg','./icon-48.png','./icon-180.png','./icon-192.png','./icon-512.png','./version.json'];
 
 self.addEventListener('install', event => {
   event.waitUntil(
@@ -52,7 +52,7 @@ self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
   if (url.origin !== self.location.origin) return;
 
-  if (url.pathname.endsWith('/version.json') || url.pathname.endsWith('/index.html') || url.pathname.endsWith('/sw.js')) {
+  if (url.pathname.endsWith('/version.json') || url.pathname.endsWith('/index.html') || url.pathname.endsWith('/sw.js') || url.pathname.endsWith('/manifest.webmanifest')) {
     event.respondWith(networkFirst(event.request));
     return;
   }
