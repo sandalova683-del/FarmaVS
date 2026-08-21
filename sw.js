@@ -7,6 +7,7 @@ self.addEventListener('install', event => {
     caches.open(APP_CACHE)
       .then(cache => cache.addAll(CORE_ASSETS))
       .then(() => self.skipWaiting())
+      .catch(err => console.warn('Cache install failed:', err))
   );
 });
 

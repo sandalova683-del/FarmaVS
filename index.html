@@ -32,7 +32,7 @@
     .brand-en{margin-top:2px;color:#94a3b8;font-size:.67rem;font-weight:750;letter-spacing:.12em;text-transform:uppercase}
     .tagline{margin:3px 0 0;color:#475569;font-size:.86rem;font-weight:650}
     .tabs{display:flex;gap:7px;overflow:auto;padding:4px 0 13px;position:sticky;top:0;background:rgba(245,247,251,.94);backdrop-filter:blur(10px);z-index:10}
-    .tab{border:1px solid var(--line);background:#fff;border-radius:14px;padding:9px 12px;white-space:nowrap;color:#475569}
+    .tab{border:1px solid var(--line);background:#fff;border-radius:14px;padding:9px 12px;white-space:nowrap;color:#475569;flex-shrink:0}
     .tab.active{background:#111827;color:#fff;border-color:#111827}
     .view{display:none}.view.active{display:block}
     .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px;margin:0 0 14px;box-shadow:var(--shadow)}
@@ -44,9 +44,10 @@
     input,select{width:100%;border:1px solid #d8dee8;background:#fbfcfe;color:var(--ink);border-radius:14px;padding:11px 12px;outline:none}
     input:focus,select:focus{border-color:#93b4ff;box-shadow:0 0 0 3px rgba(37,99,235,.10)}
     input[type=number]::-webkit-inner-spin-button{opacity:.4}
-    .btn{border:0;border-radius:14px;padding:12px 15px;background:var(--accent);color:#fff;font-weight:750;width:100%}
-    .btn.secondary{background:#111827}.btn.green{background:var(--green)}.btn.ghost{background:#f1f5f9;color:#1f2937}.btn.danger{background:#fee2e2;color:#991b1b}
+    .btn{border:0;border-radius:14px;padding:12px 15px;background:var(--accent);color:#fff;font-weight:750;width:100%;transition:opacity .15s}
+    .btn:hover{opacity:.9}
     .btn:active{transform:translateY(1px)}
+    .btn.secondary{background:#111827}.btn.green{background:var(--green)}.btn.ghost{background:#f1f5f9;color:#1f2937}.btn.danger{background:#fee2e2;color:#991b1b}
     .actions{display:flex;gap:8px}.actions .btn{flex:1}
     .metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
     .metric{border:1px solid var(--line);background:#fafbfc;border-radius:17px;padding:12px}
@@ -61,14 +62,14 @@
     .list{display:grid;gap:7px}.row{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid #eef1f5}.row:last-child{border-bottom:0}
     .row small{color:var(--muted)}
     .check{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:15px;padding:10px 11px;background:#fafbfc}
-    .check input{width:21px;height:21px;accent-color:var(--accent)}
-    .check label{flex:1}.check .x{border:0;background:transparent;color:#9ca3af;font-size:18px}
+    .check input{width:21px;height:21px;accent-color:var(--accent);flex-shrink:0}
+    .check label{flex:1}.check .x{border:0;background:transparent;color:#9ca3af;font-size:18px;padding:0 4px}
     .add{display:flex;gap:8px;margin-top:9px}.add input{flex:1}.add button{width:48px;border:0;border-radius:14px;background:#111827;color:#fff;font-weight:800}
     .calendarHead{display:flex;justify-content:space-between;align-items:center;gap:8px}.calendarHead button{border:1px solid var(--line);background:#fff;border-radius:12px;padding:7px 10px}
     .weekdays,.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}.weekdays{margin:10px 0 5px;color:#94a3b8;font-size:.68rem;text-align:center}
     .day{min-height:38px;border:1px solid transparent;border-radius:11px;background:#f1f5f9;display:grid;place-items:center;font-size:.76rem;position:relative}
-    .day.click{cursor:pointer}.day.today{outline:2px solid #111827}.day.sel{border:3px solid var(--accent);box-shadow:0 0 0 2px rgba(37,99,235,.12);font-weight:800}.day.future{opacity:.4}
-    .day.preReg{background:#f1f5f9;color:#cbd5e1}.day.p0{background:#fee2e2}.day.p1{background:#ffedd5}.day.p2{background:#fef3c7}.day.p3{background:#dcfce7}.day.p4{background:#bbf7d0}
+    .day.click{cursor:pointer}.day.today{outline:2px solid #111827}.day.sel{border:3px solid var(--accent);box-shadow:0 0 0 2px rgba(37,99,235,.12);font-weight:800}.day.future{opacity:.4;cursor:default}
+    .day.preReg{background:#f1f5f9;color:#cbd5e1;cursor:default}.day.p0{background:#fee2e2}.day.p1{background:#ffedd5}.day.p2{background:#fef3c7}.day.p3{background:#dcfce7}.day.p4{background:#bbf7d0}
     .chart{border:1px solid var(--line);border-radius:17px;background:#fafbfc;padding:10px;overflow:hidden}.chart svg{display:block;width:100%;height:auto}
     .table{width:100%;border-collapse:collapse;font-size:.78rem}.table th,.table td{text-align:left;padding:8px 5px;border-bottom:1px solid #eef1f5}.table th{color:#64748b;font-weight:650}
     .empty{padding:15px;color:#94a3b8;text-align:center;border:1px dashed #d9dee7;border-radius:14px}
@@ -82,9 +83,10 @@
     .progress-stat .label{color:#6b7280;font-size:.88rem;margin-bottom:6px}
     .progress-stat .value{font-size:1.35rem;font-weight:500;letter-spacing:-.3px;white-space:nowrap}
     .trend-down{color:#16a34a;font-weight:800}.trend-up{color:#ef5b68;font-weight:800}.trend-flat{color:#6b7280;font-weight:800}
+    .metric-good{color:#16a34a;font-weight:800}.metric-bad{color:#dc2626;font-weight:800}.metric-neutral{color:#6b7280}
     .progress-metric-tabs{display:flex;gap:10px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:none}
     .progress-metric-tabs::-webkit-scrollbar{display:none}
-    .progress-metric{border:0;background:#f1f1f1;color:#707070;border-radius:999px;padding:9px 17px;font-weight:600;white-space:nowrap}
+    .progress-metric{border:0;background:#f1f1f1;color:#707070;border-radius:999px;padding:9px 17px;font-weight:600;white-space:nowrap;flex-shrink:0}
     .progress-metric.active{background:#2563eb;color:#fff}.progress-metric:hover{background:#e8efff;color:#1d4ed8}.progress-metric.active:hover{background:#1d4ed8;color:#fff}
     .progress-chart-wrap{position:relative;margin:4px 0 0;padding:0 0 2px}
     .progress-chart{border:0;background:#fff;padding:0;overflow:hidden}
@@ -92,17 +94,59 @@
     .progress-legend{display:flex;flex-direction:column;gap:6px;margin:8px 0 15px;color:#6b7280;font-size:.86rem}
     .legend-dot,.legend-line{display:inline-block;vertical-align:middle;margin-right:8px}.legend-dot{width:10px;height:10px;border-radius:50%;background:#2563eb}.legend-line{width:18px;height:3px;border-radius:3px;background:#2563eb}
     .progress-periods{display:flex;gap:8px;overflow-x:auto;padding:0 0 10px;scrollbar-width:none}.progress-periods::-webkit-scrollbar{display:none}
-    .progress-period{border:0;background:#f1f1f1;color:#777;border-radius:999px;padding:9px 18px;font-weight:600;white-space:nowrap}.progress-period.active{background:var(--accent);color:#fff}
-    .progress-range{display:flex;align-items:center;justify-content:center;gap:14px;margin:3px 0 26px;color:#5b5b5b;font-size:.86rem}.progress-range button{border:0;background:#f1f1f1;color:#aaa;width:38px;height:38px;border-radius:50%;font-size:1.45rem;line-height:1}.progress-range button:not(:disabled){color:#aaa}.progress-range button:disabled{opacity:.55}
+    .progress-period{border:0;background:#f1f1f1;color:#777;border-radius:999px;padding:9px 18px;font-weight:600;white-space:nowrap;flex-shrink:0}.progress-period.active{background:var(--accent);color:#fff}
+    .progress-range{display:flex;align-items:center;justify-content:center;gap:14px;margin:3px 0 26px;color:#5b5b5b;font-size:.86rem}.progress-range button{border:0;background:#f1f1f1;color:#aaa;width:38px;height:38px;border-radius:50%;font-size:1.45rem;line-height:1;transition:background .15s}.progress-range button:not(:disabled):hover{background:#e0e0e0;color:#666}.progress-range button:disabled{opacity:.55;cursor:not-allowed}
     .weekly-report-list{display:grid;gap:12px}.weekly-report{border:1px solid #e7eaf0;border-radius:18px;padding:15px;background:#fff}.weekly-report-date{font-size:1.02rem;font-weight:800;margin-bottom:14px}.weekly-report-grid{display:grid;gap:13px 12px}.weekly-report-row{display:grid;gap:13px 12px}.weekly-report-row.cols3{grid-template-columns:repeat(3,minmax(0,1fr))}.weekly-report-row.cols2{grid-template-columns:repeat(2,minmax(0,1fr))}.weekly-report-item .wk-label{font-size:.78rem;color:#6b7280}.weekly-report-item .wk-value{font-size:1.02rem;font-weight:750;margin-top:2px}.weekly-report-bottom{display:block;margin-top:15px}.weekly-goal-summary{width:100%;margin:0;font-size:.92rem}.weekly-goal-summary b{font-size:1rem}.weekly-training{margin-top:12px;font-size:.82rem;color:#475569;font-weight:600;text-align:left}.weekly-goals-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 18px;margin-top:9px}.weekly-goal{display:flex;align-items:center;justify-content:space-between;gap:12px;min-width:0;font-size:.76rem;color:#475569}.weekly-goal-label{white-space:normal;overflow:visible;text-overflow:clip}.weekly-goal-status{font-size:.9rem;font-weight:800;flex:0 0 auto}.weekly-goal-status.done{color:#16a34a}.weekly-goal-status.not-done{color:#f43f5e}.progress-empty{padding:20px 8px;color:#94a3b8;text-align:center}
-    @media(max-width:560px){.progress-summary{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.progress-stat .label{font-size:.78rem}.progress-stat .value{font-size:1.12rem}.weekly-report-row{gap:12px 8px}.weekly-report-row.cols3{grid-template-columns:repeat(3,minmax(0,1fr))}.weekly-report-row.cols2{grid-template-columns:repeat(2,minmax(0,1fr))}.weekly-report{padding:13px}.weekly-goals-grid{gap:7px 18px}.weekly-goal{font-size:.72rem}.progress-heading{font-size:1.3rem}}
+    .dashboard-section{margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}.dashboard-section:first-of-type{border-top:0;margin-top:0;padding-top:0}
+    .dashboard-section-title{font-size:1.02rem;font-weight:800;margin-bottom:12px;color:var(--ink)}
+    .dashboard-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px}
+    .dashboard-kpi,.training-kpi{background:#fafbfc;border-radius:14px;padding:12px;border:1px solid #eef1f5}
+    .dashboard-kpi .label,.training-kpi .label{font-size:.75rem;color:#64748b;font-weight:650}
+    .dashboard-kpi .value,.training-kpi .value{font-size:1.08rem;font-weight:800;margin-top:3px}
+    .dashboard-kpi .sub,.training-kpi .sub{font-size:.7rem;color:#94a3b8;margin-top:2px}
+    .volume-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px}
+    .volume-card{background:#fafbfc;border-radius:12px;padding:10px;text-align:center;border:1px solid #eef1f5}
+    .volume-card .label{font-size:.7rem;color:#64748b}
+    .volume-card .value{font-size:.95rem;font-weight:700}
+    .comparison-table{width:100%;border-collapse:collapse;font-size:.78rem}
+    .comparison-table th,.comparison-table td{padding:6px 4px;border-bottom:1px solid #eef1f5;text-align:left}
+    .comparison-table th{color:#64748b;font-weight:650}
+    .mini-note{font-size:.7rem;color:#94a3b8;margin-top:8px}
+    .correlation-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+    .correlation-card{background:#fafbfc;border-radius:14px;padding:14px;border:1px solid #eef1f5}
+    .correlation-title{font-weight:700;font-size:.9rem;margin-bottom:6px}
+    .correlation-stat{font-size:.78rem;color:#64748b;margin-bottom:6px}
+    .correlation-empty{font-size:.72rem;color:#94a3b8;padding:8px 0}
+    .correlation-chart svg{width:100%;height:auto;display:block}
+    .analytics-week-filter{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+    .analytics-week-filter label{font-size:.82rem;color:#64748b;font-weight:600}
+    .analytics-week-filter select{padding:7px 10px;border-radius:10px;border:1px solid #d8dee8;background:#fbfcfe;width:auto;min-width:140px}
+
+    @media(max-width:560px){
+      .progress-summary{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+      .progress-stat .label{font-size:.78rem}
+      .progress-stat .value{font-size:1.12rem}
+      .weekly-report-row{gap:12px 8px}
+      .weekly-report-row.cols3{grid-template-columns:repeat(3,minmax(0,1fr))}
+      .weekly-report-row.cols2{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .weekly-report{padding:13px}
+      .weekly-goals-grid{gap:7px 18px}
+      .weekly-goal{font-size:.72rem}
+      .progress-heading{font-size:1.3rem}
+      .dashboard-kpis{grid-template-columns:repeat(2,1fr)}
+      .correlation-grid{grid-template-columns:1fr}
+      .volume-grid{grid-template-columns:repeat(4,1fr)}
+    }
+    @media(max-width:400px){
+      .volume-grid{grid-template-columns:repeat(2,1fr)}
+      .dashboard-kpis{grid-template-columns:1fr}
+    }
     .footerNote{color:#94a3b8;font-size:.68rem;text-align:center;margin:20px 0}
     .hidden{display:none!important}
     @media(max-width:520px){.grid2{grid-template-columns:1fr}.grid3{grid-template-columns:1fr 1fr}.app{padding-left:11px;padding-right:11px}}
   
     .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:#166534;color:#fff;padding:10px 16px;border-radius:12px;box-shadow:0 8px 28px rgba(0,0,0,.18);font-size:.9rem;opacity:0;pointer-events:none;transition:.22s;z-index:9999}
     .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-
   </style>
 </head>
 <body><div id="toast" class="toast" role="status" aria-live="polite"></div>
@@ -296,12 +340,11 @@
         <div class="grid2" id="profileMeasurementFields" style="margin-top:10px"></div>
       </div>
 
-      <div class="note" style="margin-top:12px">Дата регистрации фиксируется при сохранении профиля. Данные остаются в твоём ЛК.</div>
       <button class="btn secondary" id="saveProfile" style="margin-top:12px">Сохранить профиль</button>
       <button class="btn danger" id="resetData" style="margin-top:10px">Удалить всё</button>
     </section>
   </main>
-  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v2.11.12</span></div>
+  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v2.11.13</span></div>
 </div>
 
 <script>
@@ -374,9 +417,6 @@
     const d=p.registrationDate;
     const registrationDayWeight=n(state.weights?.[d] ?? state.journal?.[d]?.weight);
 
-    // Migration/repair: the registration weight is the immutable starting point.
-    // If the old build accidentally replaced profile.weight with a later value,
-    // prefer the weight recorded on the registration date when it exists.
     if(!p.registrationSnapshot || typeof p.registrationSnapshot!=='object'){
       p.registrationSnapshot={};
       for(const key of keys){
@@ -388,8 +428,6 @@
     }
 
     const snap=p.registrationSnapshot;
-    // If a previous version created a snapshot from the already-updated profile
-    // weight, repair it from the registration-day record.
     if(registrationDayWeight!=null && snap.weight!=null && n(snap.weight)!==registrationDayWeight){
       snap.weight=String(registrationDayWeight);
     }
@@ -479,8 +517,6 @@
   function bmrMifflin(w,h,a,male){
     return 10*w + 6.25*h - 5*a + (male?5:-161);
   }
-  // Питание: белок/жиры задаются в г/кг, углеводы — остаток калорий.
-  // При умеренной/высокой/очень высокой активности белок берём по верхней границе 2.2 г/кг.
   function nutritionBase(p, caloriesOverride=null){
     const w=n(p.weight), h=n(p.height), a=age(p.birth), act=n(p.activity)||1.2;
     if(!w||!h||a==null) return null;
@@ -583,7 +619,6 @@
     return nutritionBase(p,calories);
   }
 
-  // US Navy equations use inches. Inputs here are converted from cm.
   function navyBodyFat(p, m){
     const w=n(p.weight), h=n(p.height), a=age(p.birth);
     if(!w||!h||a==null) return null;
@@ -710,17 +745,6 @@
     }));
   }
 
-  function renderMeasurements(){
-    $('wDate').value=todayStr();$('mDate').value=todayStr();$('wDate').max=todayStr();$('mDate').max=todayStr();
-    const vals=Object.keys(state.weights).sort(); const last=vals.at(-1);
-    $('wValue').value=''; $('wValue').placeholder=last?String(state.weights[last]):'Введите вес';
-    const ms=Object.keys(state.measurements).sort(); if(ms.length){const lm=state.measurements[ms.at(-1)];for(const [k] of MEASUREMENTS){const el=$('m_'+k);if(el)el.placeholder=lm[k]!=null?String(lm[k]):'';}}
-  }
-
-  function ensureDay(d){
-    if(!state.dailyDone[d]) state.dailyDone[d]={};
-    for(const g of state.dailyGoals) if(typeof state.dailyDone[d][g.id]!=='boolean') state.dailyDone[d][g.id]=false;
-  }
   function renderWeek(){
     $('weeklyList').innerHTML=state.weeklyGoals.map(g=>`<div class="check"><input type="checkbox" data-wid="${esc(g.id)}" ${state.weeklyDone[g.id]?'checked':''}><label>${esc(g.label)}</label>${g.fixed?'':`<button class="x" data-wdel="${esc(g.id)}">×</button>`}</div>`).join('');
     const total=state.weeklyGoals.length, done=state.weeklyGoals.filter(g=>state.weeklyDone[g.id]).length;
@@ -1054,6 +1078,10 @@
     const metric=(label,value,unit='')=>`<div class="weekly-report-item"><div class="wk-label">${label}</div><div class="wk-value">${value!=null?value+' '+unit:'—'}</div></div>`;
     $('analyticsWeeklyStats').innerHTML=rows.map(r=>{const m=weeklyReportMetrics(r.start,r.end),done=r.goals.filter(g=>g.done).length,total=r.goals.length,pct=total?Math.round(done/total*100):0,goals=r.goals.map(g=>`<div class="weekly-goal"><span class="weekly-goal-label">${esc(g.label)}</span><span class="weekly-goal-status ${g.done?'done':'not-done'}">${g.done?'✓':'✕'}</span></div>`).join('');return `<div class="weekly-report"><div class="weekly-report-date">${fmtLong(r.start)} — ${fmtLong(r.end)}</div><div class="weekly-report-grid"><div class="weekly-report-row cols3">${metric('% Жира',m.fat,'%')}${metric('Средний вес',m.avg,'кг')}${metric('Мин. вес',m.min,'кг')}</div><div class="weekly-report-row cols3">${metric('Талия',m.waist,'см')}${metric('Бёдра',m.hips,'см')}${metric('Грудь',m.chest,'см')}</div><div class="weekly-report-row cols2">${metric('Пр. рука',m.armR,'см')}${metric('Лев. рука',m.armL,'см')}</div><div class="weekly-report-row cols2">${metric('Пр. нога',m.legR,'см')}${metric('Лев. нога',m.legL,'см')}</div></div><div class="weekly-report-bottom"><div class="weekly-goal-summary"><b>${done}/${total}</b> целей · <b>${pct}%</b><div class="weekly-goals-grid">${goals}</div></div><div class="weekly-training"><b>Всего тренировок: ${m.trainingCount}</b> · ${m.trainingMinutes} мин<br>Силовые: ${m.strengthCount} · ${m.strengthMinutes} мин<br>Кардио: ${m.cardioCount} · ${m.cardioMinutes} мин</div></div></div>`}).join('');
   }
+  function ensureDay(d){
+    if(!state.dailyDone[d]) state.dailyDone[d]={};
+    for(const g of state.dailyGoals) if(typeof state.dailyDone[d][g.id]!=='boolean') state.dailyDone[d][g.id]=false;
+  }
   function renderAnalytics(){
     const end=state.ui.analyticsDate||todayStr(),period=state.ui.analyticsPeriod||'week',key=state.ui.analyticsMetric||'weight';
     const weekStartSelect=$('analyticsWeekStart');if(weekStartSelect)weekStartSelect.value=String(state.ui.analyticsWeekStartDay??1);
@@ -1076,14 +1104,14 @@
       b.classList.add('active');$('view-'+b.dataset.tab).classList.add('active');
       if(b.dataset.tab==='home'){renderHome();}
       if(b.dataset.tab==='journal')renderJournal();
-      if(b.dataset.tab==='week'){renderWeek();renderMeasurements();}
+      if(b.dataset.tab==='week'){renderWeek();}
       if(b.dataset.tab==='analytics')renderAnalytics();
       if(b.dataset.tab==='profile')renderProfileFields();
     }));
     setInterval(()=>{try{recalcWeeklyNutrition();const t=document.querySelector('.tab.active')?.dataset.tab;if(t==='home')renderHome();if(t==='analytics')renderAnalytics();if(t==='week')renderWeek();}catch(e){}},60000);
 
     $('resetData').addEventListener('click',()=>{
-      if(!confirm('Подтвердить удаление? Данные не смогут быть восстановленны')) return;
+      if(!confirm('Подтвердить удаление? Данные не смогут быть восстановлены')) return;
       localStorage.removeItem(KEY);
       localStorage.removeItem(LEGACY_KEY);
       location.reload();
@@ -1204,4 +1232,3 @@
 </script>
 </body>
 </html>
-
