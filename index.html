@@ -128,6 +128,7 @@
     .profile-history-item .date{font-weight:700;color:var(--ink)}
     .profile-history-item .params{color:#64748b}
     .profile-history-item .remove{background:transparent;border:0;color:#dc2626;font-weight:800;cursor:pointer;padding:0 6px}
+    .snapshot-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px 14px;margin-top:10px}.snapshot-grid>div{padding:10px 11px;border:1px solid #e5eaf2;border-radius:13px;background:#f8fafc}.snapshot-label{display:block;color:#64748b;font-size:.74rem;margin-bottom:3px}.snapshot-full{grid-column:1/-1}.snapshot-volumes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px 12px;color:#334155;font-size:.8rem}@media(max-width:600px){.snapshot-volumes{grid-template-columns:1fr}}
 
     @media(max-width:560px){
       .progress-summary{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
@@ -322,8 +323,17 @@
         </div>
         <div class="grid2">
           <div class="field"><label>Рост, см</label><input id="height" type="number" step=".1" min="100" max="250"></div>
+          <div class="field"><label>Вес, кг</label><input id="profileWeight" type="number" step=".1" min="20" max="300"></div>
+          <div class="field"><label>Цель</label><select id="profileGoal"><option value="lose">Снизить вес</option><option value="maintain">Поддержка веса</option><option value="gain">Набрать вес</option></select></div>
+          <div class="field"><label>Целевой вес, кг</label><input id="profileTarget" type="number" step=".1" min="20" max="300"></div>
+          <div class="field"><label>Активность</label><select id="profileActivity"><option value="1.2">Минимальная — в основном сидячий день</option><option value="1.375">Низкая — прогулки / лёгкая активность 1–3 р/нед</option><option value="1.55">Умеренная — тренировки 3–5 р/нед</option><option value="1.725">Высокая — интенсивные тренировки 6–7 р/нед</option><option value="1.9">Очень высокая — тяжёлая работа + спорт</option></select></div>
           <div class="field"><label>Исходные объёмы</label><div id="baseMeasurementsInfo" style="font-size:.78rem;color:#64748b;padding-top:4px">заполните ниже</div></div>
         </div>
+      </div>
+
+      <div class="card">
+        <div class="title">📌 Данные на дату регистрации</div>
+        <div id="registrationSnapshot"></div>
       </div>
 
       <div class="card">
@@ -357,14 +367,14 @@
       <button class="btn danger" id="resetData" style="margin-top:10px">Удалить всё</button>
     </section>
   </main>
-  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v2.11.15</span></div>
+  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v2.11.16</span></div>
 </div>
 
 <script>
 (() => {
   'use strict';
 
-  const APP_VERSION = '2.11.15';
+  const APP_VERSION = '2.11.16';
   const KEY = 'formavs_v2';
   const LEGACY_KEY = 'forma_v2';
   const todayStr = () => {
@@ -398,7 +408,7 @@
   ];
 
   let state = {
-    profile:{name:'',gender:'female',birth:'',height:'',weight:'',target:'',goal:'maintain',steps:'',activity:'1.2',registrationDate:null,baseMeasurements:{}},
+    profile:{name:'',gender:'female',birth:'',height:'',weight:'',target:'',goal:'maintain',steps:'',activity:'1.2',registrationDate:null,baseMeasurements:{},registrationSnapshot:null},
     weights:{}, measurements:{}, journal:{}, nutritionWeekly:{}, dailyGoals:structuredClone(DEFAULT_DAILY), weeklyGoals:structuredClone(DEFAULT_WEEKLY),
     dailyDone:{}, weeklyDone:{}, weeklyHistory:{}, cycleDays:{},
     profileHistory:[],
@@ -422,9 +432,8 @@
         state={...state,...parsed,profile:{...state.profile,...(parsed.profile||{})},ui:{...state.ui,...(parsed.ui||{})}};
         if(!state.cycleDays || typeof state.cycleDays!=='object') state.cycleDays={};
         if(!state.profileHistory || !Array.isArray(state.profileHistory)) state.profileHistory=[];
-        // Remove deprecated locks
+        // Старые блокировки профиля больше не используются.
         if(state.profile.locks) delete state.profile.locks;
-        if(state.profile.registrationSnapshot) delete state.profile.registrationSnapshot;
       }
     }catch(e){ console.warn(e); }
     ensureDefaults();
@@ -437,6 +446,16 @@
     rolloverWeek();
     if(!state.cycleDays) state.cycleDays={};
     if(!state.profileHistory || !Array.isArray(state.profileHistory)) state.profileHistory=[];
+    // Сохраняем отдельную копию исходных данных для просмотра. Она не
+    // блокирует редактирование текущего профиля и не меняется от дневных данных.
+    if(!state.profile.registrationSnapshot && state.profile.registrationDate){
+      const p=state.profile;
+      state.profile.registrationSnapshot={
+        registrationDate:p.registrationDate, name:p.name, gender:p.gender, birth:p.birth, height:p.height,
+        weight:p.weight, target:p.target, goal:p.goal, steps:p.steps, activity:p.activity,
+        baseMeasurements:{...(p.baseMeasurements||{})}
+      };
+    }
     if(!state.ui.habitDate) state.ui.habitDate=todayStr();
     if(!state.ui.month) state.ui.month=todayStr().slice(0,7);
     save();
@@ -699,14 +718,15 @@
   }
   function renderProfileFields(){
     const p=state.profile;
-    // Профиль больше не содержит отдельных полей веса/цели/активности:
-    // они задаются через текущие параметры и историю. Не обращаемся к
-    // отсутствующим DOM-элементам, иначе инициализация приложения прерывается.
     setFieldValue('registrationDate',p.registrationDate);
     setFieldValue('name',p.name);
     setFieldValue('gender',p.gender||'female');
     setFieldValue('birth',p.birth);
     setFieldValue('height',p.height);
+    setFieldValue('profileWeight',p.weight);
+    setFieldValue('profileTarget',p.target);
+    setFieldValue('profileGoal',p.goal||'maintain');
+    setFieldValue('profileActivity',p.activity||'1.2');
 
     const bm=p.baseMeasurements||{};
     const filled=MEASUREMENTS.filter(([k])=>n(bm[k])!=null).length;
@@ -717,7 +737,30 @@
     if(fields){
       fields.innerHTML=MEASUREMENTS.map(([k,label])=>`<div class="field"><label>${label}</label><input id="pm_${k}" type="number" step=".1" min="1" max="300" value="${esc(bm[k]??'')}"></div>`).join('');
     }
+    renderRegistrationSnapshot();
     renderProfileHistory();
+  }
+
+  function renderRegistrationSnapshot(){
+    const el=$('registrationSnapshot');
+    if(!el) return;
+    const snap=state.profile.registrationSnapshot;
+    if(!snap){
+      el.innerHTML='<div class="note">Исходные данные будут сохранены отдельно после сохранения профиля.</div>';
+      return;
+    }
+    const goalLabels={lose:'Снизить вес',maintain:'Поддержка веса',gain:'Набрать вес'};
+    const activityLabels={'1.2':'Минимальная','1.375':'Низкая','1.55':'Умеренная','1.725':'Высокая','1.9':'Очень высокая'};
+    const bm=snap.baseMeasurements||{};
+    const vol=MEASUREMENTS.map(([k,label])=>bm[k]!=null?`<span><b>${label}:</b> ${bm[k]} см</span>`:'').filter(Boolean).join('');
+    el.innerHTML=`<div class="snapshot-grid">
+      <div><span class="snapshot-label">Дата</span><b>${snap.registrationDate?fmt(snap.registrationDate):'—'}</b></div>
+      <div><span class="snapshot-label">Вес</span><b>${snap.weight!==''&&snap.weight!=null?`${snap.weight} кг`:'—'}</b></div>
+      <div><span class="snapshot-label">Цель</span><b>${goalLabels[snap.goal]||'—'}</b></div>
+      <div><span class="snapshot-label">Целевой вес</span><b>${snap.target!==''&&snap.target!=null?`${snap.target} кг`:'—'}</b></div>
+      <div class="snapshot-full"><span class="snapshot-label">Активность</span><b>${activityLabels[snap.activity]||'—'}</b></div>
+      <div class="snapshot-full"><span class="snapshot-label">Объёмы</span><div class="snapshot-volumes">${vol||'—'}</div></div>
+    </div>`;
   }
 
   function renderProfileHistory(){
@@ -759,7 +802,9 @@
 
   function renderHome(){
     const p=state.profile;
-    const todayP=getFullProfileAt(todayStr());
+    const today=todayStr();
+    const currentWeight=n(state.weights[today] ?? state.journal[today]?.weight);
+    const todayP={...getFullProfileAt(today),weight:currentWeight!=null?currentWeight:getFullProfileAt(today).weight};
     const nut=nutritionBase(todayP);
     const comp=bodyComp(todayP);
     const pr=progress(todayP);
@@ -772,7 +817,7 @@
       return;
     }
     let h=`<div class="card"><div class="title">Сегодня · ${fmt(todayStr())}</div>
-      <div class="metrics"><div class="metric heroMetric"><div class="k">Вес</div><div class="v">${p.weight||'—'} кг</div><div class="s">${pr?`до цели ${Math.abs(pr.diff)} кг`:'цель не задана'}</div></div>
+      <div class="metrics"><div class="metric heroMetric"><div class="k">Вес</div><div class="v">${currentWeight!=null?currentWeight:(todayP.weight||'—')} кг</div><div class="s">${pr?`до цели ${Math.abs(pr.diff)} кг`:'цель не задана'}</div></div>
       <div class="metric"><div class="k">ИМТ</div><div class="v">${nut?nut.bmi.toFixed(1):'—'}</div><div class="s">${nut?bmiCategory(nut.bmi):''}</div></div></div>`;
     if(pr) h+=`<div style="margin-top:13px;display:flex;justify-content:space-between;font-size:.78rem"><span>🎯 ${todayP.goal==='lose'?'Снизить вес':todayP.goal==='gain'?'Набрать вес':'Поддержка веса'}</span><b>${pr.pct}%</b></div><div class="progress"><i style="width:${pr.pct}%"></i></div>`;
     h+=`</div>`;
@@ -1217,11 +1262,16 @@
       // Сохраняем только поля, которые реально есть на странице профиля.
       // Цель, целевой вес, активность и шаги хранятся в истории параметров и
       // не должны случайно затираться при сохранении профиля.
+      const oldRegistrationDate=p.registrationDate;
       p.registrationDate=$('registrationDate').value||todayStr();
       p.name=$('name').value.trim();
       p.gender=$('gender').value;
       p.birth=$('birth').value;
       p.height=$('height').value;
+      p.weight=$('profileWeight').value;
+      p.target=$('profileTarget').value;
+      p.goal=$('profileGoal').value;
+      p.activity=$('profileActivity').value;
 
       const m={...(p.baseMeasurements||{})};
       for(const [k] of MEASUREMENTS){
@@ -1229,6 +1279,14 @@
         if(v!=null)m[k]=v;
       }
       p.baseMeasurements=m;
+      // Снимок исходных данных создаётся один раз для просмотра истории.
+      // При последующих сохранениях текущие параметры можно свободно менять.
+      if(!p.registrationSnapshot){
+        p.registrationSnapshot={registrationDate:p.registrationDate,name:p.name,gender:p.gender,birth:p.birth,height:p.height,weight:p.weight,target:p.target,goal:p.goal,steps:p.steps,activity:p.activity,baseMeasurements:{...m}};
+      } else {
+        // Дату регистрации можно изменить вручную; исходные значения остаются прежними.
+        p.registrationSnapshot.registrationDate=p.registrationDate;
+      }
 
       const wk=weekStartDate(todayStr()),base=nutritionBase(p);
       if(state.nutritionWeekly[wk]==null && base) state.nutritionWeekly[wk]=base.calories;
@@ -1318,7 +1376,7 @@
     load();renderMeasurementFields();bind();renderProfileFields();renderHome();renderWeek();renderJournal();renderAnalytics();
     setInterval(()=>{if(todayStr()!==state._lastDay){state._lastDay=todayStr();rolloverWeek();state.ui.habitDate=todayStr();state.ui.journalDate=todayStr();save();renderHome();renderJournal();renderWeek();renderAnalytics();}},30000);
     if ('serviceWorker' in navigator) {
-      const APP_VERSION='2.11.14';
+      const APP_VERSION='2.11.16';
       let reloadScheduled = false;
       function reloadOnceAfterUpdate(){
         if(reloadScheduled) return;
