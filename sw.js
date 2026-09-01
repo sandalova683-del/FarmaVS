@@ -1,5 +1,5 @@
-const APP_CACHE = 'formulavs-shell-v2.11.14';
-const APP_VERSION = '2.11.14';
+const APP_CACHE = 'formulavs-shell-v2.11.15';
+const APP_VERSION = '2.11.15';
 const CORE_ASSETS = ['./','./index.html','./manifest.webmanifest','./icon.svg','./icon-48.png','./icon-180.png','./icon-192.png','./icon-512.png','./version.json'];
 
 self.addEventListener('install', event => {

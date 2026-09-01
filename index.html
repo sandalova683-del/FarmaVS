@@ -357,14 +357,14 @@
       <button class="btn danger" id="resetData" style="margin-top:10px">Удалить всё</button>
     </section>
   </main>
-  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v2.11.14</span></div>
+  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v2.11.15</span></div>
 </div>
 
 <script>
 (() => {
   'use strict';
 
-  const APP_VERSION = '2.11.14';
+  const APP_VERSION = '2.11.15';
   const KEY = 'formavs_v2';
   const LEGACY_KEY = 'forma_v2';
   const todayStr = () => {
@@ -693,20 +693,30 @@
   }
 
   // ---------- UI ----------
+  function setFieldValue(id,value){
+    const el=$(id);
+    if(el) el.value=value??'';
+  }
   function renderProfileFields(){
     const p=state.profile;
-    $('registrationDate').value=p.registrationDate||'';
-    $('name').value=p.name||'';
-    $('gender').value=p.gender||'female';
-    $('birth').value=p.birth||'';
-    $('height').value=p.height||'';
-    $('weight').value=p.weight||'';
-    $('target').value=p.target||'';
-    $('goal').value=p.goal||'maintain';
-    $('steps').value=p.steps||'';
-    $('activity').value=p.activity||'1.2';
-    const html=MEASUREMENTS.map(([k,label])=>`<div class="field"><label>${label}</label><input id="pm_${k}" type="number" step=".1" min="1" max="300" value="${esc(p.baseMeasurements?.[k]??'')}"></div>`).join('');
-    $('profileMeasurementFields').innerHTML=html;
+    // Профиль больше не содержит отдельных полей веса/цели/активности:
+    // они задаются через текущие параметры и историю. Не обращаемся к
+    // отсутствующим DOM-элементам, иначе инициализация приложения прерывается.
+    setFieldValue('registrationDate',p.registrationDate);
+    setFieldValue('name',p.name);
+    setFieldValue('gender',p.gender||'female');
+    setFieldValue('birth',p.birth);
+    setFieldValue('height',p.height);
+
+    const bm=p.baseMeasurements||{};
+    const filled=MEASUREMENTS.filter(([k])=>n(bm[k])!=null).length;
+    const info=$('baseMeasurementsInfo');
+    if(info) info.textContent=filled?`Заполнено: ${filled} из ${MEASUREMENTS.length}`:'заполните ниже';
+
+    const fields=$('profileMeasurementFields');
+    if(fields){
+      fields.innerHTML=MEASUREMENTS.map(([k,label])=>`<div class="field"><label>${label}</label><input id="pm_${k}" type="number" step=".1" min="1" max="300" value="${esc(bm[k]??'')}"></div>`).join('');
+    }
     renderProfileHistory();
   }
 
@@ -1204,25 +1214,30 @@
 
     $('saveProfile').addEventListener('click',()=>{
       const p=state.profile;
-      const values={name:$('name').value.trim(),gender:$('gender').value,birth:$('birth').value,height:$('height').value,weight:$('weight').value,target:$('target').value,goal:$('goal').value,steps:$('steps').value,activity:$('activity').value,registrationDate:$('registrationDate').value||todayStr()};
-      const wasRegistered=!!p.registrationDate;
-      p.registrationDate=values.registrationDate;
-      p.name=values.name;
-      p.gender=values.gender;
-      p.birth=values.birth;
-      p.height=values.height;
-      p.weight=values.weight;
-      p.target=values.target;
-      p.goal=values.goal;
-      p.steps=values.steps;
-      p.activity=values.activity;
+      // Сохраняем только поля, которые реально есть на странице профиля.
+      // Цель, целевой вес, активность и шаги хранятся в истории параметров и
+      // не должны случайно затираться при сохранении профиля.
+      p.registrationDate=$('registrationDate').value||todayStr();
+      p.name=$('name').value.trim();
+      p.gender=$('gender').value;
+      p.birth=$('birth').value;
+      p.height=$('height').value;
+
       const m={...(p.baseMeasurements||{})};
-      for(const [k] of MEASUREMENTS){const el=$('pm_'+k),v=n(el?.value);if(v!=null)m[k]=v;}
+      for(const [k] of MEASUREMENTS){
+        const el=$('pm_'+k),v=n(el?.value);
+        if(v!=null)m[k]=v;
+      }
       p.baseMeasurements=m;
-      if(!wasRegistered && n(p.weight)!=null && !state.weights[p.registrationDate]) state.weights[p.registrationDate]=n(p.weight);
+
       const wk=weekStartDate(todayStr()),base=nutritionBase(p);
       if(state.nutritionWeekly[wk]==null && base) state.nutritionWeekly[wk]=base.calories;
-      recalcWeeklyNutrition();save();renderProfileFields();renderHome();toast('Данные сохранены');
+      recalcWeeklyNutrition();
+      save();
+      renderProfileFields();
+      renderHome();
+      renderAnalytics();
+      toast('Данные сохранены');
     });
 
     $('addHistory').addEventListener('click',()=>{
