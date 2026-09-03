@@ -614,50 +614,60 @@
     return [Math.round(calories*range[0]/kcalPerGram),Math.round(calories*range[1]/kcalPerGram)];
   }
 
+  // Water target: simple, transparent weight-based formula with a mild diet adjustment.
+  // Watson/TBW is intentionally NOT used for the daily drinking target: TBW estimates body water,
+  // not how much a person should drink. The target is an orientation, not a mandatory volume.
   function waterTarget(p,date=null){
     const w=n(p.weight);
     if(!w) return null;
     const type=p.dietType||'mediterranean';
-    const dietCoeff=type==='keto'||type==='lchf'?1.5:type==='paleo'?1.2:1.0;
+    const dietCoeff={keto:1.15,lchf:1.10,paleo:1.05,mediterranean:1.00}[type]||1.00;
     const activity=n(p.activity)||1.2;
     const j=date?state.journal[date]||{}:{};
     const minutes=n(j.trainingMinutes)||0;
-    let raw, method='weight';
-    const enteredFat=n(p.bodyFatPercent);
-    if(enteredFat!=null){
-      const h=n(p.height), a=age(p.birth);
-      if(h && a!=null){
-        let tbw=p.gender==='male'
-          ? 2.447-(0.09156*a)+(0.1074*h)+(0.3362*w)
-          : -2.097+(0.1069*h)+(0.2466*w);
-        const ref=p.gender==='male'?23:33;
-        const correction=1+((ref-enteredFat)*0.012);
-        tbw*=correction;
-        raw=tbw*0.12*dietCoeff;
-        method='Watson + % жира';
-      }
-    }
-    if(raw==null){
-      raw=w*0.033*dietCoeff;
-      method='вес × 0,033';
-    }
+
+    const base=w*0.033;
+    let target=base*dietCoeff;
+
+    // Additional fluid for substantial training only; keep this deliberately modest.
+    // High / very high activity: +0.3 L per 30 min, capped at +1.0 L/day.
     let trainingAdd=0;
-    if(activity>=1.725 && minutes>0) trainingAdd=0.5*(minutes/30);
-    raw+=trainingAdd;
-    const limit=p.gender==='male'?6:5;
-    const overPhysio=raw>limit;
-    const capped=raw>4;
-    const target=Math.min(raw,4);
-    let safety='';
-    if(overPhysio || capped){
-      safety=`Расчётная потребность в воде получилась ${round(raw,1)} л/сутки. Для безопасности FormulaVS ограничивает отображаемую целевую норму 4 л/сутки. Если вам требуется больше жидкости из-за спорта, жары или состояния здоровья, ориентируйтесь на рекомендации врача/специалиста.`;
+    if(activity>=1.725 && minutes>0){
+      trainingAdd=Math.min(1,0.3*(minutes/30));
+      target+=trainingAdd;
     }
-    const dietHint=type==='keto'||type==='lchf'
-      ? `На ${type==='keto'?'КЕТО':'LCHF'} увеличена поправка на питание (+50%). Следите не только за водой, но и за электролитами.`
-      : type==='paleo'
-        ? 'Для Палео применена поправка +20%.'
-        : 'Для Средиземноморской применена базовая норма без поправки.';
-    return {waterL:round(target,1),waterRawL:round(raw,1),waterMethod:method,waterTrainingAdd:round(trainingAdd,1),waterSafety:safety,waterHint:dietHint,waterDietCoeff:dietCoeff};
+
+    // User-facing target is rounded to 100 ml. A small flexible range is shown around it.
+    target=Math.max(0.8,Math.round(target*10)/10);
+    const rangeLow=Math.max(0.8,Math.round((target-0.2)*10)/10);
+    const rangeHigh=Math.round((target+0.2)*10)/10;
+
+    const dietName={keto:'КЕТО',lchf:'LCHF',paleo:'Палео',mediterranean:'Средиземноморская'}[type]||'Средиземноморская';
+    const dietHint=type==='keto'
+      ? 'КЕТО: мягкая поправка +15%. Пейте дробно в течение дня и следите за электролитами.'
+      : type==='lchf'
+        ? 'LCHF: мягкая поправка +10%. Пейте по жажде и равномерно в течение дня.'
+        : type==='paleo'
+          ? 'Палео: мягкая поправка +5%. Объём остаётся ориентиром и зависит от активности и погоды.'
+          : 'Средиземноморская: базовая норма без поправки на тип питания.';
+
+    let safety='';
+    if(target>4){
+      safety='Расчётная цель получилась выше 4 л/сутки. Не заставляйте себя выпивать такой объём: потребность зависит от жары, нагрузки и потерь жидкости. При необычно высокой потребности обсудите её со специалистом.';
+    }
+
+    return {
+      waterL:target,
+      waterRawL:target,
+      waterRangeLowL:rangeLow,
+      waterRangeHighL:rangeHigh,
+      waterMethod:'вес × 0,033 + мягкая поправка',
+      waterTrainingAdd:round(trainingAdd,1),
+      waterSafety:safety,
+      waterHint:dietHint,
+      waterDietCoeff:dietCoeff,
+      waterDietName:dietName
+    };
   }
 
   function nutritionBase(p, caloriesOverride=null){
@@ -955,8 +965,8 @@
       <div class="metric"><div class="k">Белки</div><div class="v">${nut.protein} г</div><div class="s">диапазон ${rangeText(ranges.protein)} · середина ${mid(ranges.protein)} г</div></div>
       <div class="metric"><div class="k">Жиры</div><div class="v">${nut.fat} г</div><div class="s">диапазон ${rangeText(ranges.fat)} · середина ${mid(ranges.fat)} г</div></div>
       <div class="metric"><div class="k">Углеводы</div><div class="v">${nut.carbs} г</div><div class="s">диапазон ${rangeText(ranges.carbs)} · середина ${mid(ranges.carbs)} г</div></div>
-      <div class="metric"><div class="k">Вода</div><div class="v">${nut.waterL} л</div><div class="s">${esc(nut.waterMethod||'расчёт')}${nut.waterTrainingAdd?` · +${nut.waterTrainingAdd} л тренировка`:``}</div></div>
-    </div>${nut.proteinMinimum!=null?`<div class="note" style="margin-top:10px">Белковый минимум: ${nut.proteinMinimum} г (1,2 г/кг).${nut.proteinAdjusted?' Формула дала меньше, поэтому белок повышен, а углеводы уменьшены.':''}</div>`:''}${(nut.dietType==='keto'||nut.dietType==='lchf')?`<div class="note" style="margin-top:8px">🥬 Для ${esc(dietName)} углеводы учитываются как <b>net carbs</b>: общие углеводы − клетчатка.</div>`:''}<div class="note" style="margin-top:8px">💧 ${esc(nut.waterHint||'Норма рассчитана по весу и типу питания.')} ${nut.waterTrainingAdd?`За интенсивную тренировку добавлено ${nut.waterTrainingAdd} л.`:''}</div>${(nut.dietType==='keto'||nut.dietType==='lchf')?`<div class="note warn" style="margin-top:8px">⚡ На КЕТО/LCHF следите за электролитами; одной воды недостаточно.</div>`:''}${nut.waterSafety?`<div class="note warn" style="margin-top:8px">${esc(nut.waterSafety)}</div>`:''}<div class="metrics" style="margin-top:9px"><div class="metric"><div class="k">Всего потрачено</div><div class="v">${(() => {const x=totalBurnedAtPreview(today); return x!=null?round(x,0):'—'})()} ккал</div><div class="s">BMR + активность</div></div><div class="metric"><div class="k">Баланс ккал</div><div class="v">${(() => {const x=totalBurnedAtPreview(today),c=n(state.journal[today]?.calories); return x!=null&&c!=null?`${c-x>0?'+':''}${round(c-x,0)}`:'—'})()}</div><div class="s">Ккал − всего потрачено</div></div></div><div class="note" style="margin-top:10px">КБЖУ пересчитываются в начале новой недели по средней динамике веса. При застое/обратной динамике калорийность корректируется на 40 ккал. Калорийность не опускается ниже BMR + 10%. При изменении веса дневные граммы КБЖУ пересчитываются автоматически.</div>${nut.safety?`<div class="note warn" style="margin-top:10px">${esc(nut.safety)}</div>`:''}</div>`;
+      <div class="metric"><div class="k">Вода</div><div class="v">${nut.waterL} л</div><div class="s">ориентир ${nut.waterRangeLowL}–${nut.waterRangeHighL} л</div></div>
+    </div>${nut.proteinMinimum!=null?`<div class="note" style="margin-top:10px">Белковый минимум: ${nut.proteinMinimum} г (1,2 г/кг).${nut.proteinAdjusted?' Формула дала меньше, поэтому белок повышен, а углеводы уменьшены.':''}</div>`:''}${(nut.dietType==='keto'||nut.dietType==='lchf')?`<div class="note" style="margin-top:8px">🥬 Для ${esc(dietName)} углеводы учитываются как <b>net carbs</b>: общие углеводы − клетчатка.</div>`:''}<div class="note" style="margin-top:8px">💧 ${esc(nut.waterHint||'Норма рассчитана по весу и типу питания.')} ${nut.waterTrainingAdd?`Для высокой активности учтено +${nut.waterTrainingAdd} л за тренировку.`:''} Цель — ориентир, а не обязательный объём.</div>${(nut.dietType==='keto'||nut.dietType==='lchf')?`<div class="note warn" style="margin-top:8px">⚡ На КЕТО/LCHF следите за электролитами; одной воды недостаточно.</div>`:''}${nut.waterSafety?`<div class="note warn" style="margin-top:8px">${esc(nut.waterSafety)}</div>`:''}<div class="metrics" style="margin-top:9px"><div class="metric"><div class="k">Всего потрачено</div><div class="v">${(() => {const x=totalBurnedAtPreview(today); return x!=null?round(x,0):'—'})()} ккал</div><div class="s">BMR + активность</div></div><div class="metric"><div class="k">Баланс ккал</div><div class="v">${(() => {const x=totalBurnedAtPreview(today),c=n(state.journal[today]?.calories); return x!=null&&c!=null?`${c-x>0?'+':''}${round(c-x,0)}`:'—'})()}</div><div class="s">Ккал − всего потрачено</div></div></div><div class="note" style="margin-top:10px">КБЖУ пересчитываются в начале новой недели по средней динамике веса. При застое/обратной динамике калорийность корректируется на 40 ккал. Калорийность не опускается ниже BMR + 10%. При изменении веса дневные граммы КБЖУ пересчитываются автоматически.</div>${nut.safety?`<div class="note warn" style="margin-top:10px">${esc(nut.safety)}</div>`:''}</div>`;
     }
     $('homeContent').innerHTML=h;
   }
@@ -1051,7 +1061,7 @@
     const goal=weeklyNutritionTargetForDate(d);
     $('jCalorieGoal').textContent=goal!=null?`${round(goal,0)} ккал/сутки`:'—';
     const water=nutritionForDate(d);
-    const waterTargetEl=$('jWaterGoal'); if(waterTargetEl) waterTargetEl.textContent=water?.waterL!=null?`${water.waterL} л/сутки`:'—';
+    const waterTargetEl=$('jWaterGoal'); if(waterTargetEl) waterTargetEl.textContent=water?.waterL!=null?`${water.waterL} л/сутки · ориентир ${water.waterRangeLowL}–${water.waterRangeHighL} л`:'—';
     const total=totalBurnedAt(d), balance=calorieBalanceAt(d);
     $('jTotalBurned').textContent=total!=null?`${round(total,0)} ккал`:'—';
     $('jCalorieBalance').textContent=balance!=null?`${balance>0?'+':''}${round(balance,0)} ккал`:'—';
