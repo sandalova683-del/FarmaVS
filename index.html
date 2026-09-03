@@ -165,6 +165,54 @@
     .profile-link{margin-left:auto;width:44px;height:44px;border:1px solid #cfe0ff;background:#eaf2ff;border-radius:15px;display:grid;place-items:center;font-size:22px;box-shadow:0 5px 16px rgba(37,99,235,.12);color:#2563eb;transition:.18s}.profile-link:hover{background:#dceaff}.profile-link.active{background:#dceaff;color:#2563eb;border-color:#bcd3ff}.bottom-nav{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(720px,100%);display:grid;grid-template-columns:repeat(3,1fr);gap:5px;padding:8px 10px calc(8px + env(safe-area-inset-bottom));background:rgba(255,255,255,.96);border-top:1px solid var(--line);backdrop-filter:blur(14px);z-index:100}.bottom-nav button{border:0;background:transparent;color:#64748b;border-radius:15px;padding:7px 3px 6px;font-size:.69rem;font-weight:700}.bottom-nav button .nav-icon{display:block;font-size:20px;line-height:20px;margin-bottom:2px}.bottom-nav button.active{background:#eaf2ff;color:#2563eb}.profile-photo{width:78px;height:78px;border-radius:22px;object-fit:cover;border:1px solid var(--line);background:#f1f5f9}.profile-photo-placeholder{width:78px;height:78px;border-radius:22px;display:grid;place-items:center;background:#e8efff;color:#2563eb;font-size:30px;font-weight:800}.profile-summary{display:flex;align-items:center;gap:14px}.profile-summary-name{font-size:1.05rem;font-weight:850;color:var(--ink)}.profile-summary-sub{font-size:.8rem;color:#64748b;margin-top:3px}.file-upload{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}.file-btn{display:inline-flex;align-items:center;justify-content:center;border:1px solid #cfe0ff;background:#eaf2ff;color:#2563eb;border-radius:12px;padding:10px 14px;font-weight:750;cursor:pointer}.profile-editor-note{margin-bottom:12px}.profile-edit-actions{display:flex;gap:10px;flex-wrap:wrap}.profile-edit-actions .btn{flex:1;min-width:180px}.diet-grid{display:grid;grid-template-columns:1fr;gap:8px}.diet-card{border:1px solid var(--line);border-radius:15px;padding:10px 12px;background:#fafbfc}.diet-card b{display:block}.diet-card small{color:#64748b}.diet-select-row{display:flex;align-items:center;gap:7px}.diet-select-row select{flex:1}.diet-help{border:1px solid #cfe0ff;background:#eaf2ff;color:#2563eb;font-weight:850;font-size:16px;line-height:1;width:38px;height:38px;border-radius:11px;cursor:pointer;flex:0 0 38px}.modal{position:fixed;inset:0;background:rgba(15,23,42,.48);display:none;align-items:center;justify-content:center;padding:18px;z-index:1000}.modal.show{display:flex}.modal-card{max-width:620px;width:100%;max-height:85vh;overflow:auto;background:#fff;border-radius:22px;padding:20px;box-shadow:0 20px 60px rgba(0,0,0,.22)}.modal-close{float:right;border:0;background:#f1f5f9;border-radius:12px;width:36px;height:36px;font-size:20px}.onboarding-title{font-size:1.35rem;font-weight:850;margin-bottom:6px}.onboarding-note{margin-bottom:14px}.tracker-switch{display:flex;gap:8px;margin-bottom:12px}.tracker-switch button{flex:1;border:1px solid var(--line);background:#fff;border-radius:13px;padding:10px;font-weight:750;color:#475569}.tracker-switch button.active{background:#2563eb;color:#fff;border-color:#2563eb}
     .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:#166534;color:#fff;padding:10px 16px;border-radius:12px;box-shadow:0 8px 28px rgba(0,0,0,.18);font-size:.9rem;opacity:0;pointer-events:none;transition:.22s;z-index:9999}
     .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+    /* Profile readability + compact history dates */
+    #view-profile{font-size:.92rem}
+    #view-profile .title{font-size:1rem}
+    #view-profile .onboarding-title{font-size:1.18rem}
+    #view-profile .note{font-size:.76rem}
+    .profile-summary-name{font-size:1.22rem}
+    .profile-summary-email{font-size:.86rem}
+    .profile-summary-meta small{font-size:.68rem}
+    .profile-summary-meta b{font-size:.82rem}
+    .profile-summary-action{font-size:.84rem}
+    .profile-history-card{padding:15px 17px}
+    .history-intro{font-size:.74rem}
+    .profile-history-entry{grid-template-columns:104px minmax(0,1fr);gap:10px}
+    .history-date-col{padding:11px 6px;min-height:104px}
+    .history-date-col strong{font-size:.86rem}
+    .history-date-col span{font-size:.68rem}
+    .history-date-col em{font-size:.62rem;padding:4px 8px;margin-top:9px}
+    .history-top-grid{padding:11px 12px;gap:8px}
+    .history-metric small{font-size:.67rem}
+    .history-metric b{font-size:.75rem}
+    .history-icon{font-size:20px;flex-basis:21px}
+    .history-volumes-modern{padding:8px 12px 10px}
+    .history-volume-title{font-size:.7rem;margin-bottom:6px}
+    .history-volume-grid-modern>div{font-size:.69rem}
+    .history-volume-grid-modern b{font-size:.71rem}
+    .registration-snapshot-card{padding:15px 17px}
+    .snapshot-column-title{font-size:.72rem}
+    .snapshot-row{font-size:.71rem;padding:3px 0}
+    .snapshot-row b{font-size:.73rem}
+    .snapshot-volume-list>div{font-size:.71rem;padding:4px 0}
+    .snapshot-foot{font-size:.67rem}
+    .steps-home-card .v{font-size:1.05rem}
+    .steps-home-card .s{line-height:1.3}
+    @media(max-width:720px){
+      #view-profile{font-size:.9rem}
+      .profile-summary-name{font-size:1.1rem}
+      .profile-summary-email{font-size:.78rem}
+      .profile-summary-action{font-size:.76rem}
+      .profile-history-entry{grid-template-columns:90px minmax(0,1fr);gap:8px}
+      .history-date-col strong{font-size:.78rem}
+    }
+    @media(max-width:560px){
+      .profile-history-entry{grid-template-columns:82px minmax(0,1fr);gap:7px}
+      .history-date-col{padding:10px 4px;min-height:102px}
+      .history-date-col strong{font-size:.74rem}
+      .history-date-col span{font-size:.64rem}
+    }
   </style>
 </head>
 <body><div id="toast" class="toast" role="status" aria-live="polite"></div>
@@ -386,7 +434,7 @@
     <button class="bottom-tab" data-tab="trackers"><span class="nav-icon">✓</span>Трекеры</button>
     <button class="bottom-tab" data-tab="analytics"><span class="nav-icon">⌁</span>Мой прогресс</button>
   </nav>
-  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v2.13.4</span></div>
+  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v2.13.6</span></div>
 </div>
   <div id="dietModal" class="modal"><div class="modal-card"><button class="modal-close" id="dietModalClose">×</button><div id="dietModalTitle" class="onboarding-title"></div><div id="dietModalBody" style="color:#475569;line-height:1.55"></div></div></div>
 
@@ -681,6 +729,87 @@
       waterDietCoeff:dietCoeff,
       waterDietName:dietName
     };
+  }
+
+  // Target daily steps: source-based progressive increase with mobility and diet pacing.
+  // The profile average steps/day is the baseline. Keto/LCHF reduce the resulting target by 5%.
+  function stepsTarget(p){
+    const current=n(p.steps);
+    if(!current || current<=0) return null;
+
+    const goalRanges={
+      lose:[0.20,0.30],
+      maintain:[0.05,0.10],
+      gain:[0.10,0.15]
+    };
+    const mobility={
+      '1.2':[1.5,1.5],
+      '1.375':[1.2,1.2],
+      '1.55':[1.0,1.0],
+      '1.725':[1.0,1.05],
+      '1.9':[1.0,1.0]
+    };
+    const [progressLow,progressHigh]=goalRanges[p.goal]||goalRanges.maintain;
+    const [mobLow,mobHigh]=mobility[String(p.activity)]||[1,1];
+
+    let low=current*(1+progressLow*mobLow);
+    let high=current*(1+progressHigh*mobHigh);
+
+    // Keto / LCHF: slower increase, -5% from the resulting target corridor.
+    if(p.dietType==='keto'||p.dietType==='lchf'){
+      low*=0.95; high*=0.95;
+    }
+
+    // For weight loss, also calculate the calorie-based alternative and use the lower target.
+    // This follows the requested algorithm and prevents an unnecessarily aggressive step goal.
+    let calorieTarget=null;
+    if(p.goal==='lose'){
+      const base=nutritionBaseForSteps(p);
+      if(base && base.tdee && base.calories && n(p.weight)>0){
+        const deficit=Math.max(0,base.tdee-base.calories);
+        const kcalPerStep=n(p.weight)*0.0005;
+        if(deficit>0 && kcalPerStep>0){
+          calorieTarget=current+(deficit/kcalPerStep);
+          high=Math.min(high,calorieTarget);
+          low=Math.min(low,high);
+        }
+      }
+    }
+
+    low=Math.max(current,Math.round(low/100)*100);
+    high=Math.max(low,Math.round(high/100)*100);
+
+    // Build a simple gradual plan toward the upper edge of the corridor.
+    const day1=low;
+    const day2=Math.min(high,Math.max(day1,Math.round(((low+high)/2)/100)*100));
+    const day3=Math.min(high,Math.max(day2,Math.round((low+(high-low)*0.75)/100)*100));
+
+    const dietAdvice={
+      keto:'КЕТО: увеличивайте шаги плавно, не более примерно +500–700 шагов в день за неделю.',
+      lchf:'LCHF: увеличивайте шаги постепенно и следите за самочувствием.',
+      paleo:'Палео: нагрузку можно увеличивать умеренно, без резких скачков.',
+      mediterranean:'Средиземноморская: можно увеличивать активность постепенно, ориентируясь на восстановление.'
+    };
+
+    return {
+      current, low, high, calorieTarget,
+      plan:[day1,day1,day2,day2,day3,day3,high],
+      dietAdvice:dietAdvice[p.dietType]||dietAdvice.mediterranean,
+      method:'текущие шаги × (1 + коэффициент цели × корректировка подвижности)'
+    };
+  }
+
+  // Lightweight TDEE helper used only by the calorie-based step check to avoid recursion.
+  function nutritionBaseForSteps(p){
+    const w=n(p.weight), h=n(p.height), a=age(p.birth), act=n(p.activity)||1.2;
+    if(!w||!h||a==null) return null;
+    const bmrV=bmrMifflin(w,h,a,p.gender==='male');
+    const tdee=bmrV*act;
+    let calories=tdee;
+    if(p.goal==='lose') calories=tdee*0.85;
+    else if(p.goal==='gain') calories=tdee*1.15;
+    calories=Math.max(bmrV*1.10,calories);
+    return {tdee,calories};
   }
 
   function nutritionBase(p, caloriesOverride=null){
@@ -1010,7 +1139,8 @@
       <div class="metric"><div class="k">Жиры</div><div class="v">${nut.fat} г</div><div class="s">диапазон ${rangeText(ranges.fat)} · середина ${mid(ranges.fat)} г</div></div>
       <div class="metric"><div class="k">Углеводы</div><div class="v">${nut.carbs} г</div><div class="s">диапазон ${rangeText(ranges.carbs)} · середина ${mid(ranges.carbs)} г</div></div>
       <div class="metric"><div class="k">Вода</div><div class="v">${nut.waterL} л</div><div class="s">ориентир ${nut.waterRangeLowL}–${nut.waterRangeHighL} л</div></div>
-    </div>${nut.proteinMinimum!=null?`<div class="note" style="margin-top:10px">Белковый минимум: ${nut.proteinMinimum} г (1,2 г/кг).${nut.proteinAdjusted?' Формула дала меньше, поэтому белок повышен, а углеводы уменьшены.':''}</div>`:''}${(nut.dietType==='keto'||nut.dietType==='lchf')?`<div class="note" style="margin-top:8px">🥬 Для ${esc(dietName)} углеводы учитываются как <b>net carbs</b>: общие углеводы − клетчатка.</div>`:''}<div class="note" style="margin-top:8px">💧 ${esc(nut.waterHint||'Норма рассчитана по весу и типу питания.')} ${nut.waterTrainingAdd?`Для высокой активности учтено +${nut.waterTrainingAdd} л за тренировку.`:''} Цель — ориентир, а не обязательный объём.</div>${(nut.dietType==='keto'||nut.dietType==='lchf')?`<div class="note warn" style="margin-top:8px">⚡ На КЕТО/LCHF следите за электролитами; одной воды недостаточно.</div>`:''}${nut.waterSafety?`<div class="note warn" style="margin-top:8px">${esc(nut.waterSafety)}</div>`:''}<div class="metrics" style="margin-top:9px"><div class="metric"><div class="k">Всего потрачено</div><div class="v">${(() => {const x=totalBurnedAtPreview(today); return x!=null?round(x,0):'—'})()} ккал</div><div class="s">BMR + активность</div></div><div class="metric"><div class="k">Баланс ккал</div><div class="v">${(() => {const x=totalBurnedAtPreview(today),c=n(state.journal[today]?.calories); return x!=null&&c!=null?`${c-x>0?'+':''}${round(c-x,0)}`:'—'})()}</div><div class="s">Ккал − всего потрачено</div></div></div><div class="note" style="margin-top:10px">КБЖУ пересчитываются в начале новой недели по средней динамике веса. При застое/обратной динамике калорийность корректируется на 40 ккал. Калорийность не опускается ниже BMR + 10%. При изменении веса дневные граммы КБЖУ пересчитываются автоматически.</div>${nut.safety?`<div class="note warn" style="margin-top:10px">${esc(nut.safety)}</div>`:''}</div>`;
+      ${(() => { const st=stepsTarget(todayP); const actual=n(state.journal[today]?.steps); if(!st) return ''; const shown=actual!=null?Number(actual).toLocaleString('ru-RU'):Number(st.current).toLocaleString('ru-RU'); return `<div class="metric steps-home-card"><div class="k">Шаги</div><div class="v">${Number(st.low).toLocaleString('ru-RU')}–${Number(st.high).toLocaleString('ru-RU')}</div><div class="s">${actual!=null?`сегодня ${shown}`:`среднее ${shown}/день`}</div></div>`; })()}
+    </div>${nut.proteinMinimum!=null?`<div class="note" style="margin-top:10px">Белковый минимум: ${nut.proteinMinimum} г (1,2 г/кг).${nut.proteinAdjusted?' Формула дала меньше, поэтому белок повышен, а углеводы уменьшены.':''}</div>`:''}${(nut.dietType==='keto'||nut.dietType==='lchf')?`<div class="note" style="margin-top:8px">🥬 Для ${esc(dietName)} углеводы учитываются как <b>net carbs</b>: общие углеводы − клетчатка.</div>`:''}<div class="note" style="margin-top:8px">💧 ${esc(nut.waterHint||'Норма рассчитана по весу и типу питания.')} ${nut.waterTrainingAdd?`Для высокой активности учтено +${nut.waterTrainingAdd} л за тренировку.`:''} Цель — ориентир, а не обязательный объём.</div>${(nut.dietType==='keto'||nut.dietType==='lchf')?`<div class="note warn" style="margin-top:8px">⚡ На КЕТО/LCHF следите за электролитами; одной воды недостаточно.</div>`:''}${nut.waterSafety?`<div class="note warn" style="margin-top:8px">${esc(nut.waterSafety)}</div>`:''}<div class="metrics" style="margin-top:9px"><div class="metric"><div class="k">Всего потрачено</div><div class="v">${(() => {const x=totalBurnedAtPreview(today); return x!=null?round(x,0):'—'})()} ккал</div><div class="s">BMR + активность</div></div><div class="metric"><div class="k">Баланс ккал</div><div class="v">${(() => {const x=totalBurnedAtPreview(today),c=n(state.journal[today]?.calories); return x!=null&&c!=null?`${c-x>0?'+':''}${round(c-x,0)}`:'—'})()}</div><div class="s">Ккал − всего потрачено</div></div></div>${(() => { const st=stepsTarget(todayP); if(!st) return ''; return `<div class="note" style="margin-top:10px">🚶 <b>Цель по шагам:</b> ${Number(st.low).toLocaleString('ru-RU')}–${Number(st.high).toLocaleString('ru-RU')} шагов/день. План: дни 1–3 — ${Number(st.plan[0]).toLocaleString('ru-RU')}, дни 4–6 — ${Number(st.plan[2]).toLocaleString('ru-RU')}, дни 7–10 — ${Number(st.plan[6]).toLocaleString('ru-RU')}. ${esc(st.dietAdvice)}</div>`; })()}<div class="note" style="margin-top:10px">КБЖУ пересчитываются в начале новой недели по средней динамике веса. При застое/обратной динамике калорийность корректируется на 40 ккал. Калорийность не опускается ниже BMR + 10%. При изменении веса дневные граммы КБЖУ пересчитываются автоматически.</div>${nut.safety?`<div class="note warn" style="margin-top:10px">${esc(nut.safety)}</div>`:''}</div>`;
     }
     $('homeContent').innerHTML=h;
   }
