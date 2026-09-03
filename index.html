@@ -378,7 +378,7 @@
 (() => {
   'use strict';
 
-  const APP_VERSION = '2.12.2';
+  const APP_VERSION = '2.12.3';
   const KEY = 'formavs_v2';
   const LEGACY_KEY = 'forma_v2';
   const todayStr = () => {
@@ -1274,6 +1274,15 @@
     window.scrollTo({top:0,behavior:'smooth'});
   }
 
+  function renderMeasurementFields(){
+    const fields=$('measurementFields');
+    if(!fields)return;
+    const bm=state.profile?.baseMeasurements||{};
+    fields.innerHTML=MEASUREMENTS.map(([k,label])=>`<div class=\"field\"><label>${label}</label><input id=\"pm_${k}\" type=\"number\" step=\".1\" min=\"1\" max=\"300\" value=\"${esc(bm[k]??'')}\"></div>`).join('');
+    const mDate=$('mDate');
+    if(mDate && !mDate.value)mDate.value=state.ui?.measureDate||todayStr();
+  }
+
   function bind(){
     document.querySelectorAll('.bottom-tab').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.tab)));
     $('profileTop')?.addEventListener('click',()=>navigate('profile'));
@@ -1376,7 +1385,7 @@
     load();renderMeasurementFields();bind();renderProfileFields();renderHome();renderJournal();renderAnalytics();if(!state.profile.registrationDate)navigate('profile');else navigate('home');
     setInterval(()=>{if(todayStr()!==state._lastDay){state._lastDay=todayStr();rolloverWeek();state.ui.habitDate=todayStr();state.ui.journalDate=todayStr();save();renderHome();renderJournal();renderWeek();renderAnalytics();}},30000);
     if ('serviceWorker' in navigator) {
-      const APP_VERSION='2.12.2';
+      const APP_VERSION='2.12.3';
       let reloadScheduled = false;
       function reloadOnceAfterUpdate(){
         if(reloadScheduled) return;
