@@ -185,7 +185,7 @@
           <div class="field"><label>Белки, г</label><input id="jProtein" type="number" min="0" step=".1"></div>
           <div class="field"><label>Жиры, г</label><input id="jFat" type="number" min="0" step=".1"></div>
           <div class="field"><label>Углеводы, г</label><input id="jCarbs" type="number" min="0" step=".1"></div>
-          <div class="field"><label>Вода, мл</label><input id="jWater" type="number" min="0" step="50"></div>
+          <div class="field"><label>Вода, мл</label><input id="jWater" type="number" min="0" step="50"><div class="params" style="margin-top:4px">Цель: <b id="jWaterGoal">—</b></div></div>
           <div class="field"><label>Шаги</label><input id="jSteps" type="number" min="0"></div>
           <div class="field"><label>Потраченные ккал</label><input id="jBurnedCalories" type="number" min="0"></div>
           <div class="field"><label>Тренировка</label><select id="jTrainingType"><option value="">Нет тренировки</option><option value="strength">Силовая</option><option value="cardio">Кардио</option></select></div>
@@ -325,6 +325,7 @@
             <div class="field"><label>Пол *</label><select id="gender"><option value="female">Женский</option><option value="male">Мужской</option></select></div>
             <div class="field"><label>Дата рождения *</label><input id="birth" type="date"></div>
             <div class="field"><label>Рост, см *</label><input id="height" type="number" step=".1" min="100" max="250"></div>
+            <div class="field"><label>% жира, если известен</label><input id="profileBodyFat" type="number" step=".1" min="2" max="60" placeholder="необязательно"><div class="params" style="margin-top:4px">Используется для уточнения расчёта воды. Если не указан — применяется формула по весу.</div></div>
             <div class="field"><label>Вес, кг *</label><input id="profileWeight" type="number" step=".1" min="20" max="300"></div>
             <div class="field"><label>Целевой вес, кг *</label><input id="profileTarget" type="number" step=".1" min="20" max="300"></div>
             <div class="field"><label>Цель *</label><select id="profileGoal"><option value="lose">Снизить вес</option><option value="maintain">Поддержка веса</option><option value="gain">Набрать вес</option></select></div>
@@ -412,7 +413,7 @@
   ];
 
   let state = {
-    profile:{name:'',email:'',photo:'',gender:'female',birth:'',height:'',weight:'',target:'',goal:'maintain',steps:'',activity:'1.2',dietCategory:'balanced',dietType:'mediterranean',registrationDate:null,baseMeasurements:{},registrationSnapshot:null},
+    profile:{name:'',email:'',photo:'',gender:'female',birth:'',height:'',weight:'',target:'',goal:'maintain',steps:'',activity:'1.2',dietCategory:'balanced',dietType:'mediterranean',bodyFatPercent:'',registrationDate:null,baseMeasurements:{},registrationSnapshot:null},
     weights:{}, measurements:{}, journal:{}, nutritionWeekly:{}, dailyGoals:structuredClone(DEFAULT_DAILY), weeklyGoals:structuredClone(DEFAULT_WEEKLY),
     dailyDone:{}, weeklyDone:{}, weeklyHistory:{}, cycleDays:{},
     profileHistory:[],
@@ -446,7 +447,7 @@
     // Надёжная миграция старых сохранений: ни один отсутствующий раздел
     // не должен останавливать init() и отключать все кнопки приложения.
     if(!state.profile || typeof state.profile!=='object') state.profile={};
-    state.profile={...{name:'',email:'',photo:'',gender:'female',birth:'',height:'',weight:'',target:'',goal:'maintain',steps:'',activity:'1.2',dietCategory:'balanced',dietType:'mediterranean',registrationDate:null,baseMeasurements:{},registrationSnapshot:null},...state.profile};
+    state.profile={...{name:'',email:'',photo:'',gender:'female',birth:'',height:'',weight:'',target:'',goal:'maintain',steps:'',activity:'1.2',dietCategory:'balanced',dietType:'mediterranean',bodyFatPercent:'',registrationDate:null,baseMeasurements:{},registrationSnapshot:null},...state.profile};
     for(const k of ['weights','measurements','journal','nutritionWeekly','dailyDone','weeklyDone','weeklyHistory','cycleDays']){
       if(!state[k] || typeof state[k]!=='object' || Array.isArray(state[k])) state[k]={};
     }
@@ -533,6 +534,7 @@
       target:p.target||'',
       activity:p.activity||'1.2',
       dietType:p.dietType||'mediterranean',
+      bodyFatPercent:p.bodyFatPercent||'',
       weight:p.weight||'',
       height:p.height||'',
       birth:p.birth||'',
@@ -546,6 +548,7 @@
         if(h.target!==undefined && h.target!=='') result.target=h.target;
         if(h.activity) result.activity=h.activity;
         if(h.dietType) result.dietType=h.dietType;
+        if(h.bodyFatPercent!==undefined && h.bodyFatPercent!=='') result.bodyFatPercent=h.bodyFatPercent;
         if(h.weight!==undefined && h.weight!=='') result.weight=h.weight;
         if(h.height!==undefined && h.height!=='') result.height=h.height;
         if(h.birth) result.birth=h.birth;
@@ -569,6 +572,7 @@
       steps:p.steps,
       activity:hist.activity,
       dietType:hist.dietType||p.dietType||'mediterranean',
+      bodyFatPercent:hist.bodyFatPercent||p.bodyFatPercent||'',
       baseMeasurements:p.baseMeasurements||{}
     };
   }
@@ -610,6 +614,52 @@
     return [Math.round(calories*range[0]/kcalPerGram),Math.round(calories*range[1]/kcalPerGram)];
   }
 
+  function waterTarget(p,date=null){
+    const w=n(p.weight);
+    if(!w) return null;
+    const type=p.dietType||'mediterranean';
+    const dietCoeff=type==='keto'||type==='lchf'?1.5:type==='paleo'?1.2:1.0;
+    const activity=n(p.activity)||1.2;
+    const j=date?state.journal[date]||{}:{};
+    const minutes=n(j.trainingMinutes)||0;
+    let raw, method='weight';
+    const enteredFat=n(p.bodyFatPercent);
+    if(enteredFat!=null){
+      const h=n(p.height), a=age(p.birth);
+      if(h && a!=null){
+        let tbw=p.gender==='male'
+          ? 2.447-(0.09156*a)+(0.1074*h)+(0.3362*w)
+          : -2.097+(0.1069*h)+(0.2466*w);
+        const ref=p.gender==='male'?23:33;
+        const correction=1+((ref-enteredFat)*0.012);
+        tbw*=correction;
+        raw=tbw*0.12*dietCoeff;
+        method='Watson + % жира';
+      }
+    }
+    if(raw==null){
+      raw=w*0.033*dietCoeff;
+      method='вес × 0,033';
+    }
+    let trainingAdd=0;
+    if(activity>=1.725 && minutes>0) trainingAdd=0.5*(minutes/30);
+    raw+=trainingAdd;
+    const limit=p.gender==='male'?6:5;
+    const overPhysio=raw>limit;
+    const capped=raw>4;
+    const target=Math.min(raw,4);
+    let safety='';
+    if(overPhysio || capped){
+      safety=`Расчётная потребность в воде получилась ${round(raw,1)} л/сутки. Для безопасности FormulaVS ограничивает отображаемую целевую норму 4 л/сутки. Если вам требуется больше жидкости из-за спорта, жары или состояния здоровья, ориентируйтесь на рекомендации врача/специалиста.`;
+    }
+    const dietHint=type==='keto'||type==='lchf'
+      ? `На ${type==='keto'?'КЕТО':'LCHF'} увеличена поправка на питание (+50%). Следите не только за водой, но и за электролитами.`
+      : type==='paleo'
+        ? 'Для Палео применена поправка +20%.'
+        : 'Для Средиземноморской применена базовая норма без поправки.';
+    return {waterL:round(target,1),waterRawL:round(raw,1),waterMethod:method,waterTrainingAdd:round(trainingAdd,1),waterSafety:safety,waterHint:dietHint,waterDietCoeff:dietCoeff};
+  }
+
   function nutritionBase(p, caloriesOverride=null){
     const w=n(p.weight), h=n(p.height), a=age(p.birth), act=n(p.activity)||1.2;
     if(!w||!h||a==null) return null;
@@ -644,7 +694,8 @@
     proteinRange[1]=Math.max(proteinRange[1],proteinRange[0]);
     const fatRange=macroRangeGrams(calories,diet.ranges.fat,9);
     const carbsRange=macroRangeGrams(calories,diet.ranges.carbs,4);
-    const waterL=round(w*0.035,1);
+    const water=waterTarget(p);
+    const waterL=water?.waterL??null;
     const baseGoalCalories=p.goal==='lose'?tdee*0.85:p.goal==='gain'?tdee*1.15:tdee;
     return {
       bmi:bmi(w,h),bmr:bmrV,tdee,calories,
@@ -652,7 +703,7 @@
       protein,fat,carbs,waterL,safety,proteinKg:round(protein/w,2),fatKg:round(fat/w,2),
       dietType:p.dietType||'mediterranean',macroSplit:[carbPct,proteinPct,fatPct],
       macroRanges:{protein:proteinRange,fat:fatRange,carbs:carbsRange},
-      proteinMinimum,proteinAdjusted
+      proteinMinimum,proteinAdjusted,waterRawL:water?.waterRawL??null,waterMethod:water?.waterMethod||'',waterSafety:water?.waterSafety||'',waterHint:water?.waterHint||'',waterTrainingAdd:water?.waterTrainingAdd||0
     };
   }
 
@@ -664,7 +715,12 @@
     if(!base) return null;
     const wk=weekStartDate(date);
     const goal=state.nutritionWeekly[wk] ?? base.calories;
-    return nutritionBase(p,goal);
+    const result=nutritionBase(p,goal);
+    if(result){
+      const water=waterTarget(p,date);
+      if(water) Object.assign(result,water);
+    }
+    return result;
   }
 
   function weekStartDate(s){
@@ -799,7 +855,7 @@
     if($('registrationDate')) $('registrationDate').max=todayStr();
     setFieldValue('name',p.name); setFieldValue('email',p.email);
     setFieldValue('dietCategory',p.dietCategory||'balanced'); setFieldValue('dietType',p.dietType||'mediterranean');
-    setFieldValue('gender',p.gender||'female'); setFieldValue('birth',p.birth); setFieldValue('height',p.height);
+    setFieldValue('gender',p.gender||'female'); setFieldValue('birth',p.birth); setFieldValue('height',p.height); setFieldValue('profileBodyFat',p.bodyFatPercent||'');
     setFieldValue('profileWeight',p.weight); setFieldValue('profileTarget',p.target); setFieldValue('profileGoal',p.goal||'maintain'); setFieldValue('profileActivity',p.activity||'1.2');
     const bm=p.baseMeasurements||{};
     const fields=$('profileMeasurementFields');
@@ -899,8 +955,8 @@
       <div class="metric"><div class="k">Белки</div><div class="v">${nut.protein} г</div><div class="s">диапазон ${rangeText(ranges.protein)} · середина ${mid(ranges.protein)} г</div></div>
       <div class="metric"><div class="k">Жиры</div><div class="v">${nut.fat} г</div><div class="s">диапазон ${rangeText(ranges.fat)} · середина ${mid(ranges.fat)} г</div></div>
       <div class="metric"><div class="k">Углеводы</div><div class="v">${nut.carbs} г</div><div class="s">диапазон ${rangeText(ranges.carbs)} · середина ${mid(ranges.carbs)} г</div></div>
-      <div class="metric"><div class="k">Вода</div><div class="v">${nut.waterL} л</div><div class="s">≈ 35 мл/кг</div></div>
-    </div>${nut.proteinMinimum!=null?`<div class="note" style="margin-top:10px">Белковый минимум: ${nut.proteinMinimum} г (1,2 г/кг).${nut.proteinAdjusted?' Формула дала меньше, поэтому белок повышен, а углеводы уменьшены.':''}</div>`:''}${(nut.dietType==='keto'||nut.dietType==='lchf')?`<div class="note" style="margin-top:8px">🥬 Для ${esc(dietName)} углеводы учитываются как <b>net carbs</b>: общие углеводы − клетчатка.</div>`:''}<div class="metrics" style="margin-top:9px"><div class="metric"><div class="k">Всего потрачено</div><div class="v">${(() => {const x=totalBurnedAtPreview(today); return x!=null?round(x,0):'—'})()} ккал</div><div class="s">BMR + активность</div></div><div class="metric"><div class="k">Баланс ккал</div><div class="v">${(() => {const x=totalBurnedAtPreview(today),c=n(state.journal[today]?.calories); return x!=null&&c!=null?`${c-x>0?'+':''}${round(c-x,0)}`:'—'})()}</div><div class="s">Ккал − всего потрачено</div></div></div><div class="note" style="margin-top:10px">КБЖУ пересчитываются в начале новой недели по средней динамике веса. При застое/обратной динамике калорийность корректируется на 40 ккал. Калорийность не опускается ниже BMR + 10%. При изменении веса дневные граммы КБЖУ пересчитываются автоматически.</div>${nut.safety?`<div class="note warn" style="margin-top:10px">${esc(nut.safety)}</div>`:''}</div>`;
+      <div class="metric"><div class="k">Вода</div><div class="v">${nut.waterL} л</div><div class="s">${esc(nut.waterMethod||'расчёт')}${nut.waterTrainingAdd?` · +${nut.waterTrainingAdd} л тренировка`:``}</div></div>
+    </div>${nut.proteinMinimum!=null?`<div class="note" style="margin-top:10px">Белковый минимум: ${nut.proteinMinimum} г (1,2 г/кг).${nut.proteinAdjusted?' Формула дала меньше, поэтому белок повышен, а углеводы уменьшены.':''}</div>`:''}${(nut.dietType==='keto'||nut.dietType==='lchf')?`<div class="note" style="margin-top:8px">🥬 Для ${esc(dietName)} углеводы учитываются как <b>net carbs</b>: общие углеводы − клетчатка.</div>`:''}<div class="note" style="margin-top:8px">💧 ${esc(nut.waterHint||'Норма рассчитана по весу и типу питания.')} ${nut.waterTrainingAdd?`За интенсивную тренировку добавлено ${nut.waterTrainingAdd} л.`:''}</div>${(nut.dietType==='keto'||nut.dietType==='lchf')?`<div class="note warn" style="margin-top:8px">⚡ На КЕТО/LCHF следите за электролитами; одной воды недостаточно.</div>`:''}${nut.waterSafety?`<div class="note warn" style="margin-top:8px">${esc(nut.waterSafety)}</div>`:''}<div class="metrics" style="margin-top:9px"><div class="metric"><div class="k">Всего потрачено</div><div class="v">${(() => {const x=totalBurnedAtPreview(today); return x!=null?round(x,0):'—'})()} ккал</div><div class="s">BMR + активность</div></div><div class="metric"><div class="k">Баланс ккал</div><div class="v">${(() => {const x=totalBurnedAtPreview(today),c=n(state.journal[today]?.calories); return x!=null&&c!=null?`${c-x>0?'+':''}${round(c-x,0)}`:'—'})()}</div><div class="s">Ккал − всего потрачено</div></div></div><div class="note" style="margin-top:10px">КБЖУ пересчитываются в начале новой недели по средней динамике веса. При застое/обратной динамике калорийность корректируется на 40 ккал. Калорийность не опускается ниже BMR + 10%. При изменении веса дневные граммы КБЖУ пересчитываются автоматически.</div>${nut.safety?`<div class="note warn" style="margin-top:10px">${esc(nut.safety)}</div>`:''}</div>`;
     }
     $('homeContent').innerHTML=h;
   }
@@ -994,6 +1050,8 @@
     $('jCycle').checked=!!state.cycleDays[d];
     const goal=weeklyNutritionTargetForDate(d);
     $('jCalorieGoal').textContent=goal!=null?`${round(goal,0)} ккал/сутки`:'—';
+    const water=nutritionForDate(d);
+    const waterTargetEl=$('jWaterGoal'); if(waterTargetEl) waterTargetEl.textContent=water?.waterL!=null?`${water.waterL} л/сутки`:'—';
     const total=totalBurnedAt(d), balance=calorieBalanceAt(d);
     $('jTotalBurned').textContent=total!=null?`${round(total,0)} ккал`:'—';
     $('jCalorieBalance').textContent=balance!=null?`${balance>0?'+':''}${round(balance,0)} ккал`:'—';
@@ -1347,12 +1405,12 @@
       const p=state.profile;
       const oldDate=p.registrationDate;
       const date=$('registrationDate').value||todayStr();
-      p.registrationDate=date; p.name=$('name').value.trim(); p.email=$('email').value.trim(); p.gender=$('gender').value; p.birth=$('birth').value; p.height=$('height').value; p.weight=$('profileWeight').value; p.target=$('profileTarget').value; p.goal=$('profileGoal').value; p.activity=$('profileActivity').value; p.dietCategory=$('dietCategory').value; p.dietType=$('dietType').value;
+      p.registrationDate=date; p.name=$('name').value.trim(); p.email=$('email').value.trim(); p.gender=$('gender').value; p.birth=$('birth').value; p.height=$('height').value; p.bodyFatPercent=$('profileBodyFat')?.value||''; p.weight=$('profileWeight').value; p.target=$('profileTarget').value; p.goal=$('profileGoal').value; p.activity=$('profileActivity').value; p.dietCategory=$('dietCategory').value; p.dietType=$('dietType').value;
       if(!p.name||!p.email||!p.gender||!p.birth||!p.height||!p.weight||!p.target||!p.goal||!p.activity||!p.dietType) return alert('Заполни все обязательные поля профиля.');
       const m={...(p.baseMeasurements||{})};
       for(const [k] of MEASUREMENTS){const el=$('profile_m_'+k),v=n(el?.value);if(v!=null)m[k]=v;else if(el?.value==='') delete m[k];}
       p.baseMeasurements=m;
-      const snapshot={registrationDate:date,name:p.name,email:p.email,gender:p.gender,birth:p.birth,height:p.height,weight:p.weight,target:p.target,goal:p.goal,steps:p.steps,activity:p.activity,dietCategory:p.dietCategory,dietType:p.dietType,baseMeasurements:{...m}};
+      const snapshot={registrationDate:date,name:p.name,email:p.email,gender:p.gender,birth:p.birth,height:p.height,bodyFatPercent:p.bodyFatPercent,weight:p.weight,target:p.target,goal:p.goal,steps:p.steps,activity:p.activity,dietCategory:p.dietCategory,dietType:p.dietType,baseMeasurements:{...m}};
       if(!p.registrationSnapshot){
         p.registrationSnapshot={...snapshot};
       }
