@@ -4,7 +4,7 @@
   "start_url": "./",
   "display": "standalone",
   "background_color": "#f5f7fb",
-  "theme_color": "#111827",
+  "theme_color": "#2563eb",
   "lang": "ru",
   "description": "Персональный трекер веса, питания, активности и прогресса.",
   "icons": [

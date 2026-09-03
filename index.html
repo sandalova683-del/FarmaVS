@@ -378,7 +378,7 @@
 (() => {
   'use strict';
 
-  const APP_VERSION = '2.12.0';
+  const APP_VERSION = '2.12.2';
   const KEY = 'formavs_v2';
   const LEGACY_KEY = 'forma_v2';
   const todayStr = () => {
@@ -443,9 +443,20 @@
     ensureDefaults();
   }
   function ensureDefaults(){
+    // Надёжная миграция старых сохранений: ни один отсутствующий раздел
+    // не должен останавливать init() и отключать все кнопки приложения.
+    if(!state.profile || typeof state.profile!=='object') state.profile={};
+    state.profile={...{name:'',email:'',photo:'',gender:'female',birth:'',height:'',weight:'',target:'',goal:'maintain',steps:'',activity:'1.2',dietCategory:'balanced',dietType:'mediterranean',registrationDate:null,baseMeasurements:{},registrationSnapshot:null},...state.profile};
+    for(const k of ['weights','measurements','journal','nutritionWeekly','dailyDone','weeklyDone','weeklyHistory','cycleDays']){
+      if(!state[k] || typeof state[k]!=='object' || Array.isArray(state[k])) state[k]={};
+    }
+    if(!Array.isArray(state.dailyGoals)) state.dailyGoals=structuredClone(DEFAULT_DAILY);
+    if(!Array.isArray(state.weeklyGoals)) state.weeklyGoals=structuredClone(DEFAULT_WEEKLY);
+    if(!state.ui || typeof state.ui!=='object') state.ui={};
+    state.ui={...{month:todayStr().slice(0,7),habitDate:todayStr(),journalDate:todayStr(),analyticsDate:todayStr(),analyticsPeriod:'week',analyticsMetric:'weight',analyticsWeekStartDay:1},...state.ui};
     if(!state.nutritionWeekly || typeof state.nutritionWeekly!=='object') state.nutritionWeekly={};
-    for(const d of DEFAULT_DAILY) if(!state.dailyGoals.some(x=>x.id===d.id)) state.dailyGoals.unshift({...d});
-    for(const w of DEFAULT_WEEKLY) if(!state.weeklyGoals.some(x=>x.id===w.id)) state.weeklyGoals.push({...w});
+    for(const d of DEFAULT_DAILY) if(!state.dailyGoals.some(x=>x && x.id===d.id)) state.dailyGoals.unshift({...d});
+    for(const w of DEFAULT_WEEKLY) if(!state.weeklyGoals.some(x=>x && x.id===w.id)) state.weeklyGoals.push({...w});
     normalizeGoalLabels();
     rolloverWeek();
     if(!state.cycleDays) state.cycleDays={};
@@ -830,7 +841,7 @@
       $('homeContent').innerHTML=`<div class="card">
         <div class="title">👋 Начнём с базовых данных</div>
         <div class="note">Сначала сохрани профиль. После этого FormulaVS покажет расчёты питания, состав тела, цель и прогресс.</div>
-        <button class="btn secondary" style="margin-top:10px" onclick="document.querySelector('[data-tab=profile]').click()">Заполнить профиль</button>
+        <button class="btn secondary" style="margin-top:10px" onclick="document.getElementById('profileTop')?.click()">Заполнить профиль</button>
       </div>`;
       return;
     }
@@ -1365,7 +1376,7 @@
     load();renderMeasurementFields();bind();renderProfileFields();renderHome();renderJournal();renderAnalytics();if(!state.profile.registrationDate)navigate('profile');else navigate('home');
     setInterval(()=>{if(todayStr()!==state._lastDay){state._lastDay=todayStr();rolloverWeek();state.ui.habitDate=todayStr();state.ui.journalDate=todayStr();save();renderHome();renderJournal();renderWeek();renderAnalytics();}},30000);
     if ('serviceWorker' in navigator) {
-      const APP_VERSION='2.12.0';
+      const APP_VERSION='2.12.2';
       let reloadScheduled = false;
       function reloadOnceAfterUpdate(){
         if(reloadScheduled) return;
