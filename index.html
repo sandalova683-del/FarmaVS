@@ -378,7 +378,7 @@
 (() => {
   'use strict';
 
-  const APP_VERSION = '2.12.3';
+  const APP_VERSION = '2.13.0';
   const KEY = 'formavs_v2';
   const LEGACY_KEY = 'forma_v2';
   const todayStr = () => {
@@ -588,21 +588,37 @@
     return 10*w + 6.25*h - 5*a + (male?5:-161);
   }
   const DIET_INFO={
-    keto:{name:'КЕТО',category:'lowcarb',carbs:'5–10%',protein:'20–25%',fat:'65–75%',feature:'Введение организма в состояние кетоза для сжигания жира.',details:'Суть: Максимально низкое потребление углеводов заставляет организм переключиться с сжигания глюкозы на сжигание жиров, производя кетоновые тела. Макросы: жиры — основа рациона, белки — умеренно, углеводы — строго ограничены (обычно < 50 г в день). Плюсы: быстрая потеря веса, особенно вначале, и возможное улучшение контроля сахара в крови. Минусы: сложно соблюдать долгосрочно, возможен риск дефицита клетчатки и микроэлементов, а в начале — кето-грипп. Для кого: применяется в том числе при некоторых неврологических состояниях; при заболеваниях желчного пузыря требует особой осторожности.'},
-    lchf:{name:'LCHF',category:'lowcarb',carbs:'20–25% (до 30%)',protein:'≈20%',fat:'50–55%',feature:'Более мягкая версия низкоуглеводного питания, не всегда приводящая в кетоз.',details:'Суть: близкий родственник кето, но с более высоким процентом углеводов. Основная цель — снизить потребление сахара и рафинированных углеводов. Макросы: жиры преобладают, углеводы могут составлять до 25–30% калорийности. Особенность: более гибкий и устойчивый вариант для многих людей, не требует строгого контроля кетоза и позволяет включать больше овощей и некоторые цельнозерновые продукты.'},
-    paleo:{name:'Палео',category:'balanced',carbs:'20–35%',protein:'25–35%',fat:'30–45%',feature:'Акцент на цельных, необработанных продуктах.',details:'Суть: рацион основывается на продуктах, доступных охотникам-собирателям: мясо, рыба, яйца, овощи, фрукты, орехи, семена. Исключаются: зерновые, бобовые, молочные продукты, рафинированный сахар и промышленные масла. Макросы более сбалансированы, с заметной долей белка и жиров; углеводы в основном из овощей и фруктов. Плюсы: ограничивает переработанные продукты. Минусы: исключает целые группы продуктов и может потребовать внимания к кальцию и витамину D.'},
-    mediterranean:{name:'Средиземноморское',category:'balanced',carbs:'40–50%',protein:'15–20%',fat:'30–40%',feature:'Сбалансированная система с сильной доказательной базой для здоровья сердца.',details:'Суть: система с сильной доказательной базой в отношении здоровья сердца и долголетия. Основа: оливковое масло, рыба, морепродукты, бобовые, цельные зерна, большое количество овощей и фруктов. Красное мясо и сладости употребляются редко. Макросы: самый высокий процент углеводов среди перечисленных систем, преимущественно из сложных углеводов; жиры — преимущественно ненасыщенные. Гибкость: считается одним из наиболее устойчивых вариантов для долгосрочного соблюдения.'}
+    keto:{name:'КЕТО',category:'lowcarb',carbs:'5–10%',protein:'20–25%',fat:'65–75%',reference:[.25,.70,.05],feature:'Жиры — основа рациона, углеводы строго ограничены.',details:'Суть: максимально низкое потребление углеводов. Для расчёта FormulaVS использует контрольную точку из таблицы: белки 25%, жиры 70%, углеводы 5%. В интерфейсе показывается гибкий диапазон.'},
+    lchf:{name:'LCHF',category:'lowcarb',carbs:'20–25%',protein:'20–25%',fat:'50–55%',reference:[.20,.55,.25],feature:'Более мягкий низкоуглеводный вариант.',details:'Суть: меньше углеводов и больше жиров, чем в обычном рационе. Контрольная точка расчёта: белки 20%, жиры 55%, углеводы 25%.'},
+    paleo:{name:'Палео',category:'balanced',carbs:'25–35%',protein:'25–35%',fat:'35–45%',reference:[.30,.40,.30],feature:'Акцент на цельные, минимально обработанные продукты.',details:'Основа — мясо, рыба, яйца, овощи, фрукты, орехи и семена. Контрольная точка расчёта: белки 30%, жиры 40%, углеводы 30%.'},
+    mediterranean:{name:'Средиземноморское',category:'balanced',carbs:'40–50%',protein:'15–20%',fat:'30–40%',reference:[.18,.37,.45],feature:'Сбалансированный рацион с акцентом на цельные продукты и ненасыщенные жиры.',details:'Основа — овощи, фрукты, рыба, морепродукты, бобовые, цельные зерна и оливковое масло. Контрольная точка расчёта: белки 18%, жиры 37%, углеводы 45%.'}
   };
-  function dietMacros(type){const d=DIET_INFO[type]||DIET_INFO.mediterranean;const map={keto:[.075,.225,.70],lchf:[.25,.20,.55],paleo:[.275,.30,.425],mediterranean:[.45,.175,.375]};return map[type]||map.mediterranean;}
+  // Reference percentages are the calculation points from the user's table.
+  // Ranges are displayed to give flexibility, but daily grams are calculated
+  // from the reference point and then corrected by the protein minimum.
+  function dietMacros(type){
+    const d=DIET_INFO[type]||DIET_INFO.mediterranean;
+    const ranges={
+      keto:{protein:[.20,.25],fat:[.65,.75],carbs:[.05,.10]},
+      lchf:{protein:[.20,.25],fat:[.50,.55],carbs:[.20,.25]},
+      paleo:{protein:[.25,.35],fat:[.35,.45],carbs:[.25,.35]},
+      mediterranean:{protein:[.15,.20],fat:[.30,.40],carbs:[.40,.50]}
+    };
+    return {proteinPct:d.reference[0],fatPct:d.reference[1],carbPct:d.reference[2],ranges:ranges[type]||ranges.mediterranean};
+  }
+  function macroRangeGrams(calories, range, kcalPerGram){
+    return [Math.round(calories*range[0]/kcalPerGram),Math.round(calories*range[1]/kcalPerGram)];
+  }
 
   function nutritionBase(p, caloriesOverride=null){
     const w=n(p.weight), h=n(p.height), a=age(p.birth), act=n(p.activity)||1.2;
     if(!w||!h||a==null) return null;
     const bmrV=bmrMifflin(w,h,a,p.gender==='male');
     const tdee=bmrV*act;
+    // User-facing base: TDEE is maintenance; goal changes it by 15%.
     let calories=tdee, safety='';
     if(p.goal==='lose') calories=tdee*0.85;
-    else if(p.goal==='gain') calories=tdee*1.10;
+    else if(p.goal==='gain') calories=tdee*1.15;
     const minCalories=bmrV*1.10;
     if(calories<minCalories){
       calories=minCalories;
@@ -611,20 +627,33 @@
     if(caloriesOverride!=null) calories=Math.max(minCalories, caloriesOverride);
     calories=Math.round(calories/10)*10;
 
-    const training=act>=1.55;
-    const [carbPct,proteinPct,fatPct]=dietMacros(p.dietType);
-    let protein,fat,carbs,proteinKg,fatKg;
-    if(training){
-      proteinKg=2.2; protein=round(w*proteinKg,0);
-      fatKg=(p.dietType==='keto'?1.1:(p.dietType==='lchf'?1.0:1.0));
-      fat=round(w*fatKg,0);
-      carbs=Math.max(0,Math.round((calories-protein*4-fat*9)/4));
-    }else{
-      protein=Math.round(calories*proteinPct/4); fat=Math.round(calories*fatPct/9); carbs=Math.max(0,Math.round((calories-protein*4-fat*9)/4));
-      proteinKg=round(protein/w,2); fatKg=round(fat/w,2);
+    const diet=dietMacros(p.dietType);
+    const proteinPct=diet.proteinPct, fatPct=diet.fatPct, carbPct=diet.carbPct;
+    let protein=Math.round(calories*proteinPct/4);
+    let fat=Math.round(calories*fatPct/9);
+    let carbs=Math.max(0,Math.round((calories-protein*4-fat*9)/4));
+    const proteinMinimum=(p.dietType==='keto')?null:round(w*1.2,0);
+    let proteinAdjusted=false;
+    if(proteinMinimum!=null && protein<proteinMinimum){
+      protein=proteinMinimum;
+      proteinAdjusted=true;
+      carbs=Math.max(0,Math.floor((calories-protein*4-fat*9)/4));
     }
+    const proteinRange=macroRangeGrams(calories,diet.ranges.protein,4);
+    if(proteinMinimum!=null) proteinRange[0]=Math.max(proteinRange[0],proteinMinimum);
+    proteinRange[1]=Math.max(proteinRange[1],proteinRange[0]);
+    const fatRange=macroRangeGrams(calories,diet.ranges.fat,9);
+    const carbsRange=macroRangeGrams(calories,diet.ranges.carbs,4);
     const waterL=round(w*0.035,1);
-    return {bmi:bmi(w,h),bmr:bmrV,tdee,calories,baseCalories:Math.round((p.goal==='lose'?tdee*0.85:p.goal==='gain'?tdee*1.10:tdee)/10)*10,minCalories:Math.round(minCalories/10)*10,protein,fat,carbs,waterL,safety,proteinKg,fatKg,training,dietType:p.dietType||'mediterranean',macroSplit:[carbPct,proteinPct,fatPct]};
+    const baseGoalCalories=p.goal==='lose'?tdee*0.85:p.goal==='gain'?tdee*1.15:tdee;
+    return {
+      bmi:bmi(w,h),bmr:bmrV,tdee,calories,
+      baseCalories:Math.round(baseGoalCalories/10)*10,minCalories:Math.round(minCalories/10)*10,
+      protein,fat,carbs,waterL,safety,proteinKg:round(protein/w,2),fatKg:round(fat/w,2),
+      dietType:p.dietType||'mediterranean',macroSplit:[carbPct,proteinPct,fatPct],
+      macroRanges:{protein:proteinRange,fat:fatRange,carbs:carbsRange},
+      proteinMinimum,proteinAdjusted
+    };
   }
 
   function nutritionForDate(date){
@@ -647,7 +676,8 @@
   function avgWeightBetween(start,end){
     const vals=[];
     for(let d=parseDate(start); d<=parseDate(end); d.setDate(d.getDate()+1)){
-      const v=n(state.weights[iso(d)]);
+      const key=iso(d);
+      const v=n(state.weights[key] ?? state.journal[key]?.weight);
       if(v!=null) vals.push(v);
     }
     return vals.length ? vals.reduce((a,b)=>a+b,0)/vals.length : null;
@@ -686,9 +716,9 @@
     if(w1!=null && w0!=null){
       const diff=w1-w0;
       if(p.goal==='lose'){
-        if(diff>=0) calories-=30;
+        if(diff>=0) calories-=40;
       }else if(p.goal==='gain'){
-        if(diff<=0) calories+=50;
+        if(diff<=0) calories+=40;
       }else{
         if(diff < -0.1) calories+=30;
         else if(diff > 0.1) calories-=30;
@@ -785,7 +815,8 @@
 
   function renderDietInfo(){
     const el=$('dietInfo'); if(!el)return; const type=$('dietType')?.value||state.profile.dietType||'mediterranean'; const d=DIET_INFO[type];
-    el.innerHTML=`<div class="diet-card"><b>${d.name}</b><small>Углеводы ${d.carbs} · Белки ${d.protein} · Жиры ${d.fat}</small><div style="margin-top:4px;font-size:.78rem;color:#475569">${d.feature}</div></div>`;
+    const netNote=(type==='keto'||type==='lchf')?' · Углеводы = net carbs (общие углеводы − клетчатка)':'';
+    el.innerHTML=`<div class="diet-card"><b>${d.name}</b><small>Углеводы ${d.carbs} · Белки ${d.protein} · Жиры ${d.fat}</small><div style="margin-top:4px;font-size:.78rem;color:#475569">${d.feature}${netNote}</div></div>`;
   }
 
   function renderRegistrationSnapshot(){
@@ -856,14 +887,21 @@
       <div class="metric"><div class="k">Ориентир по возрасту</div><div class="v"><span class="badge ${comp.cls}">${comp.status}</span></div><div class="s">${comp.range?`${comp.range[0]}–${comp.range[1]}%`:''}</div></div>
     </div></div>`;
     else h+=`<div class="card"><div class="title">🧬 Состав тела</div><div class="note">Для US Navy нужны талия + шея; для женщин ещё бёдра. Их можно внести в профиле.</div></div>`;
-    if(nut) h+=`<div class="card"><div class="title">🥗 Ориентир питания</div><div class="metrics">
+    if(nut){
+      const ranges=nut.macroRanges;
+      const rangeText=(r,unit='г')=>`${r[0]}–${r[1]} ${unit}`;
+      const mid=(r)=>Math.round((r[0]+r[1])/2);
+      const dietName=DIET_INFO[nut.dietType]?.name||nut.dietType;
+      h+=`<div class="card"><div class="title">🥗 КБЖУ на день · ${esc(dietName)}</div><div class="metrics">
       <div class="metric"><div class="k">BMR</div><div class="v">${Math.round(nut.bmr)}</div><div class="s">ккал/сутки</div></div>
-      <div class="metric"><div class="k">Целевая калорийность</div><div class="v">${nut.calories}</div><div class="s">ккал/сутки</div></div>
-      <div class="metric"><div class="k">Белок</div><div class="v">${nut.protein} г</div><div class="s">ориентир</div></div>
-      <div class="metric"><div class="k">Жиры</div><div class="v">${nut.fat} г</div><div class="s">ориентир</div></div>
-      <div class="metric"><div class="k">Углеводы</div><div class="v">${nut.carbs} г</div><div class="s">остаток калорий</div></div>
+      <div class="metric"><div class="k">TDEE</div><div class="v">${Math.round(nut.tdee)}</div><div class="s">поддержание</div></div>
+      <div class="metric"><div class="k">Итоговые калории</div><div class="v">${nut.calories}</div><div class="s">с учётом цели</div></div>
+      <div class="metric"><div class="k">Белки</div><div class="v">${nut.protein} г</div><div class="s">диапазон ${rangeText(ranges.protein)} · середина ${mid(ranges.protein)} г</div></div>
+      <div class="metric"><div class="k">Жиры</div><div class="v">${nut.fat} г</div><div class="s">диапазон ${rangeText(ranges.fat)} · середина ${mid(ranges.fat)} г</div></div>
+      <div class="metric"><div class="k">Углеводы</div><div class="v">${nut.carbs} г</div><div class="s">диапазон ${rangeText(ranges.carbs)} · середина ${mid(ranges.carbs)} г</div></div>
       <div class="metric"><div class="k">Вода</div><div class="v">${nut.waterL} л</div><div class="s">≈ 35 мл/кг</div></div>
-    </div><div class="metrics" style="margin-top:9px"><div class="metric"><div class="k">Всего потрачено</div><div class="v">${(() => {const x=totalBurnedAtPreview(today); return x!=null?round(x,0):'—'})()} ккал</div><div class="s">BMR + активность</div></div><div class="metric"><div class="k">Баланс ккал</div><div class="v">${(() => {const x=totalBurnedAtPreview(today),c=n(state.journal[today]?.calories); return x!=null&&c!=null?`${c-x>0?'+':''}${round(c-x,0)}`:'—'})()}</div><div class="s">Ккал − всего потрачено</div></div></div><div class="note" style="margin-top:10px">КБЖУ пересчитываются в начале новой недели по средней динамике веса. Калорийность не опускается ниже BMR + 10%.</div>${nut.safety?`<div class="note warn" style="margin-top:10px">${esc(nut.safety)}</div>`:''}</div>`;
+    </div>${nut.proteinMinimum!=null?`<div class="note" style="margin-top:10px">Белковый минимум: ${nut.proteinMinimum} г (1,2 г/кг).${nut.proteinAdjusted?' Формула дала меньше, поэтому белок повышен, а углеводы уменьшены.':''}</div>`:''}${(nut.dietType==='keto'||nut.dietType==='lchf')?`<div class="note" style="margin-top:8px">🥬 Для ${esc(dietName)} углеводы учитываются как <b>net carbs</b>: общие углеводы − клетчатка.</div>`:''}<div class="metrics" style="margin-top:9px"><div class="metric"><div class="k">Всего потрачено</div><div class="v">${(() => {const x=totalBurnedAtPreview(today); return x!=null?round(x,0):'—'})()} ккал</div><div class="s">BMR + активность</div></div><div class="metric"><div class="k">Баланс ккал</div><div class="v">${(() => {const x=totalBurnedAtPreview(today),c=n(state.journal[today]?.calories); return x!=null&&c!=null?`${c-x>0?'+':''}${round(c-x,0)}`:'—'})()}</div><div class="s">Ккал − всего потрачено</div></div></div><div class="note" style="margin-top:10px">КБЖУ пересчитываются в начале новой недели по средней динамике веса. При застое/обратной динамике калорийность корректируется на 40 ккал. Калорийность не опускается ниже BMR + 10%. При изменении веса дневные граммы КБЖУ пересчитываются автоматически.</div>${nut.safety?`<div class="note warn" style="margin-top:10px">${esc(nut.safety)}</div>`:''}</div>`;
+    }
     $('homeContent').innerHTML=h;
   }
 
@@ -1323,7 +1361,9 @@
       if(sameIndex>=0) state.profileHistory[sameIndex]=histEntry; else state.profileHistory.push(histEntry);
       state.profileHistory.sort((a,b)=>a.date.localeCompare(b.date));
       const wk=weekStartDate(todayStr()),base=nutritionBase(getFullProfileAt(todayStr()));
-      if(state.nutritionWeekly[wk]==null && base) state.nutritionWeekly[wk]=base.calories;
+      const oldForCalc=oldDate?getProfileAt(todayStr()):null;
+      const calorieInputsChanged=!!oldForCalc && (String(oldForCalc.weight)!==String(p.weight)||String(oldForCalc.height)!==String(p.height)||String(oldForCalc.birth)!==String(p.birth)||String(oldForCalc.gender)!==String(p.gender)||String(oldForCalc.activity)!==String(p.activity)||String(oldForCalc.goal)!==String(p.goal));
+      if(base && (state.nutritionWeekly[wk]==null || calorieInputsChanged)) state.nutritionWeekly[wk]=base.calories;
       recalcWeeklyNutrition(true);
       save(); renderProfileFields(); renderHome(); renderAnalytics();
       toast(oldDate&&oldDate!==date?'Профиль обновлён':'Данные сохранены');
