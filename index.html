@@ -370,7 +370,7 @@
     <button class="bottom-tab" data-tab="trackers"><span class="nav-icon">✓</span>Трекеры</button>
     <button class="bottom-tab" data-tab="analytics"><span class="nav-icon">⌁</span>Мой прогресс</button>
   </nav>
-  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v2.12.0</span></div>
+  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v2.13.1</span></div>
 </div>
   <div id="dietModal" class="modal"><div class="modal-card"><button class="modal-close" id="dietModalClose">×</button><div id="dietModalTitle" class="onboarding-title"></div><div id="dietModalBody" style="color:#475569;line-height:1.55"></div></div></div>
 
@@ -378,7 +378,7 @@
 (() => {
   'use strict';
 
-  const APP_VERSION = '2.13.0';
+  const APP_VERSION = '2.13.1';
   const KEY = 'formavs_v2';
   const LEGACY_KEY = 'forma_v2';
   const todayStr = () => {
@@ -803,7 +803,7 @@
     setFieldValue('profileWeight',p.weight); setFieldValue('profileTarget',p.target); setFieldValue('profileGoal',p.goal||'maintain'); setFieldValue('profileActivity',p.activity||'1.2');
     const bm=p.baseMeasurements||{};
     const fields=$('profileMeasurementFields');
-    if(fields) fields.innerHTML=MEASUREMENTS.map(([k,label])=>`<div class="field"><label>${label}</label><input id="pm_${k}" type="number" step=".1" min="1" max="300" value="${esc(bm[k]??'')}"></div>`).join('');
+    if(fields) fields.innerHTML=MEASUREMENTS.map(([k,label])=>`<div class="field"><label>${label}</label><input id="profile_m_${k}" type="number" step=".1" min="1" max="300" value="${esc(bm[k]??'')}"></div>`).join('');
     const photo=p.photo?`<img src="${esc(p.photo)}" class="profile-photo">`:'VS';
     const pp=$('profilePhotoPreview'); if(pp){pp.innerHTML=photo;pp.className=p.photo?'':'profile-photo-placeholder';}
     const pe=$('profilePhotoPreviewEditor'); if(pe){pe.innerHTML=photo;pe.className=p.photo?'':'profile-photo-placeholder';}
@@ -1316,7 +1316,7 @@
     const fields=$('measurementFields');
     if(!fields)return;
     const bm=state.profile?.baseMeasurements||{};
-    fields.innerHTML=MEASUREMENTS.map(([k,label])=>`<div class=\"field\"><label>${label}</label><input id=\"pm_${k}\" type=\"number\" step=\".1\" min=\"1\" max=\"300\" value=\"${esc(bm[k]??'')}\"></div>`).join('');
+    fields.innerHTML=MEASUREMENTS.map(([k,label])=>`<div class=\"field\"><label>${label}</label><input id=\"m_${k}\" type=\"number\" step=\".1\" min=\"1\" max=\"300\" value=\"${esc(state.measurements?.[state.ui?.measureDate||todayStr()]?.[k]??'')}\"></div>`).join('');
     const mDate=$('mDate');
     if(mDate && !mDate.value)mDate.value=state.ui?.measureDate||todayStr();
   }
@@ -1350,7 +1350,7 @@
       p.registrationDate=date; p.name=$('name').value.trim(); p.email=$('email').value.trim(); p.gender=$('gender').value; p.birth=$('birth').value; p.height=$('height').value; p.weight=$('profileWeight').value; p.target=$('profileTarget').value; p.goal=$('profileGoal').value; p.activity=$('profileActivity').value; p.dietCategory=$('dietCategory').value; p.dietType=$('dietType').value;
       if(!p.name||!p.email||!p.gender||!p.birth||!p.height||!p.weight||!p.target||!p.goal||!p.activity||!p.dietType) return alert('Заполни все обязательные поля профиля.');
       const m={...(p.baseMeasurements||{})};
-      for(const [k] of MEASUREMENTS){const el=$('pm_'+k),v=n(el?.value);if(v!=null)m[k]=v;}
+      for(const [k] of MEASUREMENTS){const el=$('profile_m_'+k),v=n(el?.value);if(v!=null)m[k]=v;else if(el?.value==='') delete m[k];}
       p.baseMeasurements=m;
       const snapshot={registrationDate:date,name:p.name,email:p.email,gender:p.gender,birth:p.birth,height:p.height,weight:p.weight,target:p.target,goal:p.goal,steps:p.steps,activity:p.activity,dietCategory:p.dietCategory,dietType:p.dietType,baseMeasurements:{...m}};
       if(!p.registrationSnapshot){
@@ -1425,7 +1425,7 @@
     load();renderMeasurementFields();bind();renderProfileFields();renderHome();renderJournal();renderAnalytics();if(!state.profile.registrationDate)navigate('profile');else navigate('home');
     setInterval(()=>{if(todayStr()!==state._lastDay){state._lastDay=todayStr();rolloverWeek();state.ui.habitDate=todayStr();state.ui.journalDate=todayStr();save();renderHome();renderJournal();renderWeek();renderAnalytics();}},30000);
     if ('serviceWorker' in navigator) {
-      const APP_VERSION='2.12.3';
+      const APP_VERSION='2.13.1';
       let reloadScheduled = false;
       function reloadOnceAfterUpdate(){
         if(reloadScheduled) return;
