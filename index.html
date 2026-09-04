@@ -28,8 +28,8 @@
     .mark{width:44px;height:44px;border-radius:15px;background:linear-gradient(145deg,#111827 0%,#273449 58%,#2563eb 100%);color:#fff;display:grid;place-items:center;font-weight:900;font-size:15px;letter-spacing:-.8px;position:relative;overflow:hidden;box-shadow:0 9px 20px rgba(17,24,39,.18)}
     .mark:before{content:"";position:absolute;width:28px;height:4px;border-radius:99px;background:#60a5fa;transform:rotate(-35deg);right:-5px;top:9px;opacity:.9}
     .mark:after{content:"";position:absolute;width:20px;height:20px;border:2px solid rgba(255,255,255,.18);border-radius:50%;left:-7px;bottom:-7px}
-    h1{font-size:1.48rem;letter-spacing:-.5px;margin:0}
-    .brand-en{margin-top:1px;color:#94a3b8;font-size:.54rem;font-weight:750;letter-spacing:.12em;text-transform:uppercase}
+    h1{font-size:1.18rem;letter-spacing:-.4px;margin:0}
+    .brand-en{margin-top:1px;color:#94a3b8;font-size:.46rem;font-weight:750;letter-spacing:.12em;text-transform:uppercase}
     .tagline{margin:3px 0 0;color:#475569;font-size:.86rem;font-weight:650}
     .tabs{display:flex;gap:7px;overflow:auto;padding:4px 0 13px;position:sticky;top:69px;background:rgba(245,247,251,.94);backdrop-filter:blur(10px);z-index:10}
     .tab{border:1px solid var(--line);background:#fff;border-radius:14px;padding:9px 12px;white-space:nowrap;color:#475569;flex-shrink:0}
@@ -123,8 +123,47 @@
     .analytics-week-filter label{font-size:.82rem;color:#64748b;font-weight:600}
     .analytics-week-filter select{padding:7px 10px;border-radius:10px;border:1px solid #d8dee8;background:#fbfcfe;width:auto;min-width:140px}
 
+    /* FormulaVS home — profile-style dashboard */
+    .home-card{padding:18px 20px;border-radius:20px}
+    .home-section-title{font-size:1.05rem;font-weight:800;margin:0 0 12px;display:flex;align-items:center;gap:8px}
+    .home-date{color:#64748b;font-size:.78rem;margin-top:-5px;margin-bottom:14px}
+    .home-primary-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:10px}
+    .home-primary{border:1px solid #dbe7f7;background:#f7faff;border-radius:16px;padding:13px 14px}
+    .home-primary .k,.home-stat .k{color:#64748b;font-size:.72rem}
+    .home-primary .v{font-size:1.42rem;font-weight:850;color:#172033;line-height:1.2;margin-top:3px}
+    .home-primary .s,.home-stat .s{color:#94a3b8;font-size:.69rem;margin-top:3px}
+    .home-stat{border:1px solid #e0e7ef;background:#fff;border-radius:16px;padding:13px 14px}
+    .home-stat .v{font-size:1.18rem;font-weight:850;margin-top:3px;line-height:1.2}
+    .home-progress-head{display:flex;justify-content:space-between;gap:8px;font-size:.77rem;margin:14px 0 5px}
+    .home-progress-head b{color:#2563eb}
+    .home-two-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+    .home-water,.home-steps{border:1px solid #e0e7ef;background:#fff;border-radius:16px;padding:13px 14px}
+    .home-water .v,.home-steps .v{font-size:1.25rem;font-weight:850;margin-top:3px}
+    .home-water .k,.home-steps .k{color:#64748b;font-size:.72rem}
+    .home-water .s,.home-steps .s{color:#94a3b8;font-size:.69rem;margin-top:3px;line-height:1.35}
+    .home-kcal-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+    .home-kcal-item{border:1px solid #e0e7ef;border-radius:14px;padding:10px 11px;background:#fff;min-width:0}
+    .home-kcal-item .label{font-size:.68rem;color:#64748b}
+    .home-kcal-item .value{font-size:1.02rem;font-weight:800;margin-top:3px;white-space:nowrap}
+    .home-kcal-item .sub{font-size:.63rem;color:#94a3b8;margin-top:2px;line-height:1.25}
+    .home-note-stack{display:grid;gap:8px}
+    .home-note{padding:11px 12px;border-radius:14px;background:#f7faff;border:1px solid #e0eaff;color:#52647c;font-size:.75rem;line-height:1.4}
+    .home-note strong{color:#1e3a8a}
+    .home-composition-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+    .home-composition-item{border:1px solid #e0e7ef;border-radius:14px;padding:10px 11px;background:#fff}
+    .home-composition-item .k{font-size:.68rem;color:#64748b}
+    .home-composition-item .v{font-size:1rem;font-weight:800;margin-top:3px}
+    @media(max-width:560px){
+      .home-primary-grid{grid-template-columns:1fr 1fr}
+      .home-kcal-strip{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .home-card{padding:15px}
+    }
+    @media(max-width:400px){
+      .home-primary-grid,.home-two-grid{grid-template-columns:1fr}
+    }
+
     /* FormulaVS profile — compact dashboard */
-    .profile-summary-card{padding:14px 18px}.profile-summary-modern{display:flex;align-items:center;gap:20px;min-height:130px}.profile-avatar-large{width:138px;height:138px;border-radius:50%;flex:0 0 138px}.profile-summary-main{flex:1;min-width:0}.profile-summary-name{font-size:1.35rem;font-weight:850;color:var(--ink);letter-spacing:-.2px}.profile-summary-email{font-size:.95rem;color:#334155;margin-top:5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.profile-summary-meta{display:flex;align-items:center;gap:18px;margin-top:18px}.profile-summary-meta>div{display:flex;align-items:center;gap:9px}.profile-summary-meta>i{height:36px;width:1px;background:#dbe3ef}.summary-icon{font-size:25px;color:#1683ee;line-height:1}.profile-summary-meta small{display:block;color:#64748b;font-size:.72rem;margin-bottom:2px}.profile-summary-meta b{display:block;color:#111827;font-size:.88rem}.profile-summary-action{width:auto;min-width:250px;padding:14px 20px;border-radius:12px;font-size:.9rem}.diet-choice-row>label{display:block;color:#64748b;font-size:.76rem;margin-bottom:5px}.diet-select-row{gap:8px}.diet-select-row select{height:42px}.diet-help{width:42px;height:42px;flex-basis:42px;border-radius:12px}.diet-card-modern{margin-top:9px;border:1px solid #e2e8f0;border-radius:13px;background:#fbfcfe;padding:10px 13px}.diet-macros{font-size:.8rem;font-weight:750;color:#334155}.diet-feature{font-size:.76rem;line-height:1.4;color:#64748b;margin-top:3px}.profile-history-card{padding:18px 20px}.history-intro{margin-top:7px;padding:9px 11px;line-height:1.45}.profile-history-list{display:grid;gap:12px;margin-top:14px}.profile-history-entry{display:grid;grid-template-columns:94px minmax(0,1fr);gap:9px;align-items:stretch}.history-date-col{background:#f4f8ff;border:1px solid #e0e9f8;border-radius:10px;padding:11px 6px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;min-height:112px}.history-date-col strong{font-size:.82rem;color:#2563eb;white-space:nowrap}.history-date-col span{font-size:.68rem;color:#475569;margin-top:4px}.history-date-col em{font-style:normal;font-size:.6rem;color:#0f766e;background:#d9f7f0;border-radius:999px;padding:5px 10px;margin-top:12px}.history-data-card{border:1px solid #e0e7ef;border-radius:12px;overflow:hidden;background:#fff}.history-top-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));padding:13px 14px;gap:10px}.history-metric{display:flex;align-items:flex-start;gap:8px;min-width:0}.history-metric>div{min-width:0}.history-metric small{display:block;color:#64748b;font-size:.72rem;margin-bottom:3px;white-space:nowrap}.history-metric b{display:block;font-size:.8rem;color:#111827;line-height:1.3;overflow-wrap:anywhere}.history-metric.changed{background:#eff6ff;border-radius:10px;padding:6px 7px;margin:-6px -7px;box-shadow:inset 3px 0 0 #2563eb}.history-metric.changed small{color:#2563eb;font-weight:750}.history-metric.changed b{color:#0f3f9f}.history-icon{font-size:22px;line-height:1;flex:0 0 23px}.icon-weight{color:#0f766e}.icon-goal{color:#ef4444}.icon-activity{color:#0f8a73}.icon-steps{color:#7c3aed}.icon-diet{color:#f97316}.history-volumes-modern{border-top:1px solid #e5eaf1;padding:10px 14px 12px}.history-volume-title{font-size:.75rem;font-weight:750;color:#111827;margin-bottom:8px}.history-volume-grid-modern{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px 14px}.history-volume-grid-modern>div{display:flex;gap:7px;min-width:0;font-size:.72rem;color:#475569}.history-volume-grid-modern span{white-space:nowrap}.history-volume-grid-modern b{color:#111827;font-size:.74rem}.history-more{border:0;background:transparent;color:#2563eb;font-weight:750;font-size:.84rem;padding:5px 10px;margin:0 auto;cursor:pointer}.history-more span{font-size:1rem;margin-left:4px}.registration-snapshot-card{padding:18px 20px}.snapshot-modern{display:grid;grid-template-columns:1.1fr .9fr;gap:24px 34px;margin-top:12px}.snapshot-column{min-width:0}.snapshot-volume-column{border-left:1px solid #e2e8f0;padding-left:30px}.snapshot-column-title{font-size:.76rem;font-weight:800;color:#334155;border-bottom:1px solid #e2e8f0;padding-bottom:6px;margin-bottom:4px}.snapshot-row{display:grid;grid-template-columns:20px minmax(145px,1fr) minmax(100px,auto);align-items:center;gap:5px;padding:4px 0;font-size:.74rem}.snapshot-row-icon{color:#3b82f6;font-size:15px;text-align:center}.snapshot-row-label{color:#64748b}.snapshot-row b{color:#111827;font-size:.76rem;overflow-wrap:anywhere}.snapshot-volume-list{display:grid;grid-template-columns:1fr;gap:0}.snapshot-volume-list>div{display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-bottom:1px solid #eef2f6;font-size:.75rem}.snapshot-volume-list>div:last-child{border-bottom:0}.snapshot-volume-list span{color:#64748b}.snapshot-volume-list b{color:#111827}.snapshot-foot{grid-column:1/-1;margin:0;padding:9px 11px;font-size:.7rem}.muted{color:#94a3b8}
+    .profile-summary-card{padding:14px 18px}.profile-summary-modern{display:flex;align-items:center;gap:20px;min-height:130px}.profile-avatar-large{width:138px;height:138px;border-radius:50%;flex:0 0 138px}.profile-summary-main{flex:1;min-width:0}.profile-summary-name{font-size:1.35rem;font-weight:850;color:var(--ink);letter-spacing:-.2px}.profile-summary-email{font-size:.95rem;color:#334155;margin-top:5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.profile-summary-meta{display:flex;align-items:center;gap:18px;margin-top:18px}.profile-summary-meta>div{display:flex;align-items:center;gap:9px}.profile-summary-meta>i{height:36px;width:1px;background:#dbe3ef}.summary-icon{font-size:25px;color:#1683ee;line-height:1}.profile-summary-meta small{display:block;color:#64748b;font-size:.72rem;margin-bottom:2px}.profile-summary-meta b{display:block;color:#111827;font-size:.88rem}.profile-summary-action{position:relative;z-index:3;pointer-events:auto;width:auto;min-width:250px;padding:14px 20px;border-radius:12px;font-size:.9rem}.diet-choice-row>label{display:block;color:#64748b;font-size:.76rem;margin-bottom:5px}.diet-select-row{gap:8px}.diet-select-row select{height:42px}.diet-help{width:42px;height:42px;flex-basis:42px;border-radius:12px}.diet-card-modern{margin-top:9px;border:1px solid #e2e8f0;border-radius:13px;background:#fbfcfe;padding:10px 13px}.diet-macros{font-size:.8rem;font-weight:750;color:#334155}.diet-feature{font-size:.76rem;line-height:1.4;color:#64748b;margin-top:3px}.profile-history-card{padding:18px 20px}.history-intro{margin-top:7px;padding:9px 11px;line-height:1.45}.profile-history-list{display:grid;gap:12px;margin-top:14px}.profile-history-entry{display:grid;grid-template-columns:94px minmax(0,1fr);gap:9px;align-items:stretch}.history-date-col{background:#f4f8ff;border:1px solid #e0e9f8;border-radius:10px;padding:11px 6px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;min-height:112px}.history-date-col strong{font-size:.82rem;color:#2563eb;white-space:nowrap}.history-date-col span{font-size:.68rem;color:#475569;margin-top:4px}.history-date-col em{font-style:normal;font-size:.6rem;color:#0f766e;background:#d9f7f0;border-radius:999px;padding:5px 10px;margin-top:12px}.history-data-card{border:1px solid #e0e7ef;border-radius:12px;overflow:hidden;background:#fff}.history-top-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));padding:13px 14px;gap:10px}.history-metric{display:flex;align-items:flex-start;gap:8px;min-width:0}.history-metric>div{min-width:0}.history-metric small{display:block;color:#64748b;font-size:.72rem;margin-bottom:3px;white-space:nowrap}.history-metric b{display:block;font-size:.8rem;color:#111827;line-height:1.3;overflow-wrap:anywhere}.history-metric.changed{background:#eff6ff;border-radius:10px;padding:6px 7px;margin:-6px -7px;box-shadow:inset 3px 0 0 #2563eb}.history-metric.changed small{color:#2563eb;font-weight:750}.history-metric.changed b{color:#0f3f9f}.history-icon{font-size:22px;line-height:1;flex:0 0 23px}.icon-weight{color:#0f766e}.icon-goal{color:#ef4444}.icon-activity{color:#0f8a73}.icon-steps{color:#7c3aed}.icon-diet{color:#f97316}.history-volumes-modern{border-top:1px solid #e5eaf1;padding:10px 14px 12px}.history-volume-title{font-size:.75rem;font-weight:750;color:#111827;margin-bottom:8px}.history-volume-grid-modern{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px 14px}.history-volume-grid-modern>div{display:flex;gap:7px;min-width:0;font-size:.72rem;color:#475569}.history-volume-grid-modern span{white-space:nowrap}.history-volume-grid-modern b{color:#111827;font-size:.74rem}.history-more{border:0;background:transparent;color:#2563eb;font-weight:750;font-size:.84rem;padding:5px 10px;margin:0 auto;cursor:pointer}.history-more span{font-size:1rem;margin-left:4px}.registration-snapshot-card{padding:18px 20px}.snapshot-modern{display:grid;grid-template-columns:1.1fr .9fr;gap:24px 34px;margin-top:12px}.snapshot-column{min-width:0}.snapshot-volume-column{border-left:1px solid #e2e8f0;padding-left:30px}.snapshot-column-title{font-size:.76rem;font-weight:800;color:#334155;border-bottom:1px solid #e2e8f0;padding-bottom:6px;margin-bottom:4px}.snapshot-row{display:grid;grid-template-columns:20px minmax(145px,1fr) minmax(100px,auto);align-items:center;gap:5px;padding:4px 0;font-size:.74rem}.snapshot-row-icon{color:#3b82f6;font-size:15px;text-align:center}.snapshot-row-label{color:#64748b}.snapshot-row b{color:#111827;font-size:.76rem;overflow-wrap:anywhere}.snapshot-volume-list{display:grid;grid-template-columns:1fr;gap:0}.snapshot-volume-list>div{display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-bottom:1px solid #eef2f6;font-size:.75rem}.snapshot-volume-list>div:last-child{border-bottom:0}.snapshot-volume-list span{color:#64748b}.snapshot-volume-list b{color:#111827}.snapshot-foot{grid-column:1/-1;margin:0;padding:9px 11px;font-size:.7rem}.muted{color:#94a3b8}
 
     /* Profile history */
     .profile-history-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #eef1f5;font-size:.8rem}
@@ -176,6 +215,7 @@
     .profile-summary-meta small{font-size:.68rem}
     .profile-summary-meta b{font-size:.82rem}
     .profile-summary-action{font-size:.84rem}
+      h1{font-size:1.08rem}.brand-en{font-size:.42rem}
     .profile-history-card{padding:15px 17px}
     .history-intro{font-size:.74rem}
     .profile-history-entry{grid-template-columns:92px minmax(0,1fr);gap:9px}
@@ -203,7 +243,8 @@
       #view-profile{font-size:.9rem}
       .profile-summary-name{font-size:1.1rem}
       .profile-summary-email{font-size:.78rem}
-      .profile-summary-action{font-size:.76rem}
+      .profile-summary-action{font-size:.74rem}
+      h1{font-size:1rem}.brand-en{font-size:.4rem}
       .profile-history-entry{grid-template-columns:78px minmax(0,1fr);gap:7px}
       .history-date-col strong{font-size:.78rem}
     }
@@ -438,7 +479,7 @@
     <button class="bottom-tab" data-tab="trackers"><span class="nav-icon">✓</span>Трекеры</button>
     <button class="bottom-tab" data-tab="analytics"><span class="nav-icon">⌁</span>Мой прогресс</button>
   </nav>
-  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v2.13.6</span></div>
+  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v2.14.0</span></div>
 </div>
   <div id="dietModal" class="modal"><div class="modal-card"><button class="modal-close" id="dietModalClose">×</button><div id="dietModalTitle" class="onboarding-title"></div><div id="dietModalBody" style="color:#475569;line-height:1.55"></div></div></div>
 
@@ -446,7 +487,7 @@
 (() => {
   'use strict';
 
-  const APP_VERSION = '2.13.8';
+  const APP_VERSION = '2.14.1';
   const KEY = 'formavs_v2';
   const LEGACY_KEY = 'forma_v2';
   const todayStr = () => {
@@ -1122,46 +1163,83 @@
   function renderHome(){
     const p=state.profile;
     const today=todayStr();
+    const baseP=getFullProfileAt(today);
     const currentWeight=n(state.weights[today] ?? state.journal[today]?.weight);
-    const todayP={...getFullProfileAt(today),weight:currentWeight!=null?currentWeight:getFullProfileAt(today).weight};
+    const todayP={...baseP,weight:currentWeight!=null?currentWeight:baseP.weight};
     const nut=nutritionForDate(today);
     const comp=bodyComp(todayP);
     const pr=progress(todayP);
+    const journal=state.journal[today]||{};
+    const actualSteps=n(journal.steps);
+
     if(!p.registrationDate){
-      $('homeContent').innerHTML=`<div class="card">
-        <div class="title">👋 Начнём с базовых данных</div>
+      $('homeContent').innerHTML=`<div class="card home-card">
+        <div class="home-section-title">👋 Начнём с базовых данных</div>
         <div class="note">Сначала сохрани профиль. После этого FormulaVS покажет расчёты питания, состав тела, цель и прогресс.</div>
-        <button class="btn secondary" style="margin-top:10px" onclick="document.getElementById('profileTop')?.click()">Заполнить профиль</button>
+        <button class="btn secondary" style="margin-top:10px" type="button" onclick="navigate('profile')">Заполнить профиль</button>
       </div>`;
       return;
     }
-    let h=`<div class="card"><div class="title">Сегодня · ${fmt(todayStr())}</div><div class="metrics"><div class="metric heroMetric"><div class="k">Вес</div><div class="v">${currentWeight!=null?currentWeight:(todayP.weight||'—')} кг</div><div class="s">${pr?`до цели ${Math.abs(pr.diff)} кг`:'цель не задана'}</div></div>
-      <div class="metric"><div class="k">ИМТ</div><div class="v">${nut?nut.bmi.toFixed(1):'—'}</div><div class="s">${nut?bmiCategory(nut.bmi):''}</div></div></div>`;
-    if(pr) h+=`<div style="margin-top:13px;display:flex;justify-content:space-between;font-size:.78rem"><span>🎯 ${todayP.goal==='lose'?'Снизить вес':todayP.goal==='gain'?'Набрать вес':'Поддержка веса'}</span><b>${pr.pct}%</b></div><div class="progress"><i style="width:${pr.pct}%"></i></div>`;
+
+    let h=`<div class="card home-card">
+      <div class="home-section-title">🏠 Сегодня</div>
+      <div class="home-date">${fmtLong(today)}</div>
+      <div class="home-primary-grid">
+        <div class="home-primary"><div class="k">Вес</div><div class="v">${currentWeight!=null?currentWeight:(todayP.weight||'—')} кг</div><div class="s">${pr?`до цели ${Math.abs(pr.diff)} кг`:'цель не задана'}</div></div>
+        <div class="home-stat"><div class="k">ИМТ</div><div class="v">${nut?nut.bmi.toFixed(1):'—'}</div><div class="s">${nut?bmiCategory(nut.bmi):''}</div></div>
+      </div>`;
+    if(pr) h+=`<div class="home-progress-head"><span>🎯 ${todayP.goal==='lose'?'Снизить вес':todayP.goal==='gain'?'Набрать вес':'Поддержка веса'}</span><b>${pr.pct}%</b></div><div class="progress"><i style="width:${pr.pct}%"></i></div>`;
     h+=`</div>`;
-    if(comp) h+=`<div class="card"><div class="title">🧬 Состав тела</div><div class="metrics">
-      <div class="metric"><div class="k">% жира</div><div class="v">${comp.bf}%</div><div class="s">${comp.bfN!=null?'US Navy':'оценка по ИМТ'}</div></div>
-      <div class="metric"><div class="k">Жировая масса</div><div class="v">${comp.fatMass} кг</div><div class="s">оценка</div></div>
-      <div class="metric"><div class="k">Безжировая масса</div><div class="v">${comp.ffm} кг</div><div class="s">не равна мышечной массе</div></div>
-      <div class="metric"><div class="k">Ориентир по возрасту</div><div class="v"><span class="badge ${comp.cls}">${comp.status}</span></div><div class="s">${comp.range?`${comp.range[0]}–${comp.range[1]}%`:''}</div></div>
-    </div></div>`;
-    else h+=`<div class="card"><div class="title">🧬 Состав тела</div><div class="note">Для US Navy нужны талия + шея; для женщин ещё бёдра. Их можно внести в профиле.</div></div>`;
+
     if(nut){
+      const st=stepsTarget(todayP);
+      const waterLow=nut.waterRangeLowL!=null?nut.waterRangeLowL:1.5;
+      const waterHigh=nut.waterRangeHighL!=null?nut.waterRangeHighL:null;
+      const waterRange=waterHigh!=null?`${String(waterLow).replace('.',',')}–${String(waterHigh).replace('.',',')} л`:'1,5 л';
+      const stepsRange=st?`${Number(st.low).toLocaleString('ru-RU')}–${Number(st.high).toLocaleString('ru-RU')}`:'—';
+      const stepSub=actualSteps!=null?`сегодня ${actualSteps.toLocaleString('ru-RU')}`:(st?`среднее ${Number(st.current).toLocaleString('ru-RU')}/день`:'добавьте средние шаги в профиле');
+      h+=`<div class="card home-card">
+        <div class="home-section-title">💧 Движение и гидратация</div>
+        <div class="home-two-grid">
+          <div class="home-water"><div class="k">Вода</div><div class="v">${nut.waterL!=null?String(nut.waterL).replace('.',','):'—'} л</div><div class="s">ориентир ${waterRange}</div></div>
+          <div class="home-steps"><div class="k">Шаги</div><div class="v">${stepsRange}</div><div class="s">${stepSub}</div></div>
+        </div>
+      </div>`;
+
       const ranges=nut.macroRanges;
-      const rangeText=(r,unit='г')=>`${r[0]}–${r[1]} ${unit}`;
-      const mid=(r)=>Math.round((r[0]+r[1])/2);
-      const dietName=DIET_INFO[nut.dietType]?.name||nut.dietType;
-      h+=`<div class="card"><div class="title">🥗 КБЖУ на день · ${esc(dietName)}</div><div class="metrics">
-      <div class="metric"><div class="k">BMR</div><div class="v">${Math.round(nut.bmr)}</div><div class="s">ккал/сутки</div></div>
-      <div class="metric"><div class="k">TDEE</div><div class="v">${Math.round(nut.tdee)}</div><div class="s">поддержание</div></div>
-      <div class="metric"><div class="k">Итоговые калории</div><div class="v">${nut.calories}</div><div class="s">с учётом цели</div></div>
-      <div class="metric"><div class="k">Белки</div><div class="v">${nut.protein} г</div><div class="s">диапазон ${rangeText(ranges.protein)} · середина ${mid(ranges.protein)} г</div></div>
-      <div class="metric"><div class="k">Жиры</div><div class="v">${nut.fat} г</div><div class="s">диапазон ${rangeText(ranges.fat)} · середина ${mid(ranges.fat)} г</div></div>
-      <div class="metric"><div class="k">Углеводы</div><div class="v">${nut.carbs} г</div><div class="s">диапазон ${rangeText(ranges.carbs)} · середина ${mid(ranges.carbs)} г</div></div>
-      <div class="metric"><div class="k">Вода</div><div class="v">${nut.waterL!=null?nut.waterL:'—'} л</div><div class="s">ориентир ${nut.waterRangeLowL!=null&&nut.waterRangeHighL!=null?`${nut.waterRangeLowL}–${nut.waterRangeHighL} л`:'1,5 л'}</div></div>
-      ${(() => { const st=stepsTarget(todayP); const actual=n(state.journal[today]?.steps); if(!st) return ''; const shown=actual!=null?Number(actual).toLocaleString('ru-RU'):Number(st.current).toLocaleString('ru-RU'); return `<div class="metric steps-home-card"><div class="k">Шаги</div><div class="v">${Number(st.low).toLocaleString('ru-RU')}–${Number(st.high).toLocaleString('ru-RU')}</div><div class="s">${actual!=null?`сегодня ${shown}`:`среднее ${shown}/день`}</div></div>`; })()}
-    </div>${nut.proteinMinimum!=null?`<div class="note" style="margin-top:10px">Белковый минимум: ${nut.proteinMinimum} г (1,2 г/кг).${nut.proteinAdjusted?' Формула дала меньше, поэтому белок повышен, а углеводы уменьшены.':''}</div>`:''}${(nut.dietType==='keto'||nut.dietType==='lchf')?`<div class="note" style="margin-top:8px">🥬 Для ${esc(dietName)} углеводы учитываются как <b>net carbs</b>: общие углеводы − клетчатка.</div>`:''}<div class="note" style="margin-top:8px">💧 ${esc(nut.waterHint||'Норма рассчитана по весу и типу питания.')} ${nut.waterTrainingAdd?`Для высокой активности учтено +${nut.waterTrainingAdd} л за тренировку.`:''} Цель — ориентир, а не обязательный объём.</div>${(nut.dietType==='keto'||nut.dietType==='lchf')?`<div class="note warn" style="margin-top:8px">⚡ На КЕТО/LCHF следите за электролитами; одной воды недостаточно.</div>`:''}${nut.waterSafety?`<div class="note warn" style="margin-top:8px">${esc(nut.waterSafety)}</div>`:''}${(() => { const st=stepsTarget(todayP); if(!st) return ''; return `<div class="note" style="margin-top:10px">🚶 <b>Цель по шагам:</b> ${Number(st.low).toLocaleString('ru-RU')}–${Number(st.high).toLocaleString('ru-RU')} шагов/день. План: дни 1–3 — ${Number(st.plan[0]).toLocaleString('ru-RU')}, дни 4–6 — ${Number(st.plan[2]).toLocaleString('ru-RU')}, дни 7–10 — ${Number(st.plan[6]).toLocaleString('ru-RU')}. ${esc(st.dietAdvice)}</div>`; })()}<div class="note" style="margin-top:10px">КБЖУ пересчитываются в начале новой недели по средней динамике веса. При застое/обратной динамике калорийность корректируется на 40 ккал. Калорийность не опускается ниже BMR + 10%. При изменении веса дневные граммы КБЖУ пересчитываются автоматически.</div>${nut.safety?`<div class="note warn" style="margin-top:10px">${esc(nut.safety)}</div>`:''}</div>`;
+      const rangeText=(r)=>`${r[0]}–${r[1]} г`;
+      h+=`<div class="card home-card">
+        <div class="home-section-title">🥗 Питание · ${esc(DIET_INFO[nut.dietType]?.name||nut.dietType)}</div>
+        <div class="home-kcal-strip">
+          <div class="home-kcal-item"><div class="label">Калории</div><div class="value">${nut.calories}</div><div class="sub">ккал / день</div></div>
+          <div class="home-kcal-item"><div class="label">Белки</div><div class="value">${nut.protein} г</div><div class="sub">${rangeText(ranges.protein)}</div></div>
+          <div class="home-kcal-item"><div class="label">Жиры</div><div class="value">${nut.fat} г</div><div class="sub">${rangeText(ranges.fat)}</div></div>
+          <div class="home-kcal-item"><div class="label">Углеводы</div><div class="value">${nut.carbs} г</div><div class="sub">${rangeText(ranges.carbs)}</div></div>
+        </div>
+        ${nut.proteinMinimum!=null?`<div class="home-note" style="margin-top:9px">Белковый минимум: <strong>${nut.proteinMinimum} г</strong> (1,2 г/кг).</div>`:''}
+        ${(nut.dietType==='keto'||nut.dietType==='lchf')?`<div class="home-note" style="margin-top:8px">🥬 Для ${esc(DIET_INFO[nut.dietType]?.name||nut.dietType)} углеводы учитываются как <strong>net carbs</strong>: общие углеводы − клетчатка.</div>`:''}
+      </div>`;
     }
+
+    if(comp) h+=`<div class="card home-card">
+      <div class="home-section-title">🧬 Состав тела</div>
+      <div class="home-composition-grid">
+        <div class="home-composition-item"><div class="k">% жира</div><div class="v">${comp.bf}%</div></div>
+        <div class="home-composition-item"><div class="k">Жировая масса</div><div class="v">${comp.fatMass} кг</div></div>
+        <div class="home-composition-item"><div class="k">Безжировая масса</div><div class="v">${comp.ffm} кг</div></div>
+        <div class="home-composition-item"><div class="k">Ориентир</div><div class="v"><span class="badge ${comp.cls}">${comp.status}</span></div></div>
+      </div>
+    </div>`;
+    else h+=`<div class="card home-card"><div class="home-section-title">🧬 Состав тела</div><div class="note">Для оценки US Navy нужны талия + шея; для женщин ещё бёдра. Их можно внести в разделе Трекеры.</div></div>`;
+
+    const advice=[];
+    if(nut?.waterHint) advice.push(`💧 ${esc(nut.waterHint)}`);
+    const st=stepsTarget(todayP);
+    if(st) advice.push(`🚶 <strong>Шаги:</strong> цель ${Number(st.low).toLocaleString('ru-RU')}–${Number(st.high).toLocaleString('ru-RU')} в день. План: дни 1–3 — ${Number(st.plan[0]).toLocaleString('ru-RU')}, дни 4–6 — ${Number(st.plan[2]).toLocaleString('ru-RU')}, дни 7–10 — ${Number(st.plan[6]).toLocaleString('ru-RU')}.`);
+    if(nut?.dietType==='keto'||nut?.dietType==='lchf') advice.push('⚡ На КЕТО/LCHF следите за электролитами; одной воды недостаточно.');
+    advice.push('📈 КБЖУ пересчитываются по недельной динамике веса. При изменении текущего веса дневные граммы КБЖУ обновляются автоматически.');
+    h+=`<div class="card home-card"><div class="home-section-title">💡 Подсказки</div><div class="home-note-stack">${advice.map(x=>`<div class="home-note">${x}</div>`).join('')}${nut?.waterSafety?`<div class="home-note" style="background:#fff7ed;border-color:#fed7aa;color:#9a3412">${esc(nut.waterSafety)}</div>`:''}</div></div>`;
+
     $('homeContent').innerHTML=h;
   }
 
@@ -1584,7 +1662,27 @@
     if(mDate && !mDate.value)mDate.value=state.ui?.measureDate||todayStr();
   }
 
+  function openProfileEditor(){
+    const editor=$('profileEditor');
+    const button=$('editProfile');
+    if(!editor)return;
+    // Сначала заполняем редактор, затем показываем его.
+    // renderProfileFields() для сохранённого профиля скрывает редактор,
+    // поэтому прежний порядок делал кнопку визуально кликабельной, но редактор не открывался.
+    renderProfileFields();
+    editor.classList.remove('hidden');
+    if(button){button.classList.add('hidden');button.disabled=false;button.style.pointerEvents='auto';button.removeAttribute('aria-disabled');}
+    setTimeout(()=>editor.scrollIntoView({behavior:'smooth',block:'start'}),30);
+  }
+
   function bind(){
+    const editProfileBtn=$('editProfile');
+    if(editProfileBtn){
+      editProfileBtn.disabled=false;
+      editProfileBtn.style.pointerEvents='auto';
+      editProfileBtn.style.cursor='pointer';
+      editProfileBtn.addEventListener('click',(e)=>{e.preventDefault();e.stopPropagation();openProfileEditor();});
+    }
     document.querySelectorAll('.bottom-tab').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.tab)));
     $('profileTop')?.addEventListener('click',()=>navigate('profile'));
     document.querySelectorAll('.tracker-mode').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tracker-mode').forEach(x=>x.classList.remove('active'));b.classList.add('active');const day=b.dataset.mode==='day';document.querySelector('.journal-card').classList.toggle('hidden',!day);$('trackerWeekContent').classList.toggle('hidden',day);}));
@@ -1601,7 +1699,6 @@
     });
 
     $('profilePhoto')?.addEventListener('change',()=>{const file=$('profilePhoto').files?.[0];if(!file)return;const r=new FileReader();r.onload=()=>{state.profile.photo=r.result;const a=$('profilePhotoPreviewEditor');if(a){a.innerHTML=`<img src="${esc(r.result)}" class="profile-photo">`;a.className='';}};r.readAsDataURL(file);});
-    $('editProfile')?.addEventListener('click',()=>{ $('profileEditor')?.classList.remove('hidden'); $('editProfile')?.classList.add('hidden'); renderProfileFields(); });
     $('cancelProfileEdit')?.addEventListener('click',()=>{ renderProfileFields(); });
     $('dietType')?.addEventListener('change',()=>{renderDietInfo();});
     $('dietHelp')?.addEventListener('click',()=>{const d=DIET_INFO[$('dietType').value||'mediterranean'];$('dietModalTitle').textContent=d.name;$('dietModalBody').innerHTML=`<p><b>${d.name}</b></p><p>${d.details}</p><p><b>Макросы:</b> Углеводы ${d.carbs}, белки ${d.protein}, жиры ${d.fat}.</p><p><b>Ключевая особенность:</b> ${d.feature}</p>`;$('dietModal').classList.add('show');});
@@ -1717,7 +1814,7 @@
     load();renderMeasurementFields();bind();renderProfileFields();renderHome();renderJournal();renderAnalytics();if(!state.profile.registrationDate)navigate('profile');else navigate('home');
     setInterval(()=>{if(todayStr()!==state._lastDay){state._lastDay=todayStr();rolloverWeek();state.ui.habitDate=todayStr();state.ui.journalDate=todayStr();save();renderHome();renderJournal();renderWeek();renderAnalytics();}},30000);
     if ('serviceWorker' in navigator) {
-      const APP_VERSION='2.13.8';
+      const APP_VERSION='2.14.1';
       let reloadScheduled = false;
       function reloadOnceAfterUpdate(){
         if(reloadScheduled) return;
