@@ -150,11 +150,23 @@
     .home-plan-meta strong{font-size:.86rem}.home-plan-meta span{color:#64748b}
     .home-calories{display:flex;align-items:baseline;gap:7px;padding:11px 12px;border:1px solid #dce7f5;background:#fff;border-radius:14px}
     .home-calories span{color:#64748b;font-size:.74rem}.home-calories b{font-size:1.18rem}.home-calories small{color:#94a3b8;font-size:.67rem}
-    .home-macros{margin-top:13px}
-    .home-macro-row{margin-top:10px}.home-macro-row:first-child{margin-top:0}
-    .home-macro-head{display:flex;justify-content:space-between;font-size:.76rem;margin-bottom:5px}.home-macro-head b{font-weight:800}
-    .home-macro-track{height:8px;background:#e8eef6;border-radius:99px;overflow:hidden}.home-macro-track i{display:block;height:100%;background:#4f86e8;border-radius:99px}
-    .home-macro-sub{font-size:.65rem;color:#94a3b8;margin-top:3px}
+    .home-plan-details{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px}
+    .home-plan-detail{border:1px solid #e2e8f0;background:#fff;border-radius:12px;padding:9px 10px;min-width:0}
+    .home-plan-detail span{display:block;color:#64748b;font-size:.66rem}.home-plan-detail b{display:block;font-size:.82rem;margin-top:3px;color:#111827}
+    .home-plan-detail small{display:block;color:#94a3b8;font-size:.61rem;margin-top:2px}
+    .home-macros{margin-top:13px;display:grid;grid-template-columns:minmax(0,1fr) 104px;gap:14px;align-items:center}
+    .home-macro-row{display:grid;grid-template-columns:minmax(80px,1fr) 58px 74px 44px;align-items:center;gap:7px;padding:8px 9px;margin-top:6px;border-radius:11px;background:#fff;border:1px solid #e5eaf1}
+    .home-macro-row:first-child{margin-top:0}
+    .home-macro-name{font-size:.76rem;font-weight:800}.home-macro-grams{font-size:.76rem;font-weight:850;text-align:right}.home-macro-kcal{font-size:.69rem;color:#64748b;text-align:right}.home-macro-pct{font-size:.69rem;font-weight:800;text-align:right}
+    .home-macro-row.protein{border-left:4px solid #ef4444}.home-macro-row.protein .home-macro-name,.home-macro-row.protein .home-macro-pct{color:#dc2626}
+    .home-macro-row.fat{border-left:4px solid #eab308}.home-macro-row.fat .home-macro-name,.home-macro-row.fat .home-macro-pct{color:#ca8a04}
+    .home-macro-row.carbs{border-left:4px solid #22c55e}.home-macro-row.carbs .home-macro-name,.home-macro-row.carbs .home-macro-pct{color:#16a34a}
+    .home-macro-legend{font-size:.6rem;color:#94a3b8;margin-top:5px}
+    .home-macro-pie{width:92px;height:92px;border-radius:50%;background:conic-gradient(#ef4444 0 var(--p1),#eab308 var(--p1) var(--p2),#22c55e var(--p2) 100%);position:relative;margin:auto}
+    .home-macro-pie:after{content:"";position:absolute;inset:20px;background:#fff;border-radius:50%}
+    .home-macro-pie-label{font-size:.62rem;color:#64748b;text-align:center;margin-top:4px}
+    .home-kbju-note{margin-top:9px;padding:9px 11px;border-radius:11px;background:#f8fafc;border:1px solid #e6ebf2;color:#64748b;font-size:.66rem;line-height:1.45}
+    .home-water-note strong{color:#0f172a}
     .home-action-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:14px}
     .home-action-widget{display:flex;align-items:center;gap:10px;border:1px solid #dce7f5;background:#fff;border-radius:15px;padding:11px 12px;min-width:0}
     .home-action-icon{font-size:1.35rem;line-height:1}.home-action-label{font-size:.68rem;color:#64748b}.home-action-value{font-size:1rem;font-weight:850;margin-top:1px}.home-action-sub{font-size:.64rem;color:#94a3b8;margin-top:2px;line-height:1.3}
@@ -169,6 +181,9 @@
       .home-facts-grid,.home-action-grid{grid-template-columns:1fr 1fr}
       .home-fact-weight .home-fact-value{font-size:1.85rem}
       .home-body-summary{grid-template-columns:1fr}
+      .home-plan-details{grid-template-columns:1fr 1fr}
+      .home-macros{grid-template-columns:1fr}
+      .home-macro-pie{width:82px;height:82px}
     }
 
     /* FormulaVS profile — compact dashboard */
@@ -501,7 +516,7 @@
     <button class="bottom-tab" data-tab="trackers"><span class="nav-icon">✓</span>Трекеры</button>
     <button class="bottom-tab" data-tab="analytics"><span class="nav-icon">⌁</span>Мой прогресс</button>
   </nav>
-  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v2.14.3</span></div>
+  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v2.14.4</span></div>
 </div>
   <div id="dietModal" class="modal"><div class="modal-card"><button class="modal-close" id="dietModalClose">×</button><div id="dietModalTitle" class="onboarding-title"></div><div id="dietModalBody" style="color:#475569;line-height:1.55"></div></div></div>
 
@@ -1222,15 +1237,19 @@
     const targetText=pr && targetDiff!=null ? (pr.diff>0?'выше цели':pr.diff<0?'до цели':'цель достигнута') : 'цель не задана';
     const goalLabel=todayP.goal==='lose'?'Снизить вес':todayP.goal==='gain'?'Набрать вес':'Поддержка веса';
     const dietName=DIET_INFO[nut?.dietType||todayP.dietType]?.name || '—';
-    const ranges=nut?.macroRanges;
     const fmtNum=v=>Number(v).toLocaleString('ru-RU');
-    const progressBar=(label,value,range)=>{
-      if(value==null||!range) return '';
-      const lo=Number(range[0]), hi=Number(range[1]);
-      const pct=clamp(Math.round(Number(value)/Math.max(hi,1)*100),0,100);
-      return `<div class="home-macro-row"><div class="home-macro-head"><span>${label}</span><b>${value} г</b></div><div class="home-macro-track"><i style="width:${pct}%"></i></div><div class="home-macro-sub">ориентир ${lo}–${hi} г</div></div>`;
-    };
-
+    const macroData=[
+      {key:'protein',label:'Белки',value:nut?.protein,kcal:(nut?.protein||0)*4,color:'#ef4444'},
+      {key:'fat',label:'Жиры',value:nut?.fat,kcal:(nut?.fat||0)*9,color:'#eab308'},
+      {key:'carbs',label:'Углеводы',value:nut?.carbs,kcal:(nut?.carbs||0)*4,color:'#22c55e'}
+    ];
+    const macroTotalKcal=macroData.reduce((sum,m)=>sum+(m.kcal||0),0);
+    macroData.forEach(m=>m.pct=macroTotalKcal?Math.round(m.kcal/macroTotalKcal*100):0);
+    if(macroTotalKcal){
+      const p1=macroData[0].pct, p2=p1+macroData[1].pct;
+      macroData._pie=`--p1:${p1}%;--p2:${p2}%;`;
+    } else macroData._pie='--p1:0%;--p2:0%;';
+    const macroRows=macroData.map(m=>`<div class="home-macro-row ${m.key}"><span class="home-macro-name">${m.label}</span><span class="home-macro-grams">${m.value??'—'} г</span><span class="home-macro-kcal">${m.value!=null?fmtNum(m.kcal)+' ккал':'—'}</span><span class="home-macro-pct">${m.value!=null?m.pct+'%':'—'}</span></div>`).join('');
     let h=`<div class="card home-card home-facts-card">
       <div class="home-section-title">📊 Моё тело сегодня</div>
       <div class="home-date">Сегодня · ${fmtLong(today)}</div>
@@ -1254,7 +1273,16 @@
         <div class="home-section-title">🎯 План на сегодня</div>
         <div class="home-plan-meta"><strong>🍽 ${esc(dietName)}</strong><span>Цель: ${goalLabel}</span></div>
         <div class="home-calories"><span>Калории</span><b>${fmtNum(nut.calories)} ккал</b><small>на день</small></div>
-        <div class="home-macros">${progressBar('Белки',nut.protein,ranges?.protein)}${progressBar('Жиры',nut.fat,ranges?.fat)}${progressBar('Углеводы',nut.carbs,ranges?.carbs)}</div>
+        <div class="home-plan-details">
+          <div class="home-plan-detail"><span>BMR</span><b>${fmtNum(nut.bmr)} ккал</b><small>базовый обмен</small></div>
+          <div class="home-plan-detail"><span>TDEE</span><b>${fmtNum(nut.tdee)} ккал</b><small>поддержание</small></div>
+          <div class="home-plan-detail"><span>Белковый минимум</span><b>${nut.proteinMinimum!=null?fmtNum(nut.proteinMinimum)+' г':'—'}</b><small>${nut.proteinMinimum!=null?'1,2 г/кг':'для КЕТО не задан'}</small></div>
+        </div>
+        <div class="home-macros">
+          <div><div>${macroRows}</div><div class="home-macro-legend">Б — белки · Ж — жиры · У — углеводы · доля указана от общей калорийности БЖУ</div></div>
+          <div><div class="home-macro-pie" style="${macroData._pie}" aria-label="Доля белков, жиров и углеводов"></div><div class="home-macro-pie-label">Доля калорий БЖУ</div></div>
+        </div>
+        <div class="home-kbju-note">КБЖУ пересчитываются в начале новой недели по средней динамике веса. При застое/обратной динамике калорийность корректируется на 40 ккал. Калорийность не опускается ниже BMR + 10%. При изменении веса дневные граммы КБЖУ пересчитываются автоматически.</div>
         <div class="home-action-grid">
           <div class="home-action-widget"><div class="home-action-icon">💧</div><div><div class="home-action-label">Вода</div><div class="home-action-value">${waterTarget} л</div><div class="home-action-sub">ориентир ${waterRange}</div></div></div>
           <div class="home-action-widget"><div class="home-action-icon">👟</div><div><div class="home-action-label">Шаги</div><div class="home-action-value">${stepsRange}</div><div class="home-action-sub">${stepSub}</div></div></div>
@@ -1264,7 +1292,11 @@
     }
 
     const advice=[];
-    if(nut?.waterHint) advice.push(`💧 ${esc(nut.waterHint)}`);
+    if(nut?.waterHint){
+      const safeHint=esc(nut.waterHint);
+      const dietPrefix={keto:'КЕТО',lchf:'LCHF',paleo:'Палео',mediterranean:'Средиземноморская'}[nut?.dietType||todayP.dietType]||'';
+      advice.push(`💧 ${dietPrefix&&safeHint.startsWith(dietPrefix)?`<strong>${dietPrefix}</strong>${safeHint.slice(dietPrefix.length)}`:safeHint}`);
+    }
     const st=stepsTarget(todayP);
     if(st) advice.push(`🚶 <strong>План шагов:</strong> дни 1–3 — ${fmtNum(st.plan[0])}, дни 4–6 — ${fmtNum(st.plan[2])}, дни 7–10 — ${fmtNum(st.plan[6])}.`);
     if(nut?.dietType==='keto'||nut?.dietType==='lchf') advice.push('⚡ На КЕТО/LCHF увеличивайте нагрузку постепенно и следите за самочувствием.');
