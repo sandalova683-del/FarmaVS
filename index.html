@@ -128,11 +128,12 @@
     .home-section-title{font-size:1.05rem;font-weight:800;margin:0 0 10px;display:flex;align-items:center;gap:8px}
     .home-date{color:#64748b;font-size:.78rem;margin:-3px 0 14px}
     .home-facts-card{background:#fff}
-    .home-facts-grid{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:9px}
+    .home-facts-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:9px}
     .home-fact{border:1px solid #e0e7ef;background:#fafbfc;border-radius:16px;padding:12px 13px;min-width:0}
+    .home-fact-current{background:linear-gradient(135deg,#f7fbff 0%,#eef6ff 100%);border-color:#b9d8ff;box-shadow:inset 3px 0 0 #2563eb}
     .home-fact-label{color:#64748b;font-size:.7rem;font-weight:650}
     .home-fact-value{font-size:1.42rem;font-weight:850;line-height:1.15;margin-top:3px;letter-spacing:-.4px}
-    .home-fact-weight .home-fact-value{font-size:2.15rem}
+    .home-fact-weight .home-fact-value{font-size:2.15rem;color:#0f3f9f}
     .home-fact-value span{font-size:.72em;font-weight:750}
     .home-fact-sub{font-size:.68rem;color:#94a3b8;margin-top:4px;line-height:1.3}
     .home-good-text{color:#15803d;font-weight:700}
@@ -141,10 +142,12 @@
     .home-bmi-ring:after{content:"";position:absolute;inset:5px;background:#fff;border-radius:50%}
     .home-bmi-ring span{position:relative;z-index:1;font-size:.86rem;font-weight:850}
     .home-bmi-ring.neutral{background:conic-gradient(#94a3b8 0 55%,#e2e8f0 55% 100%)}
-    .home-fact-fat{background:#fffaf2;border-color:#fde7c2}
-    .home-body-summary{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:9px;padding:10px 12px;border-top:1px solid #eef1f5}
-    .home-body-summary div{display:flex;justify-content:space-between;gap:10px;font-size:.74rem}
-    .home-body-summary span{color:#64748b}.home-body-summary b{font-weight:800}
+    .home-composition-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:9px}
+    .home-composition-fat{border:1px solid #fde0b2;background:#fffaf2;border-radius:16px;padding:12px 13px;display:flex;flex-direction:column;justify-content:center;min-height:104px}
+    .home-composition-fat .home-fact-value{font-size:1.42rem;color:#a16207}
+    .home-composition-masses{display:grid;gap:9px}
+    .home-composition-mass{border:1px solid #e0e7ef;background:#fafbfc;border-radius:16px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px;min-width:0}
+    .home-composition-mass span{font-size:.7rem;color:#64748b}.home-composition-mass b{font-size:.92rem;color:#111827;white-space:nowrap}
     .home-plan-card{background:#f8fbff;border-color:#dce9fb}
     .home-plan-meta{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:.78rem;margin-bottom:12px;flex-wrap:wrap}
     .home-plan-meta strong{font-size:.86rem}.home-plan-meta span{color:#64748b}
@@ -172,7 +175,7 @@
     .home-action-icon{font-size:1.2rem;line-height:1}.home-action-label{font-size:.65rem;color:#64748b}.home-action-value{font-size:.86rem;font-weight:850;margin-top:1px}.home-action-sub{font-size:.61rem;color:#94a3b8;margin-top:2px;line-height:1.3}
     .home-note-stack{display:grid;gap:7px}.home-note{font-size:.68rem;line-height:1.4;padding:8px 10px;border-radius:11px;background:#f8fafc;color:#64748b}
     .home-plan-calorie-detail{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
-    .home-plan-calorie-detail .home-plan-detail{margin:0}
+    .home-plan-calorie-detail .home-plan-detail{margin:0}.home-plan-calorie-detail .home-plan-detail:first-child b{font-size:1.05rem}
     .home-plan-basics{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
     .home-body-summary{margin-top:9px}
 
@@ -181,18 +184,13 @@
     @media(max-width:560px){
       .home-card{padding:15px}
       .home-facts-grid{grid-template-columns:1fr 1fr;}
-      .home-fact-weight{grid-column:1/2}
-      .home-fact-bmi{grid-column:2/3}
-      .home-fact-fat{grid-column:auto}
-      .home-body-summary{display:contents}
-      .home-body-summary>div{border:1px solid #e0e7ef;background:#fafbfc;border-radius:16px;padding:10px 9px;display:block;font-size:.68rem;line-height:1.3}
-      .home-body-summary>div span{display:block;color:#64748b;margin-bottom:4px}
-      .home-body-summary>div b{display:block;font-size:.84rem}
+      .home-fact-weight .home-fact-value{font-size:1.9rem}
+      .home-composition-grid{grid-template-columns:1fr 1fr}
+      .home-composition-fat{min-height:96px}
     }
     @media(max-width:400px){
-      .home-facts-grid,.home-action-grid{grid-template-columns:1fr 1fr}
-      .home-fact-weight .home-fact-value{font-size:1.85rem}
-      .home-body-summary{grid-template-columns:1fr}
+      .home-facts-grid,.home-action-grid,.home-composition-grid{grid-template-columns:1fr 1fr}
+      .home-fact-weight .home-fact-value{font-size:1.75rem}
       .home-plan-details{grid-template-columns:1fr 1fr}
       .home-macros{grid-template-columns:1fr}
       .home-macro-pie{width:82px;height:82px}
@@ -1266,11 +1264,16 @@
       <div class="home-section-title">📊 Моё тело сегодня</div>
       <div class="home-date">Сегодня · ${fmtLong(today)}</div>
       <div class="home-facts-grid">
-        <div class="home-fact home-fact-weight"><div class="home-fact-label">Вес</div><div class="home-fact-value">${currentWeight!=null?String(currentWeight).replace('.',','):(todayP.weight!=null?String(todayP.weight).replace('.',','):'—')} <span>кг</span></div><div class="home-fact-sub">${targetDiff!=null?`${targetText} ${String(targetDiff).replace('.',',')} кг`:'цель не задана'}</div></div>
+        <div class="home-fact home-fact-weight home-fact-current"><div class="home-fact-label">Вес</div><div class="home-fact-value">${currentWeight!=null?String(currentWeight).replace('.',','):(todayP.weight!=null?String(todayP.weight).replace('.',','):'—')} <span>кг</span></div><div class="home-fact-sub">${targetDiff!=null?`${targetText} ${String(targetDiff).replace('.',',')} кг`:'цель не задана'}</div></div>
         <div class="home-fact home-fact-bmi"><div class="home-bmi-ring ${bmiGood?'good':'neutral'}"><span>${bmiValue}</span></div><div><div class="home-fact-label">ИМТ</div><div class="home-fact-sub ${bmiGood?'home-good-text':''}">${esc(bmiCat)}</div></div></div>
-        <div class="home-fact home-fact-fat"><div class="home-fact-label">% жира</div><div class="home-fact-value">${comp?String(comp.bf).replace('.',','):'—'}<span>${comp?'%':''}</span></div><div class="home-fact-sub">${comp?esc(comp.status):'нужны объёмы'}</div></div>
+      </div>
+      <div class="home-composition-grid">
+        <div class="home-composition-fat"><div class="home-fact-label">% жира</div><div class="home-fact-value">${comp?String(comp.bf).replace('.',','):'—'}<span>${comp?'%':''}</span></div><div class="home-fact-sub">${comp?esc(comp.status):'нужны объёмы'}</div></div>
+        <div class="home-composition-masses">
+          <div class="home-composition-mass"><span>Жировая масса</span><b>${comp?String(comp.fatMass).replace('.',',')+' кг':'—'}</b></div>
+          <div class="home-composition-mass"><span>Безжировая масса</span><b>${comp?String(comp.ffm).replace('.',',')+' кг':'—'}</b></div>
+        </div>
       </div>`;
-    if(comp) h+=`<div class="home-body-summary"><div><span>Жировая масса</span><b>${String(comp.fatMass).replace('.',',')} кг</b></div><div><span>Безжировая масса</span><b>${String(comp.ffm).replace('.',',')} кг</b></div></div>`;
     h+=`</div>`;
 
     if(nut){
@@ -1296,7 +1299,6 @@
           <div><div>${macroRows}</div><div class="home-macro-legend">Б — белки · Ж — жиры · У — углеводы · доля указана от общей калорийности БЖУ</div></div>
           <div><div class="home-macro-pie" style="${macroData._pie}" aria-label="Доля белков, жиров и углеводов"></div><div class="home-macro-pie-label">Доля калорий БЖУ</div></div>
         </div>
-        <div class="home-kbju-note">КБЖУ пересчитываются в начале новой недели по средней динамике веса. При застое/обратной динамике калорийность корректируется на 40 ккал. Калорийность не опускается ниже BMR + 10%. При изменении веса дневные граммы КБЖУ пересчитываются автоматически.</div>
         <div class="home-action-grid">
           <div class="home-action-widget"><div class="home-action-icon">💧</div><div><div class="home-action-label">Вода</div><div class="home-action-value">${waterTarget} л</div><div class="home-action-sub">ориентир ${waterRange}</div></div></div>
           <div class="home-action-widget"><div class="home-action-icon">👟</div><div><div class="home-action-label">Шаги</div><div class="home-action-value">${stepsRange}</div><div class="home-action-sub">${stepSub}</div></div></div>
@@ -1314,7 +1316,7 @@
     const st=stepsTarget(todayP);
     if(st) advice.push(`🚶 <strong>План шагов:</strong> дни 1–3 — ${fmtNum(st.plan[0])}, дни 4–6 — ${fmtNum(st.plan[2])}, дни 7–10 — ${fmtNum(st.plan[6])}.`);
     if(nut?.dietType==='keto'||nut?.dietType==='lchf') advice.push('⚡ На КЕТО/LCHF увеличивайте нагрузку постепенно и следите за самочувствием.');
-    if(advice.length) h+=`<div class="card home-card home-advice-card"><div class="home-section-title">💡 Подсказки</div><div class="home-note-stack">${advice.map(x=>`<div class="home-note">${x}</div>`).join('')}</div></div>`;
+    if(advice.length) h+=`<div class="card home-card home-advice-card"><div class="home-section-title">💡 Подсказки</div><div class="home-note-stack">${advice.map(x=>`<div class="home-note">${x}</div>`).join('')}</div><div class="home-kbju-note">КБЖУ пересчитываются в начале новой недели по средней динамике веса. При застое/обратной динамике калорийность корректируется на 40 ккал. Калорийность не опускается ниже BMR + 10%. При изменении веса дневные граммы КБЖУ пересчитываются автоматически.</div></div>`;
 
     $('homeContent').innerHTML=h;
   }
