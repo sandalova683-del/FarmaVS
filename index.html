@@ -178,12 +178,12 @@
     .profile-summary-action{font-size:.84rem}
     .profile-history-card{padding:15px 17px}
     .history-intro{font-size:.74rem}
-    .profile-history-entry{grid-template-columns:104px minmax(0,1fr);gap:10px}
-    .history-date-col{padding:11px 6px;min-height:104px}
-    .history-date-col strong{font-size:.86rem}
+    .profile-history-entry{grid-template-columns:92px minmax(0,1fr);gap:9px}
+    .history-date-col{padding:10px 5px;min-height:92px}
+    .history-date-col strong{font-size:.78rem}
     .history-date-col span{font-size:.68rem}
     .history-date-col em{font-size:.62rem;padding:4px 8px;margin-top:9px}
-    .history-top-grid{padding:11px 12px;gap:8px}
+    .history-top-grid{padding:11px 12px;gap:8px}.history-top-grid-dynamic{grid-template-columns:repeat(4,minmax(0,1fr))}
     .history-metric small{font-size:.67rem}
     .history-metric b{font-size:.75rem}
     .history-icon{font-size:20px;flex-basis:21px}
@@ -204,15 +204,19 @@
       .profile-summary-name{font-size:1.1rem}
       .profile-summary-email{font-size:.78rem}
       .profile-summary-action{font-size:.76rem}
-      .profile-history-entry{grid-template-columns:90px minmax(0,1fr);gap:8px}
+      .profile-history-entry{grid-template-columns:78px minmax(0,1fr);gap:7px}
       .history-date-col strong{font-size:.78rem}
     }
     @media(max-width:560px){
-      .profile-history-entry{grid-template-columns:82px minmax(0,1fr);gap:7px}
+      .profile-history-entry{grid-template-columns:72px minmax(0,1fr);gap:6px}
       .history-date-col{padding:10px 4px;min-height:102px}
       .history-date-col strong{font-size:.74rem}
       .history-date-col span{font-size:.64rem}
     }
+    #view-profile input:disabled,#view-profile select:disabled{background:#f5f7fa;color:#64748b;cursor:not-allowed;opacity:1}
+    #registrationDate{cursor:default}
+    @media(max-width:720px){.history-top-grid-dynamic{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:420px){.history-top-grid-dynamic{grid-template-columns:1fr 1fr}.history-date-col strong{font-size:.68rem}}
   </style>
 </head>
 <body><div id="toast" class="toast" role="status" aria-live="polite"></div>
@@ -378,7 +382,7 @@
       <div id="profileEditor" class="hidden">
         <div class="card">
           <div class="onboarding-title">👤 Профиль</div>
-          <div class="note onboarding-note profile-editor-note">Заполни данные профиля. При сохранении новая версия параметров фиксируется в истории с указанной датой.</div>
+          <div class="note onboarding-note profile-editor-note">Заполни данные профиля. После регистрации изменяются только цель, активность, средние шаги и тип питания. Остальные данные остаются исходными.</div>
           <div style="display:flex;gap:14px;align-items:center;margin-bottom:14px">
             <div id="profilePhotoPreviewEditor" class="profile-photo-placeholder">VS</div>
             <div class="field" style="flex:1;margin:0"><label>Фото</label><label class="file-btn" for="profilePhoto">Загрузить фото</label><input id="profilePhoto" class="file-upload" type="file" accept="image/*"></div>
@@ -386,7 +390,7 @@
           <div class="grid2">
             <div class="field"><label>Имя / ник *</label><input id="name"></div>
             <div class="field"><label>Эл.почта *</label><input id="email" type="email"></div>
-            <div class="field"><label>Дата регистрации *</label><input id="registrationDate" type="date"></div>
+            <div class="field"><label>Дата регистрации</label><input id="registrationDate" type="date" readonly></div>
             <div class="field"><label>Пол *</label><select id="gender"><option value="female">Женский</option><option value="male">Мужской</option></select></div>
             <div class="field"><label>Дата рождения *</label><input id="birth" type="date"></div>
             <div class="field"><label>Рост, см *</label><input id="height" type="number" step=".1" min="100" max="250"></div>
@@ -527,7 +531,11 @@
     if(!state.profileHistory || !Array.isArray(state.profileHistory)) state.profileHistory=[];
     // Сохраняем отдельную копию исходных данных для просмотра. Она не
     // блокирует редактирование текущего профиля и не меняется от дневных данных.
-    if(!state.profile.registrationSnapshot && state.profile.registrationDate){
+    // Дата регистрации фиксируется один раз. Если в старой версии она случайно
+    // была перезаписана, восстанавливаем её из неизменяемого снимка регистрации.
+    if(state.profile.registrationSnapshot?.registrationDate){
+      state.profile.registrationDate=state.profile.registrationSnapshot.registrationDate;
+    } else if(state.profile.registrationDate){
       const p=state.profile;
       state.profile.registrationSnapshot={
         registrationDate:p.registrationDate, name:p.name, email:p.email, gender:p.gender, birth:p.birth, height:p.height,
@@ -535,16 +543,18 @@
         dietType:p.dietType||'mediterranean',
         baseMeasurements:{...(p.baseMeasurements||{})}
       };
-    } else if(state.profile.registrationSnapshot){
+    }
+    if(state.profile.registrationSnapshot){
       if(!state.profile.registrationSnapshot.email) state.profile.registrationSnapshot.email=state.profile.email||'';
       if(!state.profile.registrationSnapshot.dietType) state.profile.registrationSnapshot.dietType=state.profile.dietType||'mediterranean';
     }
-    // Для старых профилей переносим исходную версию в историю параметров,
-    // чтобы расчёты по историческим датам использовали соответствующий вес и питание.
+    // История профиля хранит только динамические параметры. Старые записи могут
+    // содержать вес/объёмы, но интерфейс и новые записи их больше не используют.
     if(state.profile.registrationSnapshot && !state.profileHistory.some(h=>h.date===state.profile.registrationSnapshot.registrationDate)){
       const s=state.profile.registrationSnapshot;
-      state.profileHistory.push({...s,date:s.registrationDate});
+      state.profileHistory.push({date:s.registrationDate,time:'',goal:s.goal,activity:s.activity,steps:s.steps,dietType:s.dietType||'mediterranean'});
     }
+    state.profileHistory=state.profileHistory.map(h=>({date:h.date,time:h.time||'',goal:h.goal||'maintain',activity:h.activity||'1.2',steps:h.steps??'',dietType:h.dietType||'mediterranean'}));
     if(!state.ui.habitDate) state.ui.habitDate=todayStr();
     if(!state.ui.month) state.ui.month=todayStr().slice(0,7);
     save();
@@ -1002,16 +1012,22 @@
   function renderProfileFields(){
     const p=state.profile;
     const saved=!!p.registrationDate;
-    if(!saved && !p.registrationDate) p.registrationDate=todayStr();
+    if(!saved && !p.registrationDate) setFieldValue('registrationDate',todayStr());
     setFieldValue('registrationDate',p.registrationDate||todayStr());
-    if($('registrationDate')) $('registrationDate').max=todayStr();
+    if($('registrationDate')){ $('registrationDate').max=todayStr(); $('registrationDate').readOnly=true; }
     setFieldValue('name',p.name); setFieldValue('email',p.email);
     setFieldValue('dietType',p.dietType||'mediterranean');
     setFieldValue('gender',p.gender||'female'); setFieldValue('birth',p.birth); setFieldValue('height',p.height);
     setFieldValue('profileWeight',p.weight); setFieldValue('profileSteps',p.steps||''); setFieldValue('profileTarget',p.target); setFieldValue('profileGoal',p.goal||'maintain'); setFieldValue('profileActivity',p.activity||'1.2');
     const bm=p.baseMeasurements||{};
     const fields=$('profileMeasurementFields');
-    if(fields) fields.innerHTML=MEASUREMENTS.map(([k,label])=>`<div class="field"><label>${label}</label><input id="profile_m_${k}" type="number" step=".1" min="1" max="300" value="${esc(bm[k]??'')}"></div>`).join('');
+    if(fields) fields.innerHTML=MEASUREMENTS.map(([k,label])=>`<div class="field"><label>${label}</label><input id="profile_m_${k}" type="number" step=".1" min="1" max="300" value="${esc(bm[k]??'')}" ${saved?'disabled':''}></div>`).join('');
+    // После первой регистрации неизменяемыми становятся исходные данные.
+    // Пользователь может редактировать только 4 динамических параметра:
+    // цель, активность, средние шаги и тип питания.
+    ['name','email','gender','birth','height','profileWeight','profileTarget','profilePhoto'].forEach(id=>{
+      const el=$(id); if(el) el.disabled=saved;
+    });
     const photo=p.photo?`<img src="${esc(p.photo)}" class="profile-photo profile-avatar-large">`:'VS';
     const pp=$('profilePhotoPreview'); if(pp){pp.innerHTML=photo;pp.className=p.photo?'profile-photo profile-avatar-large':'profile-photo-placeholder profile-avatar-large';}
     const pe=$('profilePhotoPreviewEditor'); if(pe){pe.innerHTML=photo;pe.className=p.photo?'profile-photo':'profile-photo-placeholder';}
@@ -1068,32 +1084,27 @@
   function renderProfileHistory(){
     const list=$('profileHistoryList'); if(!list)return;
     const history=[...state.profileHistory].sort((a,b)=>b.date.localeCompare(a.date));
-    if(!history.length){ list.innerHTML='<div class="note">История параметров пока пуста.</div>'; return; }
+    if(!history.length){ list.innerHTML='<div class="note">История изменений пока пуста.</div>'; return; }
     const activityLabels={'1.2':'Минимальная','1.375':'Низкая','1.55':'Умеренная','1.725':'Высокая','1.9':'Очень высокая'};
     const goalLabels={lose:'Снизить вес',maintain:'Поддержка веса',gain:'Набрать вес'};
     const expanded=!!state.ui.profileHistoryExpanded;
-    const visible=expanded?history:history.slice(0,3);
-    const iconMap={weight:'◉',goal:'◎',activity:'⌁',steps:'♧',diet:'🍴'};
+    const visible=expanded?history:history.slice(0,5);
     list.innerHTML=visible.map((h,idx)=>{
-      const bm=h.baseMeasurements||{};
-      const vols=MEASUREMENTS.map(([k,label])=>bm[k]!=null?`<div><span>${label}</span><b>${bm[k]} см</b></div>`:'').filter(Boolean).join('');
       const steps=h.steps!=null&&h.steps!==''?Number(h.steps).toLocaleString('ru-RU'):'—';
       const isCurrent=idx===0;
       return `<div class="profile-history-entry">
         <div class="history-date-col"><strong>${fmt(h.date)}</strong><span>${h.time||''}</span>${isCurrent?'<em>Текущая</em>':''}</div>
         <div class="history-data-card">
-          <div class="history-top-grid">
-            <div class="history-metric"><span class="history-icon icon-weight">${iconMap.weight}</span><div><small>Вес</small><b>${h.weight!==''&&h.weight!=null?`${h.weight} кг`:'—'}</b></div></div>
-            <div class="history-metric"><span class="history-icon icon-goal">${iconMap.goal}</span><div><small>Цель</small><b>${goalLabels[h.goal]||'—'}</b></div></div>
-            <div class="history-metric"><span class="history-icon icon-activity">${iconMap.activity}</span><div><small>Активность</small><b>${activityLabels[h.activity]||h.activity||'—'}</b></div></div>
-            <div class="history-metric"><span class="history-icon icon-steps">${iconMap.steps}</span><div><small>Шаги / день</small><b>${steps}</b></div></div>
-            <div class="history-metric"><span class="history-icon icon-diet">${iconMap.diet}</span><div><small>Тип питания</small><b>${esc((DIET_INFO[h.dietType]||{}).name||h.dietType||'—')}</b></div></div>
+          <div class="history-top-grid history-top-grid-dynamic">
+            <div class="history-metric"><span class="history-icon icon-goal">◎</span><div><small>Цель</small><b>${goalLabels[h.goal]||'—'}</b></div></div>
+            <div class="history-metric"><span class="history-icon icon-activity">⌁</span><div><small>Активность</small><b>${activityLabels[h.activity]||h.activity||'—'}</b></div></div>
+            <div class="history-metric"><span class="history-icon icon-steps">♧</span><div><small>Шаги / день</small><b>${steps}</b></div></div>
+            <div class="history-metric"><span class="history-icon icon-diet">🍴</span><div><small>Тип питания</small><b>${esc((DIET_INFO[h.dietType]||{}).name||h.dietType||'—')}</b></div></div>
           </div>
-          ${vols?`<div class="history-volumes-modern"><div class="history-volume-title">Объёмы</div><div class="history-volume-grid-modern">${vols}</div></div>`:''}
         </div>
       </div>`;
     }).join('');
-    if(history.length>3){
+    if(history.length>5){
       list.innerHTML+=`<button type="button" class="history-more" id="historyMore">${expanded?'Свернуть':'Показать ещё'} <span>${expanded?'⌃':'⌄'}</span></button>`;
       $('historyMore')?.addEventListener('click',()=>{state.ui.profileHistoryExpanded=!expanded;renderProfileHistory();});
     }
@@ -1586,28 +1597,58 @@
     $('dietHelp')?.addEventListener('click',()=>{const d=DIET_INFO[$('dietType').value||'mediterranean'];$('dietModalTitle').textContent=d.name;$('dietModalBody').innerHTML=`<p><b>${d.name}</b></p><p>${d.details}</p><p><b>Макросы:</b> Углеводы ${d.carbs}, белки ${d.protein}, жиры ${d.fat}.</p><p><b>Ключевая особенность:</b> ${d.feature}</p>`;$('dietModal').classList.add('show');});
     $('saveProfile').addEventListener('click',()=>{
       const p=state.profile;
-      const oldDate=p.registrationDate;
-      const date=$('registrationDate').value||todayStr();
-      p.registrationDate=date; p.name=$('name').value.trim(); p.email=$('email').value.trim(); p.gender=$('gender').value; p.birth=$('birth').value; p.height=$('height').value; p.weight=$('profileWeight').value; p.steps=$('profileSteps')?.value||''; p.target=$('profileTarget').value; p.goal=$('profileGoal').value; p.activity=$('profileActivity').value; p.dietType=$('dietType').value;
-      if(!p.name||!p.email||!p.gender||!p.birth||!p.height||!p.weight||!p.target||!p.goal||!p.activity||!p.dietType) return alert('Заполни все обязательные поля профиля.');
-      const m={...(p.baseMeasurements||{})};
-      for(const [k] of MEASUREMENTS){const el=$('profile_m_'+k),v=n(el?.value);if(v!=null)m[k]=v;else if(el?.value==='') delete m[k];}
-      p.baseMeasurements=m;
-      const snapshot={registrationDate:date,name:p.name,email:p.email,gender:p.gender,birth:p.birth,height:p.height,weight:p.weight,target:p.target,goal:p.goal,steps:p.steps,activity:p.activity,dietType:p.dietType,baseMeasurements:{...m}};
-      if(!p.registrationSnapshot){
-        p.registrationSnapshot={...snapshot};
+      const firstSave=!p.registrationDate;
+      const oldDynamic={goal:p.goal||'maintain',activity:p.activity||'1.2',steps:p.steps??'',dietType:p.dietType||'mediterranean'};
+      const date=firstSave?todayStr():p.registrationDate;
+
+      // На первой записи фиксируем дату регистрации и исходные данные.
+      // После этого дата и исходные параметры больше не изменяются.
+      const name=firstSave?$('name').value.trim():p.name;
+      const email=firstSave?$('email').value.trim():p.email;
+      const gender=firstSave?$('gender').value:p.gender;
+      const birth=firstSave?$('birth').value:p.birth;
+      const height=firstSave?$('height').value:p.height;
+      const weight=firstSave?$('profileWeight').value:p.weight;
+      const target=firstSave?$('profileTarget').value:p.target;
+      const m=firstSave?{}:{...(p.baseMeasurements||{})};
+      if(firstSave){
+        for(const [k] of MEASUREMENTS){const el=$('profile_m_'+k),v=n(el?.value);if(v!=null)m[k]=v;}
       }
-      const histEntry={...snapshot,date};
-      const sameIndex=state.profileHistory.findIndex(h=>h.date===date);
-      if(sameIndex>=0) state.profileHistory[sameIndex]=histEntry; else state.profileHistory.push(histEntry);
-      state.profileHistory.sort((a,b)=>a.date.localeCompare(b.date));
+      const next={
+        goal:$('profileGoal').value||'maintain',
+        activity:$('profileActivity').value||'1.2',
+        steps:$('profileSteps')?.value||'',
+        dietType:$('dietType').value||'mediterranean'
+      };
+
+      if(firstSave && (!name||!email||!gender||!birth||!height||!weight||!target||!next.goal||!next.activity||!next.dietType)) return alert('Заполни все обязательные поля профиля.');
+
+      p.registrationDate=date;
+      if(firstSave){
+        p.name=name; p.email=email; p.gender=gender; p.birth=birth; p.height=height; p.weight=weight; p.target=target; p.baseMeasurements=m;
+      }
+      p.goal=next.goal; p.activity=next.activity; p.steps=next.steps; p.dietType=next.dietType;
+
+      if(firstSave){
+        p.registrationSnapshot={registrationDate:date,name:p.name,email:p.email,gender:p.gender,birth:p.birth,height:p.height,weight:p.weight,target:p.target,goal:p.goal,steps:p.steps,activity:p.activity,dietType:p.dietType,baseMeasurements:{...(p.baseMeasurements||{})}};
+        state.profileHistory.push({date,time:new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'}),goal:p.goal,activity:p.activity,steps:p.steps,dietType:p.dietType});
+      }else{
+        const changed=oldDynamic.goal!==next.goal||oldDynamic.activity!==next.activity||String(oldDynamic.steps)!==String(next.steps)||oldDynamic.dietType!==next.dietType;
+        if(changed){
+          const h={date:todayStr(),time:new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'}),goal:p.goal,activity:p.activity,steps:p.steps,dietType:p.dietType};
+          const sameIndex=state.profileHistory.findIndex(x=>x.date===h.date);
+          if(sameIndex>=0) state.profileHistory[sameIndex]=h; else state.profileHistory.push(h);
+          state.profileHistory.sort((a,b)=>a.date.localeCompare(b.date));
+        }
+      }
+
       const wk=weekStartDate(todayStr()),base=nutritionBase(getFullProfileAt(todayStr()));
-      const oldForCalc=oldDate?getProfileAt(todayStr()):null;
-      const calorieInputsChanged=!!oldForCalc && (String(oldForCalc.weight)!==String(p.weight)||String(oldForCalc.height)!==String(p.height)||String(oldForCalc.birth)!==String(p.birth)||String(oldForCalc.gender)!==String(p.gender)||String(oldForCalc.activity)!==String(p.activity)||String(oldForCalc.goal)!==String(p.goal));
+      const oldForCalc=getProfileAt(todayStr());
+      const calorieInputsChanged=!!oldForCalc && (String(oldForCalc.activity)!==String(p.activity)||String(oldForCalc.goal)!==String(p.goal)||String(oldForCalc.dietType)!==String(p.dietType));
       if(base && (state.nutritionWeekly[wk]==null || calorieInputsChanged)) state.nutritionWeekly[wk]=base.calories;
       recalcWeeklyNutrition(true);
       save(); renderProfileFields(); renderHome(); renderAnalytics();
-      toast(oldDate&&oldDate!==date?'Профиль обновлён':'Данные сохранены');
+      toast(firstSave?'Данные сохранены':'Изменения сохранены');
     });
 
     $('saveJournal').addEventListener('click',()=>{
