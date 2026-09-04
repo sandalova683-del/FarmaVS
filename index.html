@@ -165,7 +165,7 @@
     .home-macro-row.fat{border-left:4px solid #eab308}.home-macro-row.fat .home-macro-name,.home-macro-row.fat .home-macro-pct{color:#ca8a04}
     .home-macro-row.carbs{border-left:4px solid #22c55e}.home-macro-row.carbs .home-macro-name,.home-macro-row.carbs .home-macro-pct{color:#16a34a}
     .home-macro-legend{font-size:.6rem;color:#94a3b8;margin-top:5px}
-    .home-macro-pie{width:92px;height:92px;border-radius:50%;background:conic-gradient(#ef4444 0 var(--p1),#eab308 var(--p1) var(--p2),#22c55e var(--p2) 100%);position:relative;margin:auto}
+    .home-macro-pie{width:92px;height:92px;border-radius:50%;background:conic-gradient(#2C3E50 0 var(--p1),#F39C12 var(--p1) var(--p2),#E74C3C var(--p2) 100%);position:relative;margin:auto}
     .home-macro-pie:after{content:"";position:absolute;inset:20px;background:#fff;border-radius:50%}
     .home-macro-pie-label{font-size:.62rem;color:#64748b;text-align:center;margin-top:4px}
     .home-kbju-note{margin-top:9px;padding:9px 11px;border-radius:11px;background:#f8fafc;border:1px solid #e6ebf2;color:#64748b;font-size:.66rem;line-height:1.45}
@@ -939,7 +939,7 @@
     let protein=Math.round(calories*proteinPct/4);
     let fat=Math.round(calories*fatPct/9);
     let carbs=Math.max(0,Math.round((calories-protein*4-fat*9)/4));
-    const proteinMinimum=(p.dietType==='keto')?null:round(w*1.2,0);
+    const proteinMinimum=round(w*1.2,0);
     let proteinAdjusted=false;
     if(proteinMinimum!=null && protein<proteinMinimum){
       protein=proteinMinimum;
@@ -1289,7 +1289,7 @@
         <div class="home-plan-meta"><strong>🍽 ${esc(dietName)}</strong><span>Цель: ${goalLabel}</span></div>
         <div class="home-plan-calorie-detail">
           <div class="home-plan-detail"><span>Цель по ккал</span><b>${fmtNum(nut.calories)} ккал</b><small>на день</small></div>
-          <div class="home-plan-detail"><span>Белковый минимум</span><b>${nut.proteinMinimum!=null?fmtNum(nut.proteinMinimum)+' г':'—'}</b><small>${nut.proteinMinimum!=null?'1,2 г/кг':'для КЕТО не задан'}</small></div>
+          <div class="home-plan-detail"><span>Белковый минимум</span><b>${nut.proteinMinimum!=null?fmtNum(nut.proteinMinimum)+' г':'—'}</b><small>${nut.proteinMinimum!=null?'1,2 г/кг':'—'}</small></div>
         </div>
         <div class="home-plan-basics">
           <div class="home-plan-detail"><span>BMR</span><b>${fmtNum(nut.bmr)} ккал</b><small>базовый обмен</small></div>
