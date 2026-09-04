@@ -169,13 +169,25 @@
     .home-water-note strong{color:#0f172a}
     .home-action-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:14px}
     .home-action-widget{display:flex;align-items:center;gap:10px;border:1px solid #dce7f5;background:#fff;border-radius:15px;padding:11px 12px;min-width:0}
-    .home-action-icon{font-size:1.35rem;line-height:1}.home-action-label{font-size:.68rem;color:#64748b}.home-action-value{font-size:1rem;font-weight:850;margin-top:1px}.home-action-sub{font-size:.64rem;color:#94a3b8;margin-top:2px;line-height:1.3}
+    .home-action-icon{font-size:1.2rem;line-height:1}.home-action-label{font-size:.65rem;color:#64748b}.home-action-value{font-size:.86rem;font-weight:850;margin-top:1px}.home-action-sub{font-size:.61rem;color:#94a3b8;margin-top:2px;line-height:1.3}
+    .home-note-stack{display:grid;gap:7px}.home-note{font-size:.68rem;line-height:1.4;padding:8px 10px;border-radius:11px;background:#f8fafc;color:#64748b}
+    .home-plan-calorie-detail{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+    .home-plan-calorie-detail .home-plan-detail{margin:0}
+    .home-plan-basics{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+    .home-body-summary{margin-top:9px}
+
     .home-short-note{margin-top:10px;color:#64748b;font-size:.68rem}
     .home-advice-card{background:#fff}
     @media(max-width:560px){
       .home-card{padding:15px}
-      .home-facts-grid{grid-template-columns:1.2fr 1fr;}
-      .home-fact-fat{grid-column:1/-1}
+      .home-facts-grid{grid-template-columns:1fr 1fr;}
+      .home-fact-weight{grid-column:1/2}
+      .home-fact-bmi{grid-column:2/3}
+      .home-fact-fat{grid-column:auto}
+      .home-body-summary{display:contents}
+      .home-body-summary>div{border:1px solid #e0e7ef;background:#fafbfc;border-radius:16px;padding:10px 9px;display:block;font-size:.68rem;line-height:1.3}
+      .home-body-summary>div span{display:block;color:#64748b;margin-bottom:4px}
+      .home-body-summary>div b{display:block;font-size:.84rem}
     }
     @media(max-width:400px){
       .home-facts-grid,.home-action-grid{grid-template-columns:1fr 1fr}
@@ -1272,11 +1284,13 @@
       h+=`<div class="card home-card home-plan-card">
         <div class="home-section-title">🎯 План на сегодня</div>
         <div class="home-plan-meta"><strong>🍽 ${esc(dietName)}</strong><span>Цель: ${goalLabel}</span></div>
-        <div class="home-calories"><span>Калории</span><b>${fmtNum(nut.calories)} ккал</b><small>на день</small></div>
-        <div class="home-plan-details">
+        <div class="home-plan-calorie-detail">
+          <div class="home-plan-detail"><span>Цель по ккал</span><b>${fmtNum(nut.calories)} ккал</b><small>на день</small></div>
+          <div class="home-plan-detail"><span>Белковый минимум</span><b>${nut.proteinMinimum!=null?fmtNum(nut.proteinMinimum)+' г':'—'}</b><small>${nut.proteinMinimum!=null?'1,2 г/кг':'для КЕТО не задан'}</small></div>
+        </div>
+        <div class="home-plan-basics">
           <div class="home-plan-detail"><span>BMR</span><b>${fmtNum(nut.bmr)} ккал</b><small>базовый обмен</small></div>
           <div class="home-plan-detail"><span>TDEE</span><b>${fmtNum(nut.tdee)} ккал</b><small>поддержание</small></div>
-          <div class="home-plan-detail"><span>Белковый минимум</span><b>${nut.proteinMinimum!=null?fmtNum(nut.proteinMinimum)+' г':'—'}</b><small>${nut.proteinMinimum!=null?'1,2 г/кг':'для КЕТО не задан'}</small></div>
         </div>
         <div class="home-macros">
           <div><div>${macroRows}</div><div class="home-macro-legend">Б — белки · Ж — жиры · У — углеводы · доля указана от общей калорийности БЖУ</div></div>
