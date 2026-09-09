@@ -1846,7 +1846,7 @@
     // поэтому прежний порядок делал кнопку визуально кликабельной, но редактор не открывался.
     renderProfileFields();
     editor.classList.remove('hidden');
-    if(button){button.classList.add('hidden');button.disabled=false;button.style.pointerEvents='auto';button.removeAttribute('aria-disabled');}
+    if(button){button.classList.remove('hidden');button.disabled=false;button.style.pointerEvents='auto';button.style.cursor='pointer';button.removeAttribute('aria-disabled');}
     setTimeout(()=>editor.scrollIntoView({behavior:'smooth',block:'start'}),30);
   }
 
