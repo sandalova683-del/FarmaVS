@@ -303,6 +303,56 @@
     #registrationDate{cursor:default}
     @media(max-width:720px){.history-top-grid-dynamic{grid-template-columns:repeat(2,minmax(0,1fr))}}
     @media(max-width:420px){.history-top-grid-dynamic{grid-template-columns:1fr 1fr}.history-date-col strong{font-size:.68rem}}
+
+    /* Profile redesign 2.15.3 */
+    #view-profile{background:#fff;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display",Inter,system-ui,sans-serif;font-size:14px;padding:0 20px 30px;max-width:980px;margin:0 auto}
+    #view-profile .profile-zone{margin-bottom:24px}
+    .profile-hero-zone{padding:24px 0 8px;border-bottom:1px solid #E8ECF0}
+    .profile-hero-content{display:flex;align-items:center;gap:18px}
+    .profile-avatar{width:72px;height:72px;border-radius:50%;flex:0 0 72px;object-fit:cover}
+    .profile-avatar-placeholder{display:grid;place-items:center;background:#E8F0FE;color:#4A90D9;font-size:32px}
+    .profile-hero-main{min-width:0}
+    .profile-name{font-family:"SF Pro Display",-apple-system,sans-serif;font-size:20px;font-weight:600;color:#1A1A1A;line-height:1.2}
+    .profile-edit-link{border:0;background:transparent;padding:4px 0;color:#4A90D9;font-size:12px;font-weight:500;cursor:pointer}
+    .profile-email{font-size:13px;color:#8E98A3;margin-top:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .profile-registration{font-size:11px;color:#A0AEC0;margin-top:4px}
+    .profile-section-title{font-size:13px;color:#5A6B7C;font-weight:400;margin-bottom:12px}
+    .profile-tile-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+    .profile-tile{background:#F8FAFC;border-radius:12px;padding:12px;min-height:56px;box-sizing:border-box}
+    .profile-tile-label{font-size:10px;color:#8E98A3;line-height:1.2;margin-bottom:5px}
+    .profile-tile-value{font-family:"SF Pro Display",-apple-system,sans-serif;font-size:16px;font-weight:600;color:#1A1A1A;line-height:1.25;overflow-wrap:anywhere}
+    .profile-plan-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .profile-plan-full{grid-column:1/-1}
+    .profile-plan-value{display:flex;align-items:center;gap:7px}
+    .profile-plan-icon{font-size:17px}
+    .profile-volumes-zone{background:#fff;border:1px solid #E8ECF0;border-radius:12px;overflow:hidden}
+    .profile-volumes-zone details>summary{list-style:none;cursor:pointer;padding:14px 16px;font-size:13px;color:#5A6B7C;font-weight:400}
+    .profile-volumes-zone details>summary::-webkit-details-marker{display:none}
+    .profile-volumes-zone details>summary::before{content:'▶';display:inline-block;font-size:9px;margin-right:8px;transition:transform .18s}
+    .profile-volumes-zone details[open]>summary::before{transform:rotate(90deg)}
+    .profile-volume-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 16px 16px}
+    .profile-volume-item{background:#F8FAFC;border-radius:8px;padding:10px 12px;display:flex;justify-content:space-between;gap:8px;align-items:center}
+    .profile-volume-item span{font-size:11px;color:#8E98A3}.profile-volume-item b{font-size:14px;color:#1A1A1A}
+    .profile-history-zone{border-top:1px solid #E8ECF0;padding-top:24px}
+    .profile-history-list{display:grid;gap:8px;margin-top:0}
+    .profile-history-entry{display:block;cursor:pointer}
+    .profile-history-card{background:#F8FAFC;border:0;border-left:3px solid #E8ECF0;border-radius:12px;padding:12px;transition:.15s}
+    .profile-history-entry.current .profile-history-card{border-left-color:#4A90D9}
+    .profile-history-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+    .profile-history-date{font-size:13px;font-weight:700;color:#1A1A1A}.profile-history-time{font-weight:400;color:#8E98A3;margin-left:5px}
+    .profile-current-badge{background:#E8F0FE;color:#4A90D9;font-size:10px;font-weight:500;border-radius:12px;padding:4px 8px;white-space:nowrap}
+    .profile-history-lines{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px 16px;color:#5A6B7C;font-size:12px}
+    .profile-history-lines b{font-weight:500;color:#1A1A1A}.profile-history-line.changed{background:#E8F0FE;border-radius:7px;padding:3px 5px;margin:-3px -5px}
+    .profile-history-line.changed b{color:#4A90D9}
+    .profile-all-history{display:block;margin:10px auto 0;border:0;background:transparent;color:#4A90D9;font-size:12px;font-weight:500;cursor:pointer}
+    .profile-editor-screen{margin-bottom:24px}.profile-editor-photo-row{display:flex;gap:14px;align-items:center;margin-bottom:14px}
+    .profile-editor-screen .profile-avatar{width:78px;height:78px;flex-basis:78px}
+    .profile-footer-zone{border-top:1px solid #E8ECF0;padding-top:20px;margin-top:8px;text-align:left}
+    .profile-disclaimer{font-size:10px;line-height:1.45;color:#A0AEC0;margin-bottom:14px}.profile-delete-btn{width:100%;border:0;background:#FDEDEC;color:#E74C3C;border-radius:12px;padding:12px 14px;font-size:13px;font-weight:500;cursor:pointer}.profile-version{text-align:center;font-size:10px;color:#C5CDD5;margin-top:14px}
+    .profile-history-modal-card{max-width:720px}.profile-history-modal-card .profile-history-list{margin-top:14px}
+    .profile-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}.profile-detail-row{background:#F8FAFC;border-radius:8px;padding:10px}.profile-detail-row small{display:block;font-size:10px;color:#8E98A3;margin-bottom:4px}.profile-detail-row b{font-size:13px;color:#1A1A1A}
+    @media(max-width:720px){#view-profile{padding-left:11px;padding-right:11px}.profile-tile-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.profile-history-lines{grid-template-columns:1fr 1fr}}
+    @media(max-width:520px){#view-profile{padding-left:11px;padding-right:11px}.profile-tile-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.profile-plan-grid{grid-template-columns:1fr 1fr}.profile-history-lines{grid-template-columns:1fr}.profile-hero-content{gap:14px}.profile-name{font-size:19px}}
   </style>
 </head>
 <body><div id="toast" class="toast" role="status" aria-live="polite"></div>
@@ -449,29 +499,52 @@
     </section>
 
     <section id="view-profile" class="view">
-      <div class="card profile-summary-card">
-        <div class="profile-summary-modern">
-          <div id="profilePhotoPreview" class="profile-photo-placeholder profile-avatar-large">VS</div>
-          <div class="profile-summary-main">
-            <div id="profileSummaryName" class="profile-summary-name">Профиль</div>
-            <div id="profileSummaryEmail" class="profile-summary-email"></div>
-            <div class="profile-summary-meta">
-              <div><span class="summary-icon">▣</span><span><small>Дата регистрации</small><b id="profileSummaryDate">—</b></span></div>
-              <i></i>
-              <div><span class="summary-icon">♀</span><span><small>Пол</small><b id="profileSummaryGender">—</b></span></div>
-            </div>
+      <div class="profile-zone profile-hero-zone">
+        <div class="profile-hero-content">
+          <div id="profilePhotoPreview" class="profile-avatar profile-avatar-placeholder">👤</div>
+          <div class="profile-hero-main">
+            <div id="profileSummaryName" class="profile-name">Профиль</div>
+            <button class="profile-edit-link" id="editProfile" type="button">✎ Редактировать</button>
+            <div id="profileSummaryEmail" class="profile-email"></div>
+            <div class="profile-registration">Дата регистрации: <span id="profileSummaryDate">—</span></div>
           </div>
-          <button class="btn primary profile-summary-action" id="editProfile" type="button">✎&nbsp; Внести данные профиля</button>
         </div>
       </div>
 
-      <div id="profileEditor" class="hidden">
+      <div class="profile-zone">
+        <div class="profile-section-title">📏 Мои параметры</div>
+        <div id="profileAnthroGrid" class="profile-tile-grid"></div>
+      </div>
+
+      <div class="profile-zone">
+        <div class="profile-section-title">🥗 План питания</div>
+        <div class="profile-plan-grid">
+          <div id="profileActivityTile" class="profile-tile profile-plan-half"></div>
+          <div id="profileStepsTile" class="profile-tile profile-plan-half"></div>
+          <div id="profileDietTile" class="profile-tile profile-plan-full"></div>
+        </div>
+      </div>
+
+      <div id="profileVolumesZone" class="profile-zone profile-volumes-zone hidden">
+        <details id="profileVolumesDetails">
+          <summary>📐 Объемы тела</summary>
+          <div id="profileVolumesGrid" class="profile-volume-grid"></div>
+        </details>
+      </div>
+
+      <div class="profile-zone profile-history-zone">
+        <div class="profile-section-title">📜 История параметров</div>
+        <div id="profileHistoryList" class="profile-history-list"></div>
+        <button type="button" class="profile-all-history hidden" id="profileAllHistory">📥 Все записи <span id="profileAllHistoryCount"></span></button>
+      </div>
+
+      <div id="profileEditor" class="hidden profile-editor-screen">
         <div class="card">
-          <div class="onboarding-title">👤 Профиль</div>
-          <div class="note onboarding-note profile-editor-note">Заполни данные профиля. После регистрации изменяются только целевой вес, цель, активность, средние шаги и тип питания. Остальные данные остаются исходными.</div>
+          <div class="onboarding-title">👤 Редактирование профиля</div>
+          <div class="note onboarding-note profile-editor-note">После первой регистрации исходные данные остаются фиксированными. Изменяются целевой вес, цель, активность, средние шаги и тип питания.</div>
           <div id="profileChangeDateWrap" class="profile-change-date hidden"><label for="profileChangeDate">Дата изменения целей и параметров</label><input id="profileChangeDate" type="date"><div class="muted" style="font-size:.68rem;margin-top:4px">С этой даты новые значения будут использоваться в расчётах и истории.</div></div>
-          <div style="display:flex;gap:14px;align-items:center;margin-bottom:14px">
-            <div id="profilePhotoPreviewEditor" class="profile-photo-placeholder">VS</div>
+          <div class="profile-editor-photo-row">
+            <div id="profilePhotoPreviewEditor" class="profile-avatar profile-avatar-placeholder">👤</div>
             <div class="field" style="flex:1;margin:0"><label>Фото</label><label class="file-btn" for="profilePhoto">Загрузить фото</label><input id="profilePhoto" class="file-upload" type="file" accept="image/*"></div>
           </div>
           <div class="grid2">
@@ -506,18 +579,26 @@
         </div>
       </div>
 
-      <div class="card profile-history-card">
-        <div class="section-heading"><div><div class="title">↶&nbsp; История параметров</div><div class="note history-intro">Каждое сохранение изменённых вводных фиксируется отдельной записью. Новые параметры применяются с указанной даты.</div></div></div>
-        <div id="profileHistoryList" class="profile-history-list"></div>
+      <div class="profile-zone profile-footer-zone">
+        <div class="profile-disclaimer">⚠️ Расчёты ориентировочные и не являются медицинской диагностикой. % жира по формулам — это оценка, а не измерение.</div>
+        <button class="profile-delete-btn" id="resetData" type="button">🗑 Удалить все данные</button>
+        <div class="profile-version">FormulaVS — v2.15.3</div>
       </div>
 
-      <div class="card registration-snapshot-card">
-        <div class="title">📌&nbsp; Данные на дату регистрации</div>
-        <div id="registrationSnapshot"></div>
+      <div class="modal" id="profileHistoryModal" aria-hidden="true">
+        <div class="modal-card profile-history-modal-card">
+          <button class="modal-close" id="profileHistoryModalClose" type="button">×</button>
+          <div class="onboarding-title">📜 Все записи истории</div>
+          <div id="profileHistoryModalBody"></div>
+        </div>
       </div>
-
-      <div class="note" style="margin-top:10px">Дата регистрации фиксируется один раз при первой регистрации и больше не изменяется. Данные остаются в твоём ЛК.</div>
-      <button class="btn danger" id="resetData" style="margin-top:10px">Удалить всё</button>
+      <div class="modal" id="profileHistoryDetailModal" aria-hidden="true">
+        <div class="modal-card profile-history-modal-card">
+          <button class="modal-close" id="profileHistoryDetailClose" type="button">×</button>
+          <div class="onboarding-title" id="profileHistoryDetailTitle">Параметры</div>
+          <div id="profileHistoryDetailBody"></div>
+        </div>
+      </div>
     </section>
   </main>
   <nav class="bottom-nav" id="bottomNav">
@@ -1112,29 +1193,46 @@
     if($('profileChangeDate')){ $('profileChangeDate').min=p.registrationDate||todayStr(); $('profileChangeDate').max=todayStr(); }
     $('profileChangeDateWrap')?.classList.toggle('hidden',!saved);
     if($('registrationDate')){ $('registrationDate').max=todayStr(); $('registrationDate').readOnly=true; }
-    setFieldValue('name',p.name); setFieldValue('email',p.email);
-    setFieldValue('dietType',p.dietType||'mediterranean');
+    setFieldValue('name',p.name); setFieldValue('email',p.email); setFieldValue('dietType',p.dietType||'mediterranean');
     setFieldValue('gender',p.gender||'female'); setFieldValue('birth',p.birth); setFieldValue('height',p.height);
     setFieldValue('profileWeight',p.weight); setFieldValue('profileSteps',p.steps||''); setFieldValue('profileTarget',p.target); setFieldValue('profileGoal',p.goal||'maintain'); setFieldValue('profileActivity',p.activity||'1.2');
     const bm=p.baseMeasurements||{};
     const fields=$('profileMeasurementFields');
     if(fields) fields.innerHTML=MEASUREMENTS.map(([k,label])=>`<div class="field"><label>${label}</label><input id="profile_m_${k}" type="number" step=".1" min="1" max="300" value="${esc(bm[k]??'')}" ${saved?'disabled':''}></div>`).join('');
-    // После первой регистрации неизменяемыми становятся исходные данные.
-    // Пользователь может редактировать только 4 динамических параметра:
-    // цель, активность, средние шаги и тип питания.
-    ['name','email','gender','birth','height','profileWeight','profilePhoto'].forEach(id=>{
-      const el=$(id); if(el) el.disabled=saved;
-    });
-    const photo=p.photo?`<img src="${esc(p.photo)}" class="profile-photo profile-avatar-large">`:'VS';
-    const pp=$('profilePhotoPreview'); if(pp){pp.innerHTML=photo;pp.className=p.photo?'profile-photo profile-avatar-large':'profile-photo-placeholder profile-avatar-large';}
-    const pe=$('profilePhotoPreviewEditor'); if(pe){pe.innerHTML=photo;pe.className=p.photo?'profile-photo':'profile-photo-placeholder';}
-    const sn=$('profileSummaryName'); if(sn) sn.textContent=p.name||'Профиль';
-    const se=$('profileSummaryEmail'); if(se) se.textContent=p.email||'';
-    const sd=$('profileSummaryDate'); if(sd) sd.textContent=p.registrationDate?fmt(p.registrationDate):'—';
-    const sg=$('profileSummaryGender'); if(sg) sg.textContent=p.gender==='male'?'Мужской':p.gender==='female'?'Женский':'—';
+    ['name','email','gender','birth','height','profileWeight','profilePhoto'].forEach(id=>{const el=$(id);if(el)el.disabled=saved;});
+    const photo=p.photo?`<img src="${esc(p.photo)}" class="profile-avatar">`:'👤';
+    const pp=$('profilePhotoPreview');if(pp){pp.innerHTML=photo;pp.className=p.photo?'profile-avatar':'profile-avatar profile-avatar-placeholder';}
+    const pe=$('profilePhotoPreviewEditor');if(pe){pe.innerHTML=photo;pe.className=p.photo?'profile-avatar':'profile-avatar profile-avatar-placeholder';}
+    const sn=$('profileSummaryName');if(sn)sn.textContent=p.name||'Профиль';
+    const se=$('profileSummaryEmail');if(se)se.textContent=p.email||'';
+    const sd=$('profileSummaryDate');if(sd)sd.textContent=p.registrationDate?fmt(p.registrationDate):'—';
     $('profileEditor')?.classList.toggle('hidden',saved);
-    $('editProfile')?.classList.toggle('hidden',!saved);
-    renderDietInfo(); renderRegistrationSnapshot(); renderProfileHistory();
+    renderProfileDashboard();
+    renderDietInfo();
+    renderProfileHistory();
+  }
+
+  function profileActivityLabel(v){return ({'1.2':'Минимальная','1.375':'Низкая','1.55':'Умеренная','1.725':'Высокая','1.9':'Очень высокая'})[v]||'—';}
+  function profileGoalLabel(v){return ({lose:'Снизить вес',maintain:'Поддержка веса',gain:'Набрать вес'})[v]||'—';}
+  function profileCurrentMeasurements(){
+    const dates=Object.keys(state.measurements||{}).filter(d=>d<=todayStr()).sort();
+    return dates.length?state.measurements[dates.at(-1)]:null;
+  }
+  function renderProfileDashboard(){
+    const p=state.profile;
+    const grid=$('profileAnthroGrid');
+    if(grid){
+      const ageVal=age(p.birth);
+      const gender=p.gender==='male'?'Мужской':p.gender==='female'?'Женский':'—';
+      const tiles=[['Рост',p.height?`${p.height} см`:'—'],['Вес',p.weight?`${p.weight} кг`:'—'],['Целевой вес',p.target?`${p.target} кг`:'—'],['Возраст',ageVal!=null?`${ageVal} лет`:'—'],['Пол',gender],['Цель',profileGoalLabel(p.goal)]];
+      grid.innerHTML=tiles.map(([l,v])=>`<div class="profile-tile"><div class="profile-tile-label">${l}</div><div class="profile-tile-value">${esc(v)}</div></div>`).join('');
+    }
+    const at=$('profileActivityTile');if(at)at.innerHTML=`<div class="profile-tile-label">Активность</div><div class="profile-tile-value profile-plan-value"><span class="profile-plan-icon">🚶‍♀️</span>${esc(profileActivityLabel(p.activity))}</div>`;
+    const st=$('profileStepsTile');if(st)st.innerHTML=`<div class="profile-tile-label">Средние шаги/день</div><div class="profile-tile-value">${p.steps?Number(p.steps).toLocaleString('ru-RU'):'—'}</div>`;
+    const dt=$('profileDietTile');const d=DIET_INFO[p.dietType||'mediterranean'];if(dt)dt.innerHTML=`<div class="profile-tile-label">Тип питания</div><div class="profile-tile-value profile-plan-value"><span class="profile-plan-icon">🥗</span>${esc(d?.name||'—')}</div>`;
+    const zone=$('profileVolumesZone'),vg=$('profileVolumesGrid'),lm=profileCurrentMeasurements();
+    const vals=MEASUREMENTS.map(([k,label])=>[label,n(lm?.[k]??p.baseMeasurements?.[k])]).filter(([,v])=>v!=null);
+    if(zone&&vg){zone.classList.toggle('hidden',vals.length===0);vg.innerHTML=vals.map(([l,v])=>`<div class="profile-volume-item"><span>${esc(l)}</span><b>${v} см</b></div>`).join('');}
   }
 
   function renderDietInfo(){
@@ -1179,43 +1277,43 @@
   }
 
   function renderProfileHistory(){
-    const list=$('profileHistoryList'); if(!list)return;
+    const list=$('profileHistoryList');if(!list)return;
     const history=[...state.profileHistory].sort((a,b)=>b.date.localeCompare(a.date));
-    if(!history.length){ list.innerHTML='<div class="note">История изменений пока пуста.</div>'; return; }
-    const activityLabels={'1.2':'Минимальная','1.375':'Низкая','1.55':'Умеренная','1.725':'Высокая','1.9':'Очень высокая'};
+    if(!history.length){list.innerHTML='<div class="note">История изменений пуста. Ваши первые параметры появятся здесь.</div>';$('profileAllHistory')?.classList.add('hidden');return;}
     const goalLabels={lose:'Снизить вес',maintain:'Поддержка веса',gain:'Набрать вес'};
-    const expanded=!!state.ui.profileHistoryExpanded;
-    const visible=expanded?history:history.slice(0,5);
+    const activityLabels={'1.2':'Минимальная','1.375':'Низкая','1.55':'Умеренная','1.725':'Высокая','1.9':'Очень высокая'};
     const same=(a,b)=>String(a??'')===String(b??'');
-    list.innerHTML=visible.map((h,idx)=>{
+    const visible=history.slice(0,3);
+    const makeCard=(h,idx)=>{
       const prev=history[idx+1];
-      const changed={
-        target:!!prev&&!same(h.target,prev.target),
-        goal:!!prev&&!same(h.goal,prev.goal),
-        activity:!!prev&&!same(h.activity,prev.activity),
-        steps:!!prev&&!same(h.steps,prev.steps),
-        dietType:!!prev&&!same(h.dietType,prev.dietType)
-      };
+      const changed={target:!!prev&&!same(h.target,prev.target),goal:!!prev&&!same(h.goal,prev.goal),activity:!!prev&&!same(h.activity,prev.activity),steps:!!prev&&!same(h.steps,prev.steps),dietType:!!prev&&!same(h.dietType,prev.dietType)};
       const steps=h.steps!=null&&h.steps!==''?Number(h.steps).toLocaleString('ru-RU'):'—';
-      const isCurrent=idx===0;
-      const metric=(key,icon,label,value)=>`<div class="history-metric${changed[key]?' changed':''}" title="${changed[key]?'Изменено по сравнению с предыдущей записью':''}"><span class="history-icon ${key==='target'?'icon-target':key==='goal'?'icon-goal':key==='activity'?'icon-activity':key==='steps'?'icon-steps':'icon-diet'}">${icon}</span><div><small>${label}</small><b>${value}</b></div></div>`;
-      return `<div class="profile-history-entry">
-        <div class="history-date-col"><strong>${fmt(h.date)}</strong><span>${h.time||''}</span>${isCurrent?'<em>Текущая</em>':''}</div>
-        <div class="history-data-card">
-          <div class="history-top-grid history-top-grid-dynamic">
-            ${metric('target','🎯','Целевой вес',h.target!==''&&h.target!=null?`${h.target} кг`:'—')}
-            ${metric('goal','◎','Цель',goalLabels[h.goal]||'—')}
-            ${metric('activity','⌁','Активность',activityLabels[h.activity]||h.activity||'—')}
-            ${metric('steps','♧','Шаги / день',steps)}
-            ${metric('dietType','🍴','Тип питания',esc((DIET_INFO[h.dietType]||{}).name||h.dietType||'—'))}
-          </div>
-        </div>
-      </div>`;
-    }).join('');
-    if(history.length>5){
-      list.innerHTML+=`<button type="button" class="history-more" id="historyMore">${expanded?'Свернуть':'Показать ещё'} <span>${expanded?'⌃':'⌄'}</span></button>`;
-      $('historyMore')?.addEventListener('click',()=>{state.ui.profileHistoryExpanded=!expanded;renderProfileHistory();});
-    }
+      const current=idx===0;
+      const line=(key,label,val)=>`<div class="profile-history-line ${changed[key]?'changed':''}">${label}: <b>${val}</b></div>`;
+      return `<div class="profile-history-entry ${current?'current':''}" data-history-date="${esc(h.date)}"><div class="profile-history-card"><div class="profile-history-head"><div class="profile-history-date">${current&&h.date===todayStr()?'Сегодня, ':''}${fmt(h.date)}<span class="profile-history-time">${h.time||''}</span></div>${current?'<span class="profile-current-badge">✓ Текущая</span>':''}</div><div class="profile-history-lines">${line('target','Целевой вес',h.target!==''&&h.target!=null?`${h.target} кг`:'—')}${line('goal','Цель',goalLabels[h.goal]||'—')}${line('activity','Активность',activityLabels[h.activity]||'—')}${line('steps','Шаги',steps)}${line('dietType','Питание',esc((DIET_INFO[h.dietType]||{}).name||h.dietType||'—'))}</div></div></div>`;
+    };
+    list.innerHTML=visible.map(makeCard).join('');
+    list.querySelectorAll('.profile-history-entry').forEach(el=>el.addEventListener('click',()=>openProfileHistoryDetail(el.dataset.historyDate)));
+    const allBtn=$('profileAllHistory');if(allBtn){allBtn.classList.toggle('hidden',history.length<=1);$('profileAllHistoryCount').textContent=`(${history.length})`;allBtn.onclick=()=>openProfileHistoryModal();}
+  }
+  function historyByDate(date){return state.profileHistory.find(h=>h.date===date);}
+  function openProfileHistoryDetail(date){
+    const h=historyByDate(date);if(!h)return;
+    const goalLabels={lose:'Снизить вес',maintain:'Поддержка веса',gain:'Набрать вес'};const activityLabels={'1.2':'Минимальная','1.375':'Низкая','1.55':'Умеренная','1.725':'Высокая','1.9':'Очень высокая'};
+    const body=$('profileHistoryDetailBody');if(!body)return;
+    const rows=[['Целевой вес',h.target!==''&&h.target!=null?`${h.target} кг`:'—'],['Цель',goalLabels[h.goal]||'—'],['Активность',activityLabels[h.activity]||'—'],['Средние шаги / день',h.steps!==''&&h.steps!=null?Number(h.steps).toLocaleString('ru-RU'):'—'],['Тип питания',(DIET_INFO[h.dietType]||{}).name||h.dietType||'—']];
+    $('profileHistoryDetailTitle').textContent=`Параметры · ${fmt(h.date)}`;body.innerHTML=`<div class="profile-detail-grid">${rows.map(r=>`<div class="profile-detail-row"><small>${r[0]}</small><b>${esc(r[1])}</b></div>`).join('')}</div>`;
+    $('profileHistoryDetailModal').classList.add('show');$('profileHistoryDetailModal').setAttribute('aria-hidden','false');
+  }
+  function openProfileHistoryModal(){
+    const body=$('profileHistoryModalBody');if(!body)return;
+    const history=[...state.profileHistory].sort((a,b)=>b.date.localeCompare(a.date));
+    const list=$('profileHistoryList');
+    const old=list.innerHTML;
+    const fake=document.createElement('div');
+    const goalLabels={lose:'Снизить вес',maintain:'Поддержка веса',gain:'Набрать вес'};const activityLabels={'1.2':'Минимальная','1.375':'Низкая','1.55':'Умеренная','1.725':'Высокая','1.9':'Очень высокая'};
+    body.innerHTML=`<div class="profile-history-list">${history.map((h,idx)=>{const steps=h.steps!=null&&h.steps!==''?Number(h.steps).toLocaleString('ru-RU'):'—';return `<div class="profile-history-entry ${idx===0?'current':''}"><div class="profile-history-card"><div class="profile-history-head"><div class="profile-history-date">${idx===0&&h.date===todayStr()?'Сегодня, ':''}${fmt(h.date)}<span class="profile-history-time">${h.time||''}</span></div>${idx===0?'<span class="profile-current-badge">✓ Текущая</span>':''}</div><div class="profile-history-lines"><div>Целевой вес: <b>${h.target!==''&&h.target!=null?esc(h.target)+' кг':'—'}</b></div><div>Цель: <b>${goalLabels[h.goal]||'—'}</b></div><div>Активность: <b>${activityLabels[h.activity]||'—'}</b></div><div>Шаги: <b>${steps}</b></div><div>Питание: <b>${esc((DIET_INFO[h.dietType]||{}).name||h.dietType||'—')}</b></div></div></div></div>`}).join('')}</div>`;
+    $('profileHistoryModal').classList.add('show');$('profileHistoryModal').setAttribute('aria-hidden','false');
   }
 
   function renderHome(){
@@ -1767,6 +1865,10 @@
 
     $('dietModalClose')?.addEventListener('click',()=>$('dietModal').classList.remove('show'));
     $('dietModal')?.addEventListener('click',e=>{if(e.target.id==='dietModal')$('dietModal').classList.remove('show');});
+    $('profileHistoryModalClose')?.addEventListener('click',()=>{$('profileHistoryModal').classList.remove('show');$('profileHistoryModal').setAttribute('aria-hidden','true');});
+    $('profileHistoryModal')?.addEventListener('click',e=>{if(e.target.id==='profileHistoryModal')$('profileHistoryModal').classList.remove('show');});
+    $('profileHistoryDetailClose')?.addEventListener('click',()=>{$('profileHistoryDetailModal').classList.remove('show');$('profileHistoryDetailModal').setAttribute('aria-hidden','true');});
+    $('profileHistoryDetailModal')?.addEventListener('click',e=>{if(e.target.id==='profileHistoryDetailModal')$('profileHistoryDetailModal').classList.remove('show');});
 
     $('resetData').addEventListener('click',()=>{
       if(!confirm('Подтвердить удаление? Данные не смогут быть восстановлены')) return;
@@ -1894,7 +1996,7 @@
     load();renderMeasurementFields();bind();renderProfileFields();renderHome();renderJournal();renderAnalytics();if(!state.profile.registrationDate)navigate('profile');else navigate('home');
     setInterval(()=>{if(todayStr()!==state._lastDay){state._lastDay=todayStr();rolloverWeek();state.ui.habitDate=todayStr();state.ui.journalDate=todayStr();save();renderHome();renderJournal();renderWeek();renderAnalytics();}},30000);
     if ('serviceWorker' in navigator) {
-      const APP_VERSION='2.14.2';
+      const APP_VERSION='2.15.3';
       let reloadScheduled = false;
       function reloadOnceAfterUpdate(){
         if(reloadScheduled) return;
