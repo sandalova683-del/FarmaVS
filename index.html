@@ -317,6 +317,10 @@
     [data-theme="dark"] #view-profile{background:var(--bg);color:var(--ink)}
     [data-theme="dark"] .profile-tile{background:var(--surface)}
     [data-theme="dark"] .profile-name,[data-theme="dark"] .profile-tile-value{color:var(--ink)}
+    /* Системная тема остаётся привязанной к ОС, но имеет собственный мягкий контраст,
+       поэтому визуально не выглядит точной копией явно выбранной светлой/тёмной темы. */
+    [data-theme-mode="system"][data-theme="light"]{--bg:#f1f4f8;--surface:#f6f8fb;--line:#dfe5ed;--shadow:0 8px 28px rgba(15,23,42,.07)}
+    [data-theme-mode="system"][data-theme="dark"]{--bg:#0e1422;--card:#151c2b;--surface:#1a2333;--line:#2b374b;--shadow:0 12px 30px rgba(0,0,0,.30)}
     .quick-nav{position:relative!important;background:var(--accent)!important;color:#fff!important;transform:translateY(-7px);box-shadow:0 7px 18px rgba(37,99,235,.25)}
     .quick-nav .nav-icon{font-size:24px!important}
     .app-settings-card{margin-top:8px;display:none}.app-settings-card.show{display:block}
@@ -331,6 +335,29 @@
     .focus-list{display:grid;gap:7px;margin-top:12px}.focus-item{display:flex;justify-content:space-between;gap:10px;padding:9px 10px;background:var(--surface);border-radius:13px}.focus-item span{color:var(--muted)}.focus-item b{font-size:.78rem}
     .weekly-review{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:13px}.weekly-review-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}.weekly-review-grid div{padding:9px;border:1px solid var(--line);border-radius:12px;background:var(--card)}.weekly-review-grid small{display:block;color:var(--muted);font-size:.66rem}.weekly-review-grid b{display:block;margin-top:2px}
     @media(max-width:560px){.quick-grid{grid-template-columns:repeat(2,1fr)}.settings-row{align-items:flex-start}.settings-row select{min-width:110px}.weekly-review-grid{grid-template-columns:1fr 1fr}}
+
+    /* FormulaVS 3.0.1 refinements */
+    .coach-actions .coach-btn{width:auto;flex:1;background:#fff;color:#111827;border:1px solid rgba(255,255,255,.18);font-size:.78rem;padding:10px 12px;white-space:nowrap}
+    .coach-actions .coach-btn:last-child{background:rgba(255,255,255,.10);color:#fff}
+    #profileEditor.hidden{display:none!important}
+    .profile-editor-screen{display:block}
+    [data-theme="dark"] .profile-hero-zone,[data-theme="dark"] .profile-footer-zone{border-color:var(--line)}
+    [data-theme="dark"] #view-profile{background:var(--bg);color:var(--ink)}
+    [data-theme="dark"] .profile-tile,[data-theme="dark"] .profile-detail-row,[data-theme="dark"] .profile-change-date,[data-theme="dark"] .diet-card{background:var(--surface);color:var(--ink);border-color:var(--line)}
+    [data-theme="dark"] .profile-section-title,[data-theme="dark"] .profile-tile-label,[data-theme="dark"] .profile-email,[data-theme="dark"] .profile-registration,[data-theme="dark"] .profile-disclaimer,[data-theme="dark"] .profile-version{color:var(--muted)}
+    [data-theme="dark"] .profile-name,[data-theme="dark"] .profile-tile-value,[data-theme="dark"] .profile-detail-row b{color:var(--ink)}
+    [data-theme="dark"] .profile-editable-field input,[data-theme="dark"] .profile-editable-field select,[data-theme="dark"] .profile-change-date input{background:#111827!important;color:var(--ink)!important;border-color:#334155;box-shadow:none}
+    [data-theme="dark"] .profile-editable-field input:focus,[data-theme="dark"] .profile-editable-field select:focus{background:#0f172a!important;border-color:#60a5fa;box-shadow:0 0 0 3px rgba(96,165,250,.14)}
+    [data-theme="dark"] .modal-card{background:var(--card);color:var(--ink)}
+    [data-theme="dark"] .modal-close{background:var(--surface);color:var(--ink)}
+    [data-theme="dark"] .profile-delete-btn{background:#3a1c22;color:#fca5a5}
+    [data-theme="dark"] .file-btn,[data-theme="dark"] .diet-help{background:#172554;color:#bfdbfe;border-color:#29466f}
+    [data-theme="dark"] .home-advice-card,[data-theme="dark"] .home-kbju-note,[data-theme="dark"] .home-note,[data-theme="dark"] .home-action-widget,[data-theme="dark"] .weekly-review-grid div{background:var(--surface);color:var(--ink);border-color:var(--line)}
+    [data-theme="dark"] .row,[data-theme="dark"] .table th,[data-theme="dark"] .table td{border-color:var(--line)}
+    [data-theme="dark"] .journal-calc,[data-theme="dark"] .check{background:var(--surface)!important;color:var(--ink);border-color:var(--line)!important}
+    [data-theme="dark"] .day{background:#20293a;color:var(--ink)}
+    [data-theme="dark"] .day.p0{background:#48202a}[data-theme="dark"] .day.p1{background:#3f2d1f}[data-theme="dark"] .day.p2{background:#3e371c}[data-theme="dark"] .day.p3{background:#173522}[data-theme="dark"] .day.p4{background:#18502c}
+    @media(max-width:560px){.coach-actions{gap:7px}.coach-actions .coach-btn{font-size:.68rem;padding:9px 8px;border-radius:12px}}
   </style>
 </head>
 <body><div id="toast" class="toast" role="status" aria-live="polite"></div>
@@ -558,7 +585,7 @@
       <div class="profile-zone profile-footer-zone">
         <div class="profile-disclaimer">⚠️ Расчёты ориентировочные и не являются медицинской диагностикой. % жира по формулам — это оценка, а не измерение.</div>
         <button class="profile-delete-btn" id="resetData" type="button">🗑 Удалить все данные</button>
-        <div class="profile-version">FormulaVS — v2.15.4</div>
+        <div class="profile-version">FormulaVS — v3.0.1</div>
       </div>
 
       <div class="modal" id="profileHistoryModal" aria-hidden="true">
@@ -579,7 +606,7 @@
   </main>
   <nav class="bottom-nav" id="bottomNav">
     <button class="bottom-tab active" data-tab="home"><span class="nav-icon">⌂</span>Главная</button>
-    <button class="bottom-tab" data-tab="trackers"><span class="nav-icon">✓</span>Трекеры</button><button class="quick-nav" id="quickAdd" aria-label="Быстро добавить"><span class="nav-icon">＋</span>Добавить</button>
+    <button class="bottom-tab" data-tab="trackers"><span class="nav-icon">✓</span>Трекеры</button>
     <button class="bottom-tab" data-tab="analytics"><span class="nav-icon">⌁</span>Мой прогресс</button>
   </nav>
   <div class="card app-settings-card" id="appSettingsCard"><div class="title">⚙️ Настройки</div><div class="settings-row"><div><b>Тема</b><small>Системная, светлая или тёмная</small></div><select id="themeSelect"><option value="system">Системная</option><option value="light">Светлая</option><option value="dark">Тёмная</option></select></div><div class="settings-row"><div><b>Данные</b><small>Резервная копия и перенос между устройствами</small></div><button class="btn ghost settings-data-btn" id="openDataModal">Управление</button></div></div>
@@ -666,6 +693,8 @@
     if(!Array.isArray(state.weeklyGoals)) state.weeklyGoals=structuredClone(DEFAULT_WEEKLY);
     if(!state.ui || typeof state.ui!=='object') state.ui={};
     state.ui={...{month:todayStr().slice(0,7),habitDate:todayStr(),journalDate:todayStr(),analyticsDate:todayStr(),analyticsPeriod:'week',analyticsMetric:'weight',analyticsWeekStartDay:1,isProfileEditorOpen:false},...state.ui};
+    // Редактор профиля всегда закрыт после загрузки страницы и открывается только по кнопке «Редактировать».
+    state.ui.isProfileEditorOpen=false;
     if(!state.nutritionWeekly || typeof state.nutritionWeekly!=='object') state.nutritionWeekly={};
     for(const d of DEFAULT_DAILY) if(!state.dailyGoals.some(x=>x && x.id===d.id)) state.dailyGoals.unshift({...d});
     for(const w of DEFAULT_WEEKLY) if(!state.weeklyGoals.some(x=>x && x.id===w.id)) state.weeklyGoals.push({...w});
@@ -1942,6 +1971,7 @@
     let actual=theme;
     if(theme==='system') actual=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
     root.dataset.theme=actual;
+    root.dataset.themeMode=theme;
     const sel=$('themeSelect'); if(sel) sel.value=theme;
     state.ui.theme=theme;
   }
@@ -1964,20 +1994,12 @@
   }
   function renderV3HomeTop(){
     const host=$('homeContent'); if(!host || !state.profile.registrationDate) return;
-    const today=todayStr(), j=state.journal[today]||{}, nut=nutritionForDate(today), p=getFullProfileAt(today);
-    const steps=n(j.steps), water=n(j.water), kcal=n(j.calories), targetSteps=n(p.steps);
-    const missing=[];
-    if(targetSteps && (steps==null || steps<targetSteps)) missing.push(`<div class="focus-item"><span>Шаги</span><b>${steps!=null?Number(steps).toLocaleString('ru-RU'):'0'} / ${Number(targetSteps).toLocaleString('ru-RU')}</b></div>`);
-    if(nut?.waterL && (water==null || water<nut.waterL)) missing.push(`<div class="focus-item"><span>Вода</span><b>${water!=null?round(water,2):'0'} / ${round(nut.waterL,2)} л</b></div>`);
-    if(nut?.calories && (kcal==null || kcal<nut.calories*.85)) missing.push(`<div class="focus-item"><span>Калории</span><b>${kcal!=null?round(kcal,0):'0'} / ${round(nut.calories,0)} ккал</b></div>`);
+    const today=todayStr();
+
     const coach=coachInsight(); const streak=streakForGoals();
-    const focus=document.createElement('div'); focus.className='card home-focus'; focus.innerHTML=`<div class="focus-title">Сегодня</div><div class="focus-main">${esc(coach.title)}</div><div class="focus-sub">${esc(coach.text)}</div>${missing.length?`<div class="focus-list">${missing.slice(0,3).join('')}</div>`:''}`;
-    const first=host.firstElementChild; if(first) host.insertBefore(focus,first); else host.appendChild(focus);
-    const reviewStart=weekStartDate(today), reviewEnd=addDays(reviewStart,6), ws=weightValuesInRange(reviewStart,reviewEnd), avg=ws.length?round(ws.reduce((a,b)=>a+b.value,0)/ws.length,1):null, tr=trainingStats(reviewStart,reviewEnd), done=state.dailyGoals.reduce((sum,g)=>sum+Object.keys(state.dailyDone).filter(d=>d>=reviewStart&&d<=reviewEnd&&state.dailyDone[d]?.[g.id]).length,0), possible=state.dailyGoals.length*7, pct=possible?Math.round(done/possible*100):0;
-    const review=document.createElement('div'); review.className='card'; review.innerHTML=`<div class="title">📈 Ваша неделя</div><div class="weekly-review"><div class="note">Короткий обзор без лишней статистики.</div><div class="weekly-review-grid"><div><small>Средний вес</small><b>${avg!=null?avg+' кг':'—'}</b></div><div><small>Тренировки</small><b>${tr.total}</b></div><div><small>Цели</small><b>${pct}%</b></div></div></div>`;
-    host.appendChild(review);
-    const coachCard=document.createElement('div'); coachCard.className='card coach-card'; coachCard.innerHTML=`<div class="coach-kicker">FormulaVS Coach</div><h3>${esc(coach.title)}</h3><p>${esc(coach.text)}</p>${streak?`<div class="streak-pill">🔥 Серия целей: ${streak} дн.</div>`:''}<div class="coach-actions"><button class="btn ghost" style="background:#fff;color:#111827" onclick="navigate('trackers')">Отметить данные</button><button class="btn ghost" style="background:rgba(255,255,255,.1);color:#fff" onclick="navigate('analytics')">Посмотреть прогресс</button></div>`;
+    const coachCard=document.createElement('div'); coachCard.className='card coach-card'; coachCard.innerHTML=`<div class="coach-kicker">FormulaVS Coach</div><h3>${esc(coach.title)}</h3><p>${esc(coach.text)}</p>${streak?`<div class="streak-pill">🔥 Серия целей: ${streak} дн.</div>`:''}<div class="coach-actions"><button class="btn coach-btn" type="button" data-coach-nav="trackers">Отметить данные</button><button class="btn coach-btn" type="button" data-coach-nav="analytics">Посмотреть прогресс</button></div>`;
     host.appendChild(coachCard);
+    coachCard.querySelectorAll('[data-coach-nav]').forEach(btn=>btn.addEventListener('click',()=>navigate(btn.dataset.coachNav)));
   }
   const _renderHomeV3=renderHome;
   renderHome=function(){ _renderHomeV3(); renderV3HomeTop(); };
@@ -2004,7 +2026,7 @@
   function bindV3(){
     applyTheme(state.ui.theme||'system');
     $('themeSelect')?.addEventListener('change',e=>{state.ui.theme=e.target.value;save();applyTheme(e.target.value);});
-    $('quickAdd')?.addEventListener('click',openQuick); $('quickModalClose')?.addEventListener('click',closeQuick); $('quickModal')?.addEventListener('click',e=>{if(e.target.id==='quickModal')closeQuick();});
+$('quickModalClose')?.addEventListener('click',closeQuick); $('quickModal')?.addEventListener('click',e=>{if(e.target.id==='quickModal')closeQuick();});
     document.querySelectorAll('[data-quick]').forEach(b=>b.addEventListener('click',()=>quickAction(b.dataset.quick)));
     $('openDataModal')?.addEventListener('click',()=>{$('dataModal').classList.add('show');$('dataModal').setAttribute('aria-hidden','false');});
     $('dataModalClose')?.addEventListener('click',()=>{$('dataModal').classList.remove('show');$('dataModal').setAttribute('aria-hidden','true');});
