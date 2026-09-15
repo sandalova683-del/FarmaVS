@@ -1,0 +1,11 @@
+{
+  "name": "@formulavs/health",
+  "version": "4.0.0",
+  "description": "FormulaVS native health bridge for Apple HealthKit and Android Health Connect",
+  "main": "dist/plugin.cjs.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/esm/index.d.ts",
+  "files": ["dist", "ios", "android", "Package.swift", "FormulaVSHealth.podspec"],
+  "keywords": ["capacitor", "healthkit", "health-connect", "steps"],
+  "peerDependencies": { "@capacitor/core": "^8.0.0" }
+}

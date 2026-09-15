@@ -321,6 +321,7 @@
     #profileEditor.hidden{display:none!important}
     .profile-editor-screen{display:block}
     @media(max-width:560px){.coach-actions{gap:7px}.coach-actions .coach-btn{font-size:.68rem;padding:9px 8px;border-radius:12px}}
+    .health-sync-btn{margin-top:6px;border:1px solid #cfe0ff;background:#eef5ff;color:#2563eb;border-radius:11px;padding:7px 9px;font-size:.68rem;font-weight:750;width:100%;cursor:pointer}.health-sync-btn:disabled{opacity:.6;cursor:wait}.health-source{margin-top:5px;color:#94a3b8;font-size:.62rem;min-height:15px}.health-source.connected{color:#15803d}.health-source.error{color:#b91c1c}
   </style>
 </head>
 <body><div id="toast" class="toast" role="status" aria-live="polite"></div>
@@ -351,7 +352,7 @@
           <div class="field"><label>Жиры, г</label><input id="jFat" type="number" min="0" step=".1"></div>
           <div class="field"><label>Углеводы, г</label><input id="jCarbs" type="number" min="0" step=".1"></div>
           <div class="field"><label>Вода, мл</label><input id="jWater" type="number" min="0" step="50"></div>
-          <div class="field"><label>Шаги</label><input id="jSteps" type="number" min="0"></div>
+          <div class="field"><label>Шаги</label><input id="jSteps" type="number" min="0"><button id="syncSteps" type="button" class="health-sync-btn">↻ Получить из телефона</button><div id="stepsSource" class="health-source" aria-live="polite"></div></div>
           <div class="field"><label>Потраченные ккал</label><input id="jBurnedCalories" type="number" min="0"></div>
           <div class="field"><label>Тренировка</label><select id="jTrainingType"><option value="">Нет тренировки</option><option value="strength">Силовая</option><option value="cardio">Кардио</option></select></div>
           <div class="field"><label>Продолжительность, мин</label><input id="jTrainingMinutes" type="number" min="0" step="5" placeholder="Например, 45"></div>
@@ -573,17 +574,18 @@
     <button class="bottom-tab" data-tab="analytics"><span class="nav-icon">⌁</span>Мой прогресс</button>
   </nav>
   <div class="card app-settings-card" id="appSettingsCard"><div class="title">⚙️ Настройки</div><div class="settings-row"><div><b>Данные</b><small>Резервная копия и перенос между устройствами</small></div><button class="btn ghost settings-data-btn" id="openDataModal">Управление</button></div></div>
-  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v3.0.2</span></div>
+  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v4.0.0</span></div>
 </div>
   <div id="quickModal" class="modal" aria-hidden="true"><div class="modal-card quick-modal-card"><button class="modal-close" id="quickModalClose" aria-label="Закрыть">×</button><div class="onboarding-title">Быстро добавить</div><div class="quick-grid"><button data-quick="weight">⚖️<span>Вес</span></button><button data-quick="water">💧<span>Вода</span></button><button data-quick="steps">🚶<span>Шаги</span></button><button data-quick="calories">🍽<span>Калории</span></button><button data-quick="training">🏋️<span>Тренировка</span></button><button data-quick="measurement">📏<span>Замер</span></button></div></div></div>
   <div id="dataModal" class="modal" aria-hidden="true"><div class="modal-card"><button class="modal-close" id="dataModalClose" aria-label="Закрыть">×</button><div class="onboarding-title">Данные</div><div class="data-actions"><button class="btn secondary" id="exportData">Экспортировать JSON</button><label class="btn ghost" for="importData">Импортировать JSON</label><input id="importData" type="file" accept="application/json,.json" class="file-upload"><button class="btn danger" id="resetDataFromModal">Удалить все данные</button></div></div></div>
   <div id="dietModal" class="modal"><div class="modal-card"><button class="modal-close" id="dietModalClose">×</button><div id="dietModalTitle" class="onboarding-title"></div><div id="dietModalBody" style="color:#475569;line-height:1.55"></div></div></div>
 
+<script src="js/health-service.js"></script>
 <script>
 (() => {
   'use strict';
 
-  const APP_VERSION = '3.0.2';
+  const APP_VERSION = '4.0.0';
   const KEY = 'formavs_v2';
   const LEGACY_KEY = 'forma_v2';
   const todayStr = () => {
@@ -1246,7 +1248,7 @@
     const p=state.profile;
     const today=todayStr();
     const baseP=getFullProfileAt(today);
-    const currentWeight=latestRecordedWeightAtOrBefore(today);
+    const currentWeight=latestRecordedWeightAtOrBefore(today) ?? n(p.weight);
     const todayP={...baseP,weight:currentWeight};
     const nut=nutritionForDate(today);
     const comp=bodyComp(todayP);
@@ -1425,6 +1427,13 @@
     $('jFat').value=j.fat??'';
     $('jCarbs').value=j.carbs??'';
     $('jSteps').value=j.steps??'';
+    const stepsSource=$('stepsSource');
+    if(stepsSource){
+      if(j.stepsSource==='healthkit') { stepsSource.textContent=`Apple Health · ${j.stepsSyncedAt?new Date(j.stepsSyncedAt).toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'}):'автоматически'}`; stepsSource.className='health-source connected'; }
+      else if(j.stepsSource==='health_connect') { stepsSource.textContent=`Health Connect · ${j.stepsSyncedAt?new Date(j.stepsSyncedAt).toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'}):'автоматически'}`; stepsSource.className='health-source connected'; }
+      else if(j.steps!=null) { stepsSource.textContent='Введено вручную'; stepsSource.className='health-source'; }
+      else { stepsSource.textContent=''; stepsSource.className='health-source'; }
+    }
     $('jWater').value=j.water!=null?round(j.water*1000,0):'';
     let trainingType=j.trainingType||'';
     if(!trainingType && j.activity) trainingType='strength';
@@ -1892,6 +1901,8 @@
       if(d>todayStr())return alert('Нельзя вносить данные в будущее.');
       const j={};
       [['weight','jWeight'],['calories','jCalories'],['burnedCalories','jBurnedCalories'],['protein','jProtein'],['fat','jFat'],['carbs','jCarbs'],['steps','jSteps']].forEach(([k,id])=>{const v=n($(id).value);j[k]=v;});
+      if(j.steps!=null && !(state.journal[d]?.stepsSource==='healthkit'||state.journal[d]?.stepsSource==='health_connect')) j.stepsSource='manual';
+      if(j.steps==null) { j.stepsSource=null; j.stepsSyncedAt=null; }
       const waterMl=n($('jWater').value); j.water=waterMl!=null?waterMl/1000:null;
       j.trainingType=$('jTrainingType').value||null;
       j.trainingMinutes=n($('jTrainingMinutes').value);
@@ -1959,7 +1970,7 @@
     if(nut && steps!=null && p.steps && steps<Number(p.steps)*.55) return {title:'Главный фокус — активность',text:`До вашей цели ${Number(p.steps).toLocaleString('ru-RU')} шагов ещё есть запас. Спокойная прогулка — самый простой способ закрыть часть дефицита.`};
     if(nut && water!=null && nut.waterL && water<nut.waterL*.65) return {title:'Главный фокус — вода',text:`Сегодня отмечено ${round(water,2)} л при ориентире около ${round(nut.waterL,2)} л.`};
     if(nut && j.protein!=null && nut.proteinMinimum && n(j.protein)<nut.proteinMinimum*.7) return {title:'Обратите внимание на белок',text:`Белка ${round(j.protein,0)} г. Ориентир FormulaVS — не менее ${round(nut.proteinMinimum,0)} г.`};
-    return {title:'День идёт по плану',text:'Продолжайте отмечать данные. Чем полнее дневник, тем полезнее недельная аналитика.'};
+    return {title:'Дневник готов к обновлению',text:'Если вы уже внесли данные за день, сохраните их — FormulaVS обновит расчёты и прогресс.'};
   }
   function renderV3HomeTop(){
     const host=$('homeContent'); if(!host || !state.profile.registrationDate) return;
@@ -1983,7 +1994,7 @@
     if(kind==='measurement'){document.querySelector('.tracker-mode[data-mode="week"]')?.click();setTimeout(()=>$('mDate')?.focus(),80);}
   }
   function downloadJSON(){
-    const payload={app:'FormulaVS',appVersion:APP_VERSION,schemaVersion:3,exportedAt:new Date().toISOString(),data:state};
+    const payload={app:'FormulaVS',appVersion:APP_VERSION,schemaVersion:4,exportedAt:new Date().toISOString(),data:state};
     const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}), url=URL.createObjectURL(blob), a=document.createElement('a'); a.href=url; a.download=`formulavs-backup-${todayStr()}.json`; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url); toast('Резервная копия создана');
   }
   function importJSON(file){
@@ -2002,11 +2013,48 @@ $('quickModalClose')?.addEventListener('click',closeQuick); $('quickModal')?.add
     $('exportData')?.addEventListener('click',downloadJSON); $('importData')?.addEventListener('change',e=>importJSON(e.target.files?.[0]));
     $('resetDataFromModal')?.addEventListener('click',()=>{if(confirm('Удалить все локальные данные FormulaVS?')){localStorage.removeItem(KEY);localStorage.removeItem(LEGACY_KEY);location.reload();}});
   }
+  function bindHealthUI(){
+    const sync=$('syncSteps');
+    if(!sync) return;
+    const source=$('stepsSource');
+    const updateSource=(text,kind='')=>{ if(source){source.textContent=text||'';source.className='health-source'+(kind?' '+kind:'');} };
+    const refreshStatus=async()=>{
+      try{
+        const status=await window.FormulaVSHealth?.getStatus?.();
+        if(!status || status.status==='unavailable'){sync.textContent='↻ Получить из телефона';updateSource('Автоматические шаги доступны в мобильном приложении.');return;}
+        if(status.status==='not_connected'||status.status==='permission_required'){sync.textContent=status.platform==='ios'?'Подключить Apple Health':'Подключить Health Connect';updateSource('Доступ ещё не подключён.');return;}
+        sync.textContent='↻ Обновить шаги'; updateSource(status.platform==='ios'?'Источник: Apple Health':'Источник: Health Connect','connected');
+      }catch(_){ updateSource('Источник шагов пока недоступен.','error'); }
+    };
+    sync.addEventListener('click',async()=>{
+      sync.disabled=true; updateSource('Получаем шаги…');
+      try{
+        const result=await window.FormulaVSHealth.syncToday();
+        if(result?.value!=null){
+          const d=state.ui.journalDate||todayStr();
+          if(!state.journal[d]) state.journal[d]={};
+          state.journal[d].steps=Number(result.value);
+          state.journal[d].stepsSource=result.source||'health';
+          state.journal[d].stepsSyncedAt=result.syncedAt||new Date().toISOString();
+          save(); renderJournal(); renderHome(); renderAnalytics();
+          updateSource(`${result.sourceLabel||'Здоровье устройства'} · ${Number(result.value).toLocaleString('ru-RU')} шагов`,'connected');
+          toast('Шаги обновлены');
+        } else if(result?.status==='permission_required'){
+          updateSource('Разрешение на чтение шагов не предоставлено.','error');
+        } else {
+          updateSource('За выбранную дату данных о шагах нет.');
+        }
+      }catch(e){
+        updateSource(e?.message||'Не удалось получить шаги.','error');
+      }finally{sync.disabled=false;refreshStatus();}
+    });
+    refreshStatus();
+  }
   function init(){
-    load();renderMeasurementFields();bind();bindV3();renderProfileFields();renderHome();renderJournal();renderAnalytics();if(!state.profile.registrationDate)navigate('profile');else navigate('home');
+    load();renderMeasurementFields();bind();bindV3();bindHealthUI();renderProfileFields();renderHome();renderJournal();renderAnalytics();if(!state.profile.registrationDate)navigate('profile');else navigate('home');
     setInterval(()=>{if(todayStr()!==state._lastDay){state._lastDay=todayStr();rolloverWeek();state.ui.habitDate=todayStr();state.ui.journalDate=todayStr();save();renderHome();renderJournal();renderWeek();renderAnalytics();}},30000);
     if ('serviceWorker' in navigator) {
-      const APP_VERSION='3.0.2';
+      const APP_VERSION='4.0.0';
       let reloadScheduled = false;
       function reloadOnceAfterUpdate(){
         if(reloadScheduled) return;

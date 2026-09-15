@@ -1,6 +1,6 @@
-const APP_CACHE = 'formulavs-shell-v3.0.2';
-const APP_VERSION = '3.0.2';
-const CORE_ASSETS = ['./','./index.html','./manifest.webmanifest','./icon.svg','./icon-48.png','./icon-180.png','./icon-192.png','./icon-512.png','./version.json'];
+const APP_CACHE = 'formulavs-shell-v4.0.0';
+const APP_VERSION = '4.0.0';
+const CORE_ASSETS = ['./','./index.html','./js/health-service.js','./manifest.webmanifest','./icon.svg','./icon-48.png','./icon-180.png','./icon-192.png','./icon-512.png','./version.json'];
 
 self.addEventListener('install', event => {
   event.waitUntil(
@@ -29,41 +29,17 @@ async function networkFirst(request) {
     return response;
   } catch (_) {
     const cached = await caches.match(request);
-    return cached || caches.match('./index.html');
-  }
-}
-
-async function cacheFirst(request) {
-  const cached = await caches.match(request);
-  if (cached) return cached;
-  try {
-    const response = await fetch(request);
-    if (response && response.ok) {
-      const cache = await caches.open(APP_CACHE);
-      await cache.put(request, response.clone());
-    }
-    return response;
-  } catch (_) {
-    return caches.match('./index.html');
+    if (cached) return cached;
+    throw _;
   }
 }
 
 self.addEventListener('fetch', event => {
-  if (event.request.method !== 'GET') return;
-  const url = new URL(event.request.url);
-  if (url.origin !== self.location.origin) return;
-
-  if (url.pathname.endsWith('/version.json') || url.pathname.endsWith('/index.html') || url.pathname.endsWith('/sw.js') || url.pathname.endsWith('/manifest.webmanifest')) {
-    event.respondWith(networkFirst(event.request));
-    return;
-  }
-  if (event.request.mode === 'navigate') {
-    event.respondWith(networkFirst(new Request('./index.html', {method:'GET', headers:event.request.headers})));
-    return;
-  }
-  event.respondWith(cacheFirst(event.request));
+  const req = event.request;
+  if (req.method !== 'GET') return;
+  event.respondWith(networkFirst(req));
 });
 
 self.addEventListener('message', event => {
-  if (event.data && event.data.type === 'SKIP_WAITING') self.skipWaiting();
+  if (event.data?.type === 'SKIP_WAITING') self.skipWaiting();
 });

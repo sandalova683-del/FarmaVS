@@ -1,34 +1,16 @@
-# Changelog
+# FormulaVS changelog
 
-## 3.0.2 — 2026-09-11
-- Убраны все варианты тем: приложение работает только в светлой теме.
-- Убраны настройки темы.
-- На главной вес теперь берётся из последнего фактически введённого дневного значения на текущую или предыдущую дату. Регистрационный вес больше не подставляется как текущий.
-- Если дневного веса ещё нет, на главной отображается «—».
+## 4.0.0 — Health integration foundation
 
-FormulaVS 3.0.0
-
-## Что изменено
-- Новый слой ежедневного UX: «Сегодня», фокус дня и короткий недельный обзор.
-- FormulaVS Coach: rule-based подсказки по воде, шагам, калориям и белку.
-- Быстрый ввод данных через кнопку «＋ Добавить».
-- Тёмная тема: системная / светлая / тёмная.
-- Экспорт и импорт полного состояния приложения в JSON.
-- Удаление данных доступно также из центра управления данными.
-- Сжатие фотографий профиля перед сохранением, чтобы снизить риск переполнения localStorage.
-- Исправлен баг с определением изменения параметров, влияющих на недельную калорийную цель.
-- Версия данных экспортируется отдельно от версии приложения (`schemaVersion`).
-- Обновлена версия PWA/service worker до 3.0.0.
-
-## Методология
-Расчёты остаются ориентировочными. Расчётные показатели (особенно процент жира) следует явно воспринимать как оценки, а не медицинские измерения.
-
-## 3.0.1
-
-- Убрана нижняя вкладка «Добавить».
-- Удалены блоки «Сегодня / День идёт по плану» и отдельный обзор недели с главной.
-- Исправлена навигация кнопок FormulaVS Coach.
-- Уменьшен размер текста кнопок Coach на мобильных.
-- Улучшена тёмная тема: убраны светлые выбивающиеся блоки и добавлены тёмные состояния профиля/форм/календаря.
-- Системная тема сохраняет привязку к ОС, но имеет отдельный мягкий контраст.
-- Редактор профиля принудительно закрыт при загрузке и открывается только через «Редактировать».
+- FormulaVS stays web-first/PWA-compatible.
+- Added Capacitor 8 project configuration.
+- Added a platform-neutral `FormulaVSHealth` bridge.
+- Added iOS HealthKit implementation for read-only daily step count.
+- Added Android Health Connect implementation for read-only aggregated daily step count.
+- Added step import action to the Trackers screen.
+- Imported health steps are stored with their source and sync timestamp.
+- Manual step entry remains available.
+- Added native integration source under `packages/formulavs-health`.
+- Updated service worker cache to 4.0.0.
+- Preserved the light-only UI.
+- Main-screen weight now falls back to the registration weight only when there are no daily measurements at all.

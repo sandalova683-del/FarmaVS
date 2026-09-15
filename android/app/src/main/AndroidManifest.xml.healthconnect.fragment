@@ -1,0 +1,9 @@
+<!-- Add inside the app <manifest> element: -->
+<uses-permission android:name="android.permission.health.READ_STEPS" />
+<queries>
+    <package android:name="com.google.android.apps.healthdata" />
+</queries>
+<!-- Add the Health Connect dependency to the app module:
+implementation("androidx.health.connect:connect-client:1.1.0")
+implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
+-->

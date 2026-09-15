@@ -1,4 +1,8 @@
 {
-  "version": "3.0.2",
-  "updated": "2026-09-11"
+  "version": "4.0.0",
+  "updated": "2026-09-15",
+  "healthIntegration": {
+    "ios": "Apple HealthKit / stepCount read",
+    "android": "Health Connect / StepsRecord read"
+  }
 }
