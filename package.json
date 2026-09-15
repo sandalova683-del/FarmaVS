@@ -8,7 +8,9 @@
     "open:ios": "npx cap open ios",
     "open:android": "npx cap open android",
     "build:web": "node scripts/check-web.js",
-    "doctor": "npx cap doctor"
+    "doctor": "npx cap doctor",
+    "setup:native": "node scripts/setup-native.mjs",
+    "verify": "npm run build:web && npm run doctor"
   },
   "dependencies": {
     "@capacitor/core": "^8.0.0"

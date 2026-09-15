@@ -1,0 +1,5 @@
+<!-- Add these keys to the generated iOS App target Info.plist -->
+<key>NSHealthShareUsageDescription</key>
+<string>FormulaVS uses your health data to automatically record your daily step count.</string>
+<key>NSHealthUpdateUsageDescription</key>
+<string>FormulaVS does not write health data. This description is required by the HealthKit configuration.</string>

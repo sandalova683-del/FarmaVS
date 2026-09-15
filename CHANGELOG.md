@@ -14,3 +14,10 @@
 - Updated service worker cache to 4.0.0.
 - Preserved the light-only UI.
 - Main-screen weight now falls back to the registration weight only when there are no daily measurements at all.
+
+## 4.0.0-mobile-source
+- Added native project bootstrap for Capacitor 8.
+- Added idempotent `npm run setup:native`.
+- Added iOS HealthKit and Android Health Connect source templates.
+- Added mobile build/publish guide.
+- iOS status handling no longer infers read permission from HealthKit sharing status.

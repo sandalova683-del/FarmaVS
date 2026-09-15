@@ -26,13 +26,10 @@ public class FormulaVSHealthPlugin: CAPPlugin, CAPBridgedPlugin {
             call.resolve(["status": "unavailable", "platform": "ios"])
             return
         }
-        let read = healthStore.authorizationStatus(for: type)
-        if read == .sharingDenied {
-            // For read permissions Apple intentionally does not reveal whether the user denied access.
-            call.resolve(["status": "permission_required", "platform": "ios", "canOpenSettings": true])
-        } else {
-            call.resolve(["status": "connected", "platform": "ios", "canOpenSettings": true])
-        }
+        // HealthKit intentionally does not expose a definitive read-authorization status.
+        // Treat status as permission_required until a read succeeds; the app can then
+        // show connected data without inferring privacy-sensitive authorization state.
+        call.resolve(["status": "permission_required", "platform": "ios", "canOpenSettings": true])
     }
 
     @objc func requestPermissions(_ call: CAPPluginCall) {
