@@ -328,7 +328,15 @@
     .home-top-unified{padding:15px 16px!important;border-radius:18px!important;box-shadow:0 10px 28px rgba(15,23,42,.10)}
     .home-top-unified .home-coach-heading{display:flex;align-items:center;gap:12px;margin-bottom:10px}
     .home-top-unified .coach-kicker{margin:0!important;font-size:.9rem;line-height:1.1;font-weight:900;letter-spacing:.01em;text-transform:none;color:#fff}
-    .home-coach-layout{display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:16px;align-items:center}
+    .home-coach-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,430px);gap:18px;align-items:center}
+    .home-coach-week-note,.home-coach-message{font-size:.7rem;line-height:1.45;color:rgba(255,255,255,.78)}
+    .home-coach-week-note{max-width:420px}
+    .home-coach-action-row{display:grid;grid-template-columns:minmax(0,1fr) 150px;gap:14px;align-items:center;margin-top:10px}
+    .coach-actions{display:flex;flex-direction:column;gap:7px}
+    .home-week-row{display:grid;grid-template-columns:1fr 150px;gap:10px;align-items:center}
+    .home-week-label{font-size:.7rem;color:rgba(255,255,255,.78)}
+    .home-week-select{width:150px;min-height:34px}
+    .coach-btn{width:150px;min-height:34px}
     .home-coach-message{font-size:.72rem;line-height:1.45;color:#cbd5e1;max-width:620px}
     .home-coach-controls{display:grid;gap:7px;justify-items:stretch}
     .home-week-row{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:8px}
@@ -337,9 +345,16 @@
     .home-top-unified .coach-actions{display:grid;grid-template-columns:1fr;gap:7px;margin-top:0}
     .home-top-unified .coach-btn{width:100%;height:38px;padding:8px 10px;font-size:.72rem;border-radius:11px}
     .home-top-unified .coach-copy,.home-top-unified .coach-title,.home-top-unified .streak-pill{display:none!important}
-    @media(max-width:700px){.home-coach-layout{grid-template-columns:1fr;gap:10px}.home-coach-message{max-width:none}.home-coach-controls{width:100%}}
-    .profile-history-inline-title,.profile-history-current-label{font-size:.7rem;font-weight:800;color:#667085;margin:12px 0 7px}.profile-history-nested{margin-top:10px;border-top:1px solid #edf0f4;padding-top:8px}.profile-history-nested summary{font-size:.7rem;color:#4A90D9;font-weight:750}.profile-history-zone details>summary,.profile-volumes-zone details>summary{cursor:pointer;list-style:none}.profile-history-zone details>summary::-webkit-details-marker,.profile-volumes-zone details>summary::-webkit-details-marker{display:none}.profile-history-zone details>summary:after,.profile-volumes-zone details>summary:after{content:'⌄';float:right;color:#94a3b8}.profile-history-zone details[open]>summary:after,.profile-volumes-zone details[open]>summary:after{content:'⌃'}.profile-measurement-history-list{max-height:260px;overflow:auto;padding-right:2px}.profile-history-current-label+.profile-history-list .profile-history-entry:not(:first-child){display:none}.profile-history-current-label+.profile-history-list .profile-history-card{border-left-color:#4A90D9}
-    @media(max-width:560px){.home-week-row{grid-template-columns:1fr auto;gap:8px}.home-week-note{max-width:100%}.home-top-unified{padding:13px!important}.home-top-unified .coach-actions{gap:6px}.home-top-unified .coach-btn{font-size:.66rem;padding:8px 7px}}
+    @media(max-width:700px){.home-coach-layout{grid-template-columns:1fr;gap:10px}.home-coach-action-row{grid-template-columns:1fr 150px;gap:10px}.home-coach-message{max-width:none}.home-coach-controls{width:100%}}
+    .profile-history-inline-title,.profile-history-current-label{font-size:.7rem;font-weight:800;color:#667085;margin:12px 0 7px}
+    .compact-section-title{margin-bottom:9px}
+    .profile-volume-grid-compact{gap:7px}
+    .profile-history-collapsible{margin-top:10px;border-top:1px solid #edf0f4;padding-top:9px}
+    .profile-history-collapsible>summary{cursor:pointer;list-style:none;font-size:.7rem;font-weight:750;color:#4A90D9}
+    .profile-history-collapsible>summary::-webkit-details-marker{display:none}
+    .profile-history-collapsible>summary:after{content:'⌄';float:right;color:#94a3b8}
+    .profile-history-collapsible[open]>summary:after{content:'⌃'}.profile-history-nested{margin-top:10px;border-top:1px solid #edf0f4;padding-top:8px}.profile-history-nested summary{font-size:.7rem;color:#4A90D9;font-weight:750}.profile-history-zone details>summary,.profile-volumes-zone details>summary{cursor:pointer;list-style:none}.profile-history-zone details>summary::-webkit-details-marker,.profile-volumes-zone details>summary::-webkit-details-marker{display:none}.profile-history-zone details>summary:after,.profile-volumes-zone details>summary:after{content:'⌄';float:right;color:#94a3b8}.profile-history-zone details[open]>summary:after,.profile-volumes-zone details[open]>summary:after{content:'⌃'}.profile-measurement-history-list{max-height:260px;overflow:auto;padding-right:2px}.profile-history-current-label+.profile-history-list .profile-history-entry:not(:first-child){display:none}.profile-history-current-label+.profile-history-list .profile-history-card{border-left-color:#4A90D9}
+    @media(max-width:560px){.home-week-row{grid-template-columns:1fr 150px;gap:8px}.home-coach-action-row{grid-template-columns:1fr 150px}.home-top-unified{padding:13px!important}.home-top-unified .coach-actions{gap:6px}.home-top-unified .coach-btn{font-size:.66rem;padding:8px 7px}}
   </style>
 </head>
 <body><div id="toast" class="toast" role="status" aria-live="polite"></div>
@@ -510,24 +525,21 @@
         </div>
       </div>
 
-      <div id="profileVolumesZone" class="profile-zone profile-volumes-zone hidden">
-        <details id="profileVolumesDetails">
-          <summary>📐 Текущие объемы тела</summary>
-          <div id="profileVolumesGrid" class="profile-volume-grid"></div>
-          <div class="profile-history-inline-title">История замеров</div>
+      <div id="profileVolumesZone" class="profile-zone profile-volumes-zone">
+        <div class="profile-section-title compact-section-title">📐 Текущие объемы тела</div>
+        <div id="profileVolumesGrid" class="profile-volume-grid profile-volume-grid-compact"></div>
+        <details id="profileMeasurementHistoryDetails" class="profile-history-collapsible">
+          <summary>История замеров</summary>
           <div id="profileMeasurementHistoryList" class="profile-measurement-history-list"></div>
         </details>
       </div>
 
       <div class="profile-zone profile-history-zone">
-        <details id="profileParamsHistoryDetails">
-          <summary>📜 История параметров</summary>
-          <div class="profile-history-current-label">Текущие параметры</div>
-          <div id="profileHistoryList" class="profile-history-list"></div>
-          <details id="profilePreviousParamsDetails" class="profile-history-nested">
-            <summary>Предыдущие изменения <span id="profileAllHistoryCount"></span></summary>
-            <div id="profilePreviousHistoryList" class="profile-history-list"></div>
-          </details>
+        <div class="profile-section-title compact-section-title">📋 Текущие параметры</div>
+        <div id="profileHistoryList" class="profile-history-list profile-current-only"></div>
+        <details id="profileParamsHistoryDetails" class="profile-history-collapsible">
+          <summary>История параметров <span id="profileAllHistoryCount"></span></summary>
+          <div id="profilePreviousHistoryList" class="profile-history-list"></div>
           <button type="button" class="profile-all-history hidden" id="profileAllHistory">Все записи <span id="profileAllHistoryCountLegacy"></span></button>
         </details>
       </div>
@@ -1293,7 +1305,7 @@
     const dt=$('profileDietTile');const d=DIET_INFO[p.dietType||'mediterranean'];if(dt)dt.innerHTML=`<div class="profile-tile-label">Тип питания</div><div class="profile-tile-value profile-plan-value"><span class="profile-plan-icon">🥗</span>${esc(d?.name||'—')}</div>`;
     const zone=$('profileVolumesZone'),vg=$('profileVolumesGrid'),lm=profileCurrentMeasurements();
     const vals=MEASUREMENTS.map(([k,label])=>[label,n(lm?.[k]??p.baseMeasurements?.[k])]).filter(([,v])=>v!=null);
-    if(zone&&vg){zone.classList.toggle('hidden',vals.length===0);vg.innerHTML=vals.map(([l,v])=>`<div class="profile-volume-item"><span>${esc(l)}</span><b>${v} см</b></div>`).join('');}
+    if(zone&&vg){zone.classList.remove('hidden');vg.innerHTML=vals.length?vals.map(([l,v])=>`<div class="profile-volume-item"><span>${esc(l)}</span><b>${v} см</b></div>`).join(''):'<div class="note">Текущих замеров пока нет.</div>';}
   }
 
   function renderDietInfo(){
@@ -1333,7 +1345,7 @@
       prevList.innerHTML=previous.length?previous.map((h,idx)=>makeCard(h,idx+1)).join(''):'<div class="note">Предыдущих изменений пока нет.</div>';
       prevList.querySelectorAll('.profile-history-entry').forEach(el=>el.addEventListener('click',()=>openProfileHistoryDetail(el.dataset.historyDate)));
     }
-    const prevDetails=$('profilePreviousParamsDetails'); if(prevDetails) prevDetails.classList.toggle('hidden',previous.length===0);
+    const prevDetails=$('profileParamsHistoryDetails'); if(prevDetails) prevDetails.classList.toggle('hidden',previous.length===0);
     const allBtn=$('profileAllHistory');if(allBtn){allBtn.classList.add('hidden');}
     const count=$('profileAllHistoryCount');if(count)count.textContent=previous.length?`(${previous.length})`:'';
   }
@@ -2103,7 +2115,7 @@
     const topCard=document.createElement('div');
     topCard.id='homeTopUnified';
     topCard.className='card home-top-unified';
-    topCard.innerHTML=`<div class="home-coach-heading"><div class="coach-kicker">FormulaVS Coach</div></div><div class="home-coach-layout"><div class="home-coach-message">${esc(coach.text)}</div><div class="home-coach-controls"><div class="home-week-row"><div class="home-week-label">Начало недели</div><select id="homeWeekStart" class="home-week-select"><option value="1">Понедельник</option><option value="2">Вторник</option><option value="3">Среда</option><option value="4">Четверг</option><option value="5">Пятница</option><option value="6">Суббота</option><option value="0">Воскресенье</option></select></div><div class="home-week-note">Эта настройка определяет границы недели для Планов, Динамики и расчёта КБЖУ.</div><div class="coach-actions"><button class="btn coach-btn" type="button" data-coach-nav="trackers">Отметить данные</button><button class="btn coach-btn" type="button" data-coach-nav="analytics">Посмотреть прогресс</button></div></div></div>`;
+    topCard.innerHTML=`<div class="home-coach-heading"><div class="coach-kicker">FormulaVS Coach</div></div><div class="home-coach-layout"><div class="home-coach-week-note">Эта настройка определяет границы недели для Планов, Динамики и расчёта КБЖУ.</div><div class="home-coach-controls"><div class="home-week-row"><div class="home-week-label">Начало недели</div><select id="homeWeekStart" class="home-week-select"><option value="1">Понедельник</option><option value="2">Вторник</option><option value="3">Среда</option><option value="4">Четверг</option><option value="5">Пятница</option><option value="6">Суббота</option><option value="0">Воскресенье</option></select></div><div class="home-coach-action-row"><div class="home-coach-message">Если вы уже внесли данные за день, сохраните их — FormulaVS обновит расчёты и прогресс.</div><div class="coach-actions"><button class="btn coach-btn" type="button" data-coach-nav="trackers">Отметить данные</button><button class="btn coach-btn" type="button" data-coach-nav="analytics">Посмотреть прогресс</button></div></div></div></div>`;
     host.prepend(topCard);
     const hs=$('homeWeekStart');
     if(hs){ hs.value=String(state.ui.analyticsWeekStartDay??1); hs.addEventListener('change',()=>{state.ui.analyticsWeekStartDay=Number(hs.value);save();recalcWeeklyNutrition(false);renderHome();renderAnalytics();}); }

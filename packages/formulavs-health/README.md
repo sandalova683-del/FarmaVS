@@ -1,9 +1,5 @@
-# @formulavs/health
+# Android native implementation
 
-Native FormulaVS bridge for daily step counts.
+Uses the stable `androidx.health.connect:connect-client:1.1.0` API and reads `StepsRecord` through `AggregateRequest` to avoid double-counting overlapping sources.
 
-- iOS: HealthKit `stepCount` (read only)
-- Android: Health Connect `StepsRecord` (read only, aggregated)
-- Web/PWA: gracefully reports `unavailable`
-
-The app intentionally does not write step data back to Apple Health or Health Connect.
+The app only requests `READ_STEPS`; it never writes steps to Health Connect.
