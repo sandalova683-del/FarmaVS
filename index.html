@@ -354,8 +354,9 @@
           <div class="field"><label>Вода, мл</label><input id="jWater" type="number" min="0" step="50"></div>
           <div class="field"><label>Шаги</label><input id="jSteps" type="number" min="0"><button id="syncSteps" type="button" class="health-sync-btn">↻ Получить из телефона</button><div id="stepsSource" class="health-source" aria-live="polite"></div></div>
           <div class="field"><label>Потраченные ккал</label><input id="jBurnedCalories" type="number" min="0"></div>
-          <div class="field"><label>Тренировка</label><select id="jTrainingType"><option value="">Нет тренировки</option><option value="strength">Силовая</option><option value="cardio">Кардио</option></select></div>
+          <div class="field"><label>Тренировка</label><select id="jTrainingType"><option value="">Нет тренировки</option><option value="strength">Силовая</option><option value="cardio">Кардио</option><option value="stretching">Растяжка</option><option value="pilates">Пилатес</option></select></div>
           <div class="field"><label>Продолжительность, мин</label><input id="jTrainingMinutes" type="number" min="0" step="5" placeholder="Например, 45"></div>
+          <div class="field"><label>Интенсивность тренировки</label><select id="jTrainingIntensity"><option value="">Не указана</option><option value="1.375">Низкая</option><option value="1.55">Умеренная</option><option value="1.725">Высокая</option><option value="1.9">Очень высокая</option></select></div>
           <div class="field"><label>Всего потрачено ккал</label><div id="jTotalBurned" class="journal-calc">—</div></div>
           <div class="field"><label>Баланс ккал</label><div id="jCalorieBalance" class="journal-calc">—</div></div>
           <div class="field journal-full"><label>Цикл</label><div class="check" style="margin:0;border-color:var(--accent);background:#f0f4ff"><input type="checkbox" id="jCycle"><label for="jCycle" style="font-weight:600">🔄 Сегодня месячные</label></div></div>
@@ -388,7 +389,6 @@
       <div class="card analytics-dashboard">
         <div class="progress-heading">Прогресс</div>
         <div class="progress-section-title">Динамика показателей</div>
-        <div class="analytics-week-filter"><label for="analyticsWeekStart">Начало недели</label><select id="analyticsWeekStart"><option value="1">Понедельник</option><option value="2">Вторник</option><option value="3">Среда</option><option value="4">Четверг</option><option value="5">Пятница</option><option value="6">Суббота</option><option value="0">Воскресенье</option></select></div>
         <div class="progress-periods" id="progressPeriods">
           <button class="progress-period active" data-period="week">1 нед</button><button class="progress-period" data-period="month">1 мес</button><button class="progress-period" data-period="3month">3 мес</button><button class="progress-period" data-period="halfyear">6 мес</button><button class="progress-period" data-period="year">1 год</button><button class="progress-period" data-period="all">Весь период</button>
         </div>
@@ -408,7 +408,7 @@
         <div class="dashboard-section">
           <div class="dashboard-section-title">⚖️ Вес</div>
           <div id="weightDashboard"></div>
-          <div class="progress-metric-tabs" id="progressMetricTabs"><button class="progress-metric active" data-metric="weight">Вес</button><button class="progress-metric" data-metric="fatPercent">% Жира</button><button class="progress-metric" data-metric="calories">Ккал</button><button class="progress-metric" data-metric="protein">Белки</button><button class="progress-metric" data-metric="fat">Жиры</button><button class="progress-metric" data-metric="carbs">Углеводы</button><button class="progress-metric" data-metric="water">Вода</button><button class="progress-metric" data-metric="steps">Шаги</button><button class="progress-metric" data-metric="burnedCalories">Потраченные ккал</button><button class="progress-metric" data-metric="totalBurned">Всего потрачено</button><button class="progress-metric" data-metric="calorieBalance">Баланс ккал</button><button class="progress-metric" data-metric="trainingMinutes">Тренировки, мин</button><button class="progress-metric" data-metric="cycle">Дни цикла</button></div>
+          <div class="progress-metric-tabs" id="progressMetricTabs"><button class="progress-metric active" data-metric="weight">Вес</button><button class="progress-metric" data-metric="fatPercent">% Жира</button><button class="progress-metric" data-metric="calories">Ккал</button><button class="progress-metric" data-metric="protein">Белки</button><button class="progress-metric" data-metric="fat">Жиры</button><button class="progress-metric" data-metric="carbs">Углеводы</button><button class="progress-metric" data-metric="water">Вода</button><button class="progress-metric" data-metric="steps">Шаги</button><button class="progress-metric" data-metric="burnedCalories">Потраченные ккал</button><button class="progress-metric" data-metric="totalBurned">Всего потрачено</button><button class="progress-metric" data-metric="calorieBalance">Баланс ккал</button><button class="progress-metric" data-metric="trainingMinutes">Тренировки, мин</button><button class="progress-metric" data-metric="trainingIntensity">Интенсивность</button><button class="progress-metric" data-metric="activityCoefficient">Коэф. активности</button><button class="progress-metric" data-metric="cycle">Дни цикла</button></div>
           <div id="analyticsChart" class="progress-chart-wrap"></div>
           <div class="progress-legend"><div><span class="legend-dot"></span><span id="progressLegendPrimary">Вес — ежедневные измерения</span></div><div><span class="legend-line"></span><span>Тренд — сглаженное изменение</span></div></div>
         </div>
@@ -524,8 +524,8 @@
             <div class="field"><label>Вес, кг *</label><input id="profileWeight" type="number" step=".1" min="20" max="300"></div>
             <div class="field profile-editable-field"><label>Среднее количество шагов в день</label><input id="profileSteps" type="number" step="100" min="0" max="100000" placeholder="например, 7000"></div>
             <div class="field profile-editable-field"><label>Целевой вес, кг *</label><input id="profileTarget" type="number" step=".1" min="20" max="300"></div>
-            <div class="field profile-editable-field"><label>Цель *</label><select id="profileGoal"><option value="lose">Снизить вес</option><option value="maintain">Поддержка веса</option><option value="gain">Набрать вес</option></select></div>
-            <div class="field profile-editable-field"><label>Активность *</label><select id="profileActivity"><option value="1.2">Минимальная — в основном сидячий день</option><option value="1.375">Низкая — прогулки / лёгкая активность 1–3 р/нед</option><option value="1.55">Умеренная — тренировки 3–5 р/нед</option><option value="1.725">Высокая — интенсивные тренировки 6–7 р/нед</option><option value="1.9">Очень высокая — тяжёлая работа + спорт</option></select></div>
+            <div class="field profile-editable-field"><label>Цель *</label><select id="profileGoal"><option value="lose">Снизить вес</option><option value="maintain">Поддержка веса</option><option value="recomp">Рекомпозиция</option><option value="gain">Набрать вес</option><option value="muscle_gain">Набор мышечной массы</option></select></div>
+            <div class="field profile-editable-field"><label>Базовая активность (резерв) *</label><select id="profileActivity"><option value="1.2">Минимальная — в основном сидячий день</option><option value="1.375">Низкая — прогулки / лёгкая активность 1–3 р/нед</option><option value="1.55">Умеренная — тренировки 3–5 р/нед</option><option value="1.725">Высокая — интенсивные тренировки 6–7 р/нед</option><option value="1.9">Очень высокая — тяжёлая работа + спорт</option></select></div>
           </div>
         </div>
 
@@ -574,7 +574,7 @@
     <button class="bottom-tab" data-tab="analytics"><span class="nav-icon">⌁</span>Мой прогресс</button>
   </nav>
   <div class="card app-settings-card" id="appSettingsCard"><div class="title">⚙️ Настройки</div><div class="settings-row"><div><b>Данные</b><small>Резервная копия и перенос между устройствами</small></div><button class="btn ghost settings-data-btn" id="openDataModal">Управление</button></div></div>
-  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v4.0.0</span></div>
+  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v4.1.1</span></div>
 </div>
   <div id="quickModal" class="modal" aria-hidden="true"><div class="modal-card quick-modal-card"><button class="modal-close" id="quickModalClose" aria-label="Закрыть">×</button><div class="onboarding-title">Быстро добавить</div><div class="quick-grid"><button data-quick="weight">⚖️<span>Вес</span></button><button data-quick="water">💧<span>Вода</span></button><button data-quick="steps">🚶<span>Шаги</span></button><button data-quick="calories">🍽<span>Калории</span></button><button data-quick="training">🏋️<span>Тренировка</span></button><button data-quick="measurement">📏<span>Замер</span></button></div></div></div>
   <div id="dataModal" class="modal" aria-hidden="true"><div class="modal-card"><button class="modal-close" id="dataModalClose" aria-label="Закрыть">×</button><div class="onboarding-title">Данные</div><div class="data-actions"><button class="btn secondary" id="exportData">Экспортировать JSON</button><label class="btn ghost" for="importData">Импортировать JSON</label><input id="importData" type="file" accept="application/json,.json" class="file-upload"><button class="btn danger" id="resetDataFromModal">Удалить все данные</button></div></div></div>
@@ -585,7 +585,7 @@
 (() => {
   'use strict';
 
-  const APP_VERSION = '4.0.0';
+  const APP_VERSION = '4.1.1';
   const KEY = 'formavs_v2';
   const LEGACY_KEY = 'forma_v2';
   const todayStr = () => {
@@ -662,6 +662,8 @@
     state.ui.isProfileEditorOpen=false;
     state.ui.theme='light';
     if(!state.nutritionWeekly || typeof state.nutritionWeekly!=='object') state.nutritionWeekly={};
+    if(!state.nutritionWeeklyMeta || typeof state.nutritionWeeklyMeta!=='object') state.nutritionWeeklyMeta={};
+    if(state._nutritionAlgorithmVersion!==2){ state._nutritionAlgorithmVersion=2; }
     for(const d of DEFAULT_DAILY) if(!state.dailyGoals.some(x=>x && x.id===d.id)) state.dailyGoals.unshift({...d});
     for(const w of DEFAULT_WEEKLY) if(!state.weeklyGoals.some(x=>x && x.id===w.id)) state.weeklyGoals.push({...w});
     normalizeGoalLabels();
@@ -869,14 +871,17 @@
     };
   }
 
-  function stepsTarget(p){
-    const current=n(p.steps);
+  function stepsTarget(p,weekStart=null){
+    const ws=weekStart||weekStartDate(todayStr());
+    const current=avgPositiveBetween('steps',ws,addDays(ws,6)) ?? n(p.steps);
     if(!current || current<=0) return null;
 
     const goalRanges={
       lose:[0.20,0.30],
       maintain:[0.05,0.10],
-      gain:[0.10,0.15]
+      recomp:[0.05,0.10],
+      gain:[0.10,0.15],
+      muscle_gain:[0.10,0.15]
     };
     const mobility={
       '1.2':[1.5,1.5],
@@ -897,7 +902,7 @@
 
     let calorieTarget=null;
     if(p.goal==='lose'){
-      const base=nutritionBaseForSteps(p);
+      const base=nutritionBaseForSteps(p,ws);
       if(base && base.tdee && base.calories && n(p.weight)>0){
         const deficit=Math.max(0,base.tdee-base.calories);
         const kcalPerStep=n(p.weight)*0.0005;
@@ -931,44 +936,44 @@
     };
   }
 
-  function nutritionBaseForSteps(p){
-    const w=n(p.weight), h=n(p.height), a=age(p.birth), act=n(p.activity)||1.2;
+  function caloriesForGoal(tdee,goal){
+    if(goal==='lose') return tdee*0.85;
+    if(goal==='gain'||goal==='muscle_gain') return tdee*1.15;
+    return tdee;
+  }
+  function nutritionBaseForSteps(p,weekStart=null){
+    const w=n(p.weight), h=n(p.height), a=age(p.birth);
     if(!w||!h||a==null) return null;
     const bmrV=bmrMifflin(w,h,a,p.gender==='male');
-    const tdee=bmrV*act;
-    let calories=tdee;
-    if(p.goal==='lose') calories=tdee*0.85;
-    else if(p.goal==='gain') calories=tdee*1.15;
+    const dynamic=dynamicActivityCoefficient(p,weekStart);
+    const tdee=bmrV*dynamic.coefficient;
+    let calories=caloriesForGoal(tdee,p.goal);
     calories=Math.max(bmrV*1.10,calories);
-    return {tdee,calories};
+    return {tdee,calories,activityCoefficient:dynamic.coefficient,activityStats:dynamic.stats};
   }
 
-  function nutritionBase(p, caloriesOverride=null){
-    const w=n(p.weight), h=n(p.height), a=age(p.birth), act=n(p.activity)||1.2;
+  function nutritionBase(p, caloriesOverride=null, options={}){
+    const w=n(p.weight), h=n(p.height), a=age(p.birth);
     if(!w||!h||a==null) return null;
+    const weekStart=options.weekStart||weekStartDate(todayStr());
     const bmrV=bmrMifflin(w,h,a,p.gender==='male');
-    const tdee=bmrV*act;
-    let calories=tdee, safety='';
-    if(p.goal==='lose') calories=tdee*0.85;
-    else if(p.goal==='gain') calories=tdee*1.15;
+    const dynamic=dynamicActivityCoefficient(p,weekStart);
+    const tdee=bmrV*dynamic.coefficient;
+    let calories=caloriesForGoal(tdee,p.goal), safety='';
     const minCalories=bmrV*1.10;
-    if(calories<minCalories){
-      calories=minCalories;
-      safety='Целевая калорийность не может быть ниже BMR + 10%.';
-    }
+    if(calories<minCalories){ calories=minCalories; safety='Целевая калорийность не может быть ниже BMR + 10%.'; }
     if(caloriesOverride!=null) calories=Math.max(minCalories, caloriesOverride);
     calories=Math.round(calories/10)*10;
 
     const diet=dietMacros(p.dietType);
-    const proteinPct=diet.proteinPct, fatPct=diet.fatPct, carbPct=diet.carbPct;
-    let protein=Math.round(calories*proteinPct/4);
-    let fat=Math.round(calories*fatPct/9);
+    let protein=Math.round(calories*diet.proteinPct/4);
+    let fat=Math.round(calories*diet.fatPct/9);
     let carbs=Math.max(0,Math.round((calories-protein*4-fat*9)/4));
-    const proteinMinimum=round(w*1.2,0);
+    const proteinKg=(p.goal==='recomp'||p.goal==='muscle_gain')?2:1.2;
+    const proteinMinimum=round(w*proteinKg,0);
     let proteinAdjusted=false;
-    if(proteinMinimum!=null && protein<proteinMinimum){
-      protein=proteinMinimum;
-      proteinAdjusted=true;
+    if(protein<proteinMinimum){
+      protein=proteinMinimum; proteinAdjusted=true;
       carbs=Math.max(0,Math.floor((calories-protein*4-fat*9)/4));
     }
     const proteinRange=macroRangeGrams(calories,diet.ranges.protein,4);
@@ -977,96 +982,157 @@
     const fatRange=macroRangeGrams(calories,diet.ranges.fat,9);
     const carbsRange=macroRangeGrams(calories,diet.ranges.carbs,4);
     const water=waterTarget(p);
-    const waterL=water?.waterL??null;
-    const baseGoalCalories=p.goal==='lose'?tdee*0.85:p.goal==='gain'?tdee*1.15:tdee;
+    const baseGoalCalories=caloriesForGoal(tdee,p.goal);
     return {
       bmi:bmi(w,h),bmr:bmrV,tdee,calories,
       baseCalories:Math.round(baseGoalCalories/10)*10,minCalories:Math.round(minCalories/10)*10,
-      protein,fat,carbs,waterL,safety,proteinKg:round(protein/w,2),fatKg:round(fat/w,2),
-      dietType:p.dietType||'mediterranean',macroSplit:[carbPct,proteinPct,fatPct],
+      protein,fat,carbs,waterL:water?.waterL??null,safety,proteinKg:round(protein/w,2),fatKg:round(fat/w,2),
+      dietType:p.dietType||'mediterranean',macroSplit:[diet.carbPct,diet.proteinPct,diet.fatPct],
       macroRanges:{protein:proteinRange,fat:fatRange,carbs:carbsRange},
-      proteinMinimum,proteinAdjusted,waterRawL:water?.waterRawL??null,waterMethod:water?.waterMethod||'',waterSafety:water?.waterSafety||'',waterHint:water?.waterHint||'',waterTrainingAdd:water?.waterTrainingAdd||0
+      proteinMinimum,proteinAdjusted,proteinMinimumKg:proteinKg,
+      activityCoefficient:dynamic.coefficient,stepActivityCoefficient:dynamic.stepCoefficient,trainingActivityCoefficient:dynamic.trainingCoefficient,trainingLoad:dynamic.trainingLoad,activityStats:dynamic.stats,
+      waterRawL:water?.waterRawL??null,waterMethod:water?.waterMethod||'',waterSafety:water?.waterSafety||'',waterHint:water?.waterHint||'',waterTrainingAdd:water?.waterTrainingAdd||0
     };
   }
 
   function nutritionForDate(date){
     const p=getFullProfileAt(date);
-    const w=n(state.weights[date] ?? state.journal[date]?.weight ?? p.weight);
-    if(w!=null) p.weight=w;
-    const base=nutritionBase(p);
+    const wk=weekStartDate(date), wkEnd=addDays(wk,6), basisStart=addDays(wk,-7), basisEnd=addDays(wk,-1);
+    const avgWeight=avgPositiveBetween('weight',basisStart,basisEnd);
+    p.weight=avgWeight ?? n(p.weight);
+    const base=nutritionBase(p,null,{weekStart:basisStart});
     if(!base) return null;
-    const wk=weekStartDate(date);
     const goal=state.nutritionWeekly[wk] ?? base.calories;
-    const result=nutritionBase(p,goal);
+    const result=nutritionBase(p,goal,{weekStart:basisStart});
     if(result){
-      const water=waterTarget(p,date);
-      if(water) Object.assign(result,water);
+      result.weekStart=wk; result.weekEnd=wkEnd; result.basisStart=basisStart; result.basisEnd=basisEnd; result.weekAverageWeight=avgWeight;
+      const water=waterTarget(p); if(water) Object.assign(result,water);
     }
     return result;
   }
 
-  function weekStartDate(s){
-    const d=parseDate(s), day=d.getDay();
-    const diff=day===0?-6:1-day;
+  function configuredWeekStartDate(s){
+    const d=parseDate(s), target=Number(state.ui.analyticsWeekStartDay ?? 1), day=d.getDay();
+    let diff=target-day; if(diff>0) diff-=7;
     d.setDate(d.getDate()+diff);
     return iso(d);
   }
-  function avgWeightBetween(start,end){
+  function weekStartDate(s){ return configuredWeekStartDate(s); }
+  function avgPositiveBetween(key,start,end){
     const vals=[];
     for(let d=parseDate(start); d<=parseDate(end); d.setDate(d.getDate()+1)){
-      const key=iso(d);
-      const v=n(state.weights[key] ?? state.journal[key]?.weight);
-      if(v!=null) vals.push(v);
+      const value=journalValue(iso(d),key);
+      if(value!=null && Number(value)>0) vals.push(Number(value));
     }
     return vals.length ? vals.reduce((a,b)=>a+b,0)/vals.length : null;
   }
+  function avgWeightBetween(start,end){
+    return avgPositiveBetween('weight',start,end);
+  }
+  function weeklyActivityStats(start,end){
+    const steps=[], calories=[], weights=[];
+    let trainingCount=0,totalMinutes=0;
+    const intensities=[];
+    for(let d=parseDate(start); d<=parseDate(end); d.setDate(d.getDate()+1)){
+      const key=iso(d), raw=state.journal?.[key], j=(raw&&typeof raw==='object')?raw:{};
+      const step=n(j.steps); if(step!=null && step>0) steps.push(step);
+      const kcal=n(j.calories); if(kcal!=null && kcal>0) calories.push(kcal);
+      const weight=n(state.weights?.[key] ?? j.weight); if(weight!=null && weight>0) weights.push(weight);
+      const minutes=n(j.trainingMinutes);
+      if(j.trainingType && minutes!=null && minutes>0){
+        trainingCount++; totalMinutes+=minutes;
+        const intensity=n(j.trainingIntensity); if(intensity!=null && intensity>0) intensities.push({value:intensity,minutes});
+      }
+    }
+    const avg=(arr)=>arr.length?arr.reduce((a,b)=>a+b,0)/arr.length:null;
+    const avgTrainingIntensity=intensities.length?intensities.reduce((a,x)=>a+x.value*x.minutes,0)/intensities.reduce((a,x)=>a+x.minutes,0):null;
+    return {
+      avgSteps:avg(steps),avgCalories:avg(calories),avgWeight:avg(weights),
+      trainingCount,totalMinutes,avgTrainingIntensity,
+      daysWithSteps:steps.length,daysWithCalories:calories.length,daysWithWeight:weights.length
+    };
+  }
+  function stepActivityCoefficient(avgSteps){
+    if(avgSteps==null || avgSteps<=0) return null;
+    if(avgSteps<5000) return 1.2;
+    if(avgSteps<7500) return 1.375;
+    if(avgSteps<10000) return 1.55;
+    if(avgSteps<12500) return 1.725;
+    return 1.9;
+  }
+  function dynamicActivityCoefficient(p,weekStart){
+    const start=weekStart||weekStartDate(todayStr()), stats=weeklyActivityStats(start,addDays(start,6));
+    const stepK=stepActivityCoefficient(stats.avgSteps);
+    const fallback=n(p.activity)||1.2;
+    if(stepK==null && stats.avgTrainingIntensity==null) return {coefficient:fallback,stepCoefficient:null,trainingCoefficient:null,trainingLoad:0,stats};
+    if(stepK==null) return {coefficient:stats.avgTrainingIntensity,stepCoefficient:null,trainingCoefficient:stats.avgTrainingIntensity,trainingLoad:1,stats};
+    if(stats.avgTrainingIntensity==null || stats.trainingCount===0 || stats.totalMinutes<=0) return {coefficient:stepK,stepCoefficient:stepK,trainingCoefficient:null,trainingLoad:0,stats};
+    const durationFactor=Math.min(1,stats.totalMinutes/150);
+    const countFactor=Math.min(1,stats.trainingCount/3);
+    const trainingLoad=durationFactor*countFactor;
+    const coefficient=clamp(stepK+(stats.avgTrainingIntensity-stepK)*trainingLoad,1.2,1.9);
+    return {coefficient,stepCoefficient:stepK,trainingCoefficient:stats.avgTrainingIntensity,trainingLoad,stats};
+  }
   function weeklyNutritionTarget(p, weekKey){
-    const base=nutritionBase(p);
+    const start=weekKey, avgWeight=avgPositiveBetween('weight',start,addDays(start,6));
+    const pp={...p,weight:avgWeight??p.weight};
+    const base=nutritionBase(pp,null,{weekStart:start});
     if(!base) return null;
     return state.nutritionWeekly[weekKey] ?? base.calories;
   }
   function weeklyNutritionTargetForDate(date){
-    const p=getFullProfileAt(date);
-    const w=n(state.weights[date] ?? state.journal[date]?.weight ?? p.weight);
-    if(w!=null) p.weight=w;
-    const base=nutritionBase(p);
-    if(!base) return null;
-    const wk=weekStartDate(date);
-    return state.nutritionWeekly[wk] ?? base.calories;
+    const p=getFullProfileAt(date), wk=weekStartDate(date);
+    return weeklyNutritionTarget(p,wk);
   }
   function recalcWeeklyNutrition(force=false){
-    const p=getFullProfileAt(todayStr());
-    const base=nutritionBase(p);
-    if(!base || !state.profile.registrationDate) return;
-    const currentWeek=weekStartDate(todayStr());
-    const existing=state.nutritionWeekly[currentWeek];
-    if(existing!=null && !force) return;
+    try {
+    const today=todayStr(), currentWeek=weekStartDate(today), p=getFullProfileAt(today);
+    if(!p || !state.profile.registrationDate) return;
+    const currentExisting=state.nutritionWeekly[currentWeek];
+    if(currentExisting!=null && !force) return;
 
-    let calories=existing!=null?existing:base.calories;
-    const curStart=parseDate(currentWeek);
-    const prevStart=new Date(curStart); prevStart.setDate(prevStart.getDate()-7);
-    const prevEnd=new Date(curStart); prevEnd.setDate(prevEnd.getDate()-1);
-    const prevPrevStart=new Date(curStart); prevPrevStart.setDate(prevPrevStart.getDate()-14);
-    const prevPrevEnd=new Date(curStart); prevPrevEnd.setDate(prevPrevEnd.getDate()-8);
-    const w1=avgWeightBetween(iso(prevStart),iso(prevEnd));
-    const w0=avgWeightBetween(iso(prevPrevStart),iso(prevPrevEnd));
+    const prevWeek=addDays(currentWeek,-7), prevPrevWeek=addDays(currentWeek,-14);
+    const prevStats=weeklyActivityStats(prevWeek,addDays(prevWeek,6));
+    const prevPrevStats=weeklyActivityStats(prevPrevWeek,addDays(prevPrevWeek,6));
+    const prevAvgWeight=prevStats.avgWeight;
+    const prevPrevAvgWeight=prevPrevStats.avgWeight;
+    const avgCalories=prevStats.avgCalories;
+    const prevRecommended=state.nutritionWeekly[prevWeek] ?? nutritionBase({...p,weight:prevAvgWeight??p.weight},null,{weekStart:prevWeek})?.calories;
 
-    if(w1!=null && w0!=null){
-      const diff=w1-w0;
+    const base=nutritionBase({...p,weight:prevAvgWeight??p.weight},null,{weekStart:prevWeek});
+    if(!base) return;
+    let calories=prevRecommended!=null?prevRecommended:base.calories;
+    const weightDiff=prevAvgWeight!=null&&prevPrevAvgWeight!=null?prevAvgWeight-prevPrevAvgWeight:null;
+    const caloriesAbove=avgCalories!=null && prevRecommended!=null && avgCalories>prevRecommended;
+    const weightIncreased=weightDiff!=null && weightDiff>0;
+    const useAlgorithm=!(caloriesAbove && weightIncreased);
+
+    if(useAlgorithm && weightDiff!=null){
+      const dynamic=dynamicActivityCoefficient(p,prevWeek);
+      const adaptiveBase=nutritionBase({...p,weight:prevAvgWeight??p.weight},null,{weekStart:prevWeek});
+      calories=adaptiveBase?.calories ?? calories;
       if(p.goal==='lose'){
-        if(diff>=0) calories-=40;
-      }else if(p.goal==='gain'){
-        if(diff<=0) calories+=40;
+        if(weightDiff>=0) calories-=40;
+      }else if(p.goal==='gain'||p.goal==='muscle_gain'){
+        if(weightDiff<=0) calories+=40;
       }else{
-        if(diff < -0.1) calories+=30;
-        else if(diff > 0.1) calories-=30;
+        if(weightDiff < -0.1) calories+=30;
+        else if(weightDiff > 0.1) calories-=30;
       }
     }
-    calories=Math.max(base.minCalories, Math.round(calories/10)*10);
+    // Рекомпозиция считается как поддержание; если питание было выше рекомендации, но вес не вырос — обычный алгоритм сохраняется.
+    calories=Math.max(base.minCalories,Math.round(calories/10)*10);
     state.nutritionWeekly[currentWeek]=calories;
+    state.nutritionWeeklyMeta=state.nutritionWeeklyMeta||{};
+    state.nutritionWeeklyMeta[currentWeek]={
+      averageWeight:prevAvgWeight,averageCalories:avgCalories,weightDiff,previousRecommended:prevRecommended,
+      caloriesAboveRecommended:caloriesAbove,keptPreviousRecommendation:caloriesAbove&&weightIncreased,
+      activityCoefficient:dynamicActivityCoefficient(p,prevWeek).coefficient,avgSteps:prevStats.avgSteps,trainingCount:prevStats.trainingCount,totalTrainingMinutes:prevStats.totalMinutes,avgTrainingIntensity:prevStats.avgTrainingIntensity
+    };
     const keys=Object.keys(state.nutritionWeekly).sort();
     if(keys.length>60) keys.slice(0,keys.length-60).forEach(k=>delete state.nutritionWeekly[k]);
     save();
+    } catch(e){ console.warn('recalcWeeklyNutrition error',e); }
   }
 
   function navyBodyFat(p, m){
@@ -1168,7 +1234,7 @@
   }
 
   function profileActivityLabel(v){return ({'1.2':'Минимальная','1.375':'Низкая','1.55':'Умеренная','1.725':'Высокая','1.9':'Очень высокая'})[v]||'—';}
-  function profileGoalLabel(v){return ({lose:'Снизить вес',maintain:'Поддержка веса',gain:'Набрать вес'})[v]||'—';}
+  function profileGoalLabel(v){return ({lose:'Снизить вес',maintain:'Поддержка веса',recomp:'Рекомпозиция',gain:'Набрать вес',muscle_gain:'Набор мышечной массы'})[v]||'—';}
   function profileCurrentMeasurements(){
     const dates=Object.keys(state.measurements||{}).filter(d=>d<=todayStr()).sort();
     return dates.length?state.measurements[dates.at(-1)]:null;
@@ -1202,7 +1268,7 @@
     const list=$('profileHistoryList');if(!list)return;
     const history=[...state.profileHistory].sort((a,b)=>b.date.localeCompare(a.date));
     if(!history.length){list.innerHTML='<div class="note">История изменений пуста. Ваши первые параметры появятся здесь.</div>';$('profileAllHistory')?.classList.add('hidden');return;}
-    const goalLabels={lose:'Снизить вес',maintain:'Поддержка веса',gain:'Набрать вес'};
+    const goalLabels={lose:'Снизить вес',maintain:'Поддержка веса',recomp:'Рекомпозиция',gain:'Набрать вес',muscle_gain:'Набор мышечной массы'};
     const activityLabels={'1.2':'Минимальная','1.375':'Низкая','1.55':'Умеренная','1.725':'Высокая','1.9':'Очень высокая'};
     const same=(a,b)=>String(a??'')===String(b??'');
     const visible=history.slice(0,3);
@@ -1221,7 +1287,7 @@
   function historyByDate(date){return state.profileHistory.find(h=>h.date===date);}
   function openProfileHistoryDetail(date){
     const h=historyByDate(date);if(!h)return;
-    const goalLabels={lose:'Снизить вес',maintain:'Поддержка веса',gain:'Набрать вес'};const activityLabels={'1.2':'Минимальная','1.375':'Низкая','1.55':'Умеренная','1.725':'Высокая','1.9':'Очень высокая'};
+    const goalLabels={lose:'Снизить вес',maintain:'Поддержка веса',recomp:'Рекомпозиция',gain:'Набрать вес',muscle_gain:'Набор мышечной массы'};const activityLabels={'1.2':'Минимальная','1.375':'Низкая','1.55':'Умеренная','1.725':'Высокая','1.9':'Очень высокая'};
     const body=$('profileHistoryDetailBody');if(!body)return;
     const rows=[['Целевой вес',h.target!==''&&h.target!=null?`${h.target} кг`:'—'],['Цель',goalLabels[h.goal]||'—'],['Активность',activityLabels[h.activity]||'—'],['Средние шаги / день',h.steps!==''&&h.steps!=null?Number(h.steps).toLocaleString('ru-RU'):'—'],['Тип питания',(DIET_INFO[h.dietType]||{}).name||h.dietType||'—']];
     $('profileHistoryDetailTitle').textContent=`Параметры · ${fmt(h.date)}`;body.innerHTML=`<div class="profile-detail-grid">${rows.map(r=>`<div class="profile-detail-row"><small>${r[0]}</small><b>${esc(r[1])}</b></div>`).join('')}</div>`;
@@ -1230,7 +1296,7 @@
   function openProfileHistoryModal(){
     const body=$('profileHistoryModalBody');if(!body)return;
     const history=[...state.profileHistory].sort((a,b)=>b.date.localeCompare(a.date));
-    const goalLabels={lose:'Снизить вес',maintain:'Поддержка веса',gain:'Набрать вес'};const activityLabels={'1.2':'Минимальная','1.375':'Низкая','1.55':'Умеренная','1.725':'Высокая','1.9':'Очень высокая'};
+    const goalLabels={lose:'Снизить вес',maintain:'Поддержка веса',recomp:'Рекомпозиция',gain:'Набрать вес',muscle_gain:'Набор мышечной массы'};const activityLabels={'1.2':'Минимальная','1.375':'Низкая','1.55':'Умеренная','1.725':'Высокая','1.9':'Очень высокая'};
     body.innerHTML=`<div class="profile-history-list">${history.map((h,idx)=>{const steps=h.steps!=null&&h.steps!==''?Number(h.steps).toLocaleString('ru-RU'):'—';return `<div class="profile-history-entry ${idx===0?'current':''}"><div class="profile-history-card"><div class="profile-history-head"><div class="profile-history-date">${idx===0&&h.date===todayStr()?'Сегодня, ':''}${fmt(h.date)}<span class="profile-history-time">${h.time||''}</span></div>${idx===0?'<span class="profile-current-badge">✓ Текущая</span>':''}</div><div class="profile-history-lines"><div>Целевой вес: <b>${h.target!==''&&h.target!=null?esc(h.target)+' кг':'—'}</b></div><div>Цель: <b>${goalLabels[h.goal]||'—'}</b></div><div>Активность: <b>${activityLabels[h.activity]||'—'}</b></div><div>Шаги: <b>${steps}</b></div><div>Питание: <b>${esc((DIET_INFO[h.dietType]||{}).name||h.dietType||'—')}</b></div></div></div></div>`}).join('')}</div>`;
     $('profileHistoryModal').classList.add('show');$('profileHistoryModal').setAttribute('aria-hidden','false');
   }
@@ -1254,7 +1320,6 @@
     const comp=bodyComp(todayP);
     const pr=progress(todayP);
     const journal=state.journal[today]||{};
-    const actualSteps=n(journal.steps);
 
     if(!p.registrationDate){
       $('homeContent').innerHTML=`<div class="card home-card">
@@ -1270,7 +1335,7 @@
     const bmiGood=nut?.bmi!=null && nut.bmi>=18.5 && nut.bmi<25;
     const targetDiff=pr?Math.abs(pr.diff):null;
     const targetText=pr && targetDiff!=null ? (pr.diff>0?'выше цели':pr.diff<0?'до цели':'цель достигнута') : 'цель не задана';
-    const goalLabel=todayP.goal==='lose'?'Снизить вес':todayP.goal==='gain'?'Набрать вес':'Поддержка веса';
+    const goalLabel=profileGoalLabel(todayP.goal);
     const dietName=DIET_INFO[nut?.dietType||todayP.dietType]?.name || '—';
     const fmtNum=v=>Number(v).toLocaleString('ru-RU');
     const macroData=[
@@ -1302,24 +1367,26 @@
     h+=`</div>`;
 
     if(nut){
-      const st=stepsTarget(todayP);
+      const st=stepsTarget(todayP,nut?.basisStart);
       const waterLow=nut.waterRangeLowL!=null?nut.waterRangeLowL:1.5;
       const waterHigh=nut.waterRangeHighL!=null?nut.waterRangeHighL:null;
       const waterTarget=nut.waterL!=null?String(nut.waterL).replace('.',','):'—';
       const waterRange=waterHigh!=null?`${String(waterLow).replace('.',',')}–${String(waterHigh).replace('.',',')} л`:'1,5 л';
       const stepsRange=st?`${fmtNum(st.low)}–${fmtNum(st.high)}`:'—';
-      const stepSub=actualSteps!=null?`${fmtNum(actualSteps)} сегодня`:(st?`среднее ${fmtNum(st.current)}/день`:'добавьте средние шаги в профиле');
+      const weekStats=nut?.activityStats;
+      const stepSub=st?`среднее ${weekStats?.avgSteps!=null?fmtNum(Math.round(weekStats.avgSteps)):'—'}/день за 7 дней`:'нет данных за 7 дней';
       h+=`<div class="card home-card home-plan-card">
-        <div class="home-section-title">🎯 План на сегодня</div>
+        <div class="home-section-title">🎯 План на неделю</div>
         <div class="home-plan-meta"><strong>🍽 ${esc(dietName)}</strong><span>Цель: ${goalLabel}</span></div>
         <div class="home-plan-calorie-detail">
-          <div class="home-plan-detail"><span>Цель по ккал</span><b>${fmtNum(nut.calories)} ккал</b><small>на день</small></div>
-          <div class="home-plan-detail"><span>Белковый минимум</span><b>${nut.proteinMinimum!=null?fmtNum(nut.proteinMinimum)+' г':'—'}</b><small>${nut.proteinMinimum!=null?'1,2 г/кг':'—'}</small></div>
+          <div class="home-plan-detail"><span>Цель по ккал</span><b>${fmtNum(nut.calories)} ккал</b><small>на день · фиксировано на неделю</small></div>
+          <div class="home-plan-detail"><span>Белковый минимум</span><b>${nut.proteinMinimum!=null?fmtNum(nut.proteinMinimum)+' г':'—'}</b><small>${nut.proteinMinimum!=null?String(nut.proteinMinimumKg).replace('.',',')+' г/кг':'—'}</small></div>
         </div>
         <div class="home-plan-basics">
           <div class="home-plan-detail"><span>BMR</span><b>${fmtNum(nut.bmr)} ккал</b><small>базовый обмен</small></div>
           <div class="home-plan-detail"><span>TDEE</span><b>${fmtNum(nut.tdee)} ккал</b><small>поддержание</small></div>
         </div>
+        <div class="mini-note">Средний вес для расчёта: ${nut.weekAverageWeight!=null?String(round(nut.weekAverageWeight,1)).replace('.',',')+' кг':'вес профиля'} · период ${fmtLong(nut.basisStart)} — ${fmtLong(nut.basisEnd)} · коэффициент активности ${nut.activityCoefficient!=null?nut.activityCoefficient.toFixed(3):'—'}</div>
         <div class="home-macros">
           <div><div>${macroRows}</div><div class="home-macro-legend">Б — белки · Ж — жиры · У — углеводы · доля указана от общей калорийности БЖУ</div></div>
           <div><div class="home-macro-pie" style="${macroData._pie}" aria-label="Доля белков, жиров и углеводов"></div><div class="home-macro-pie-label">Доля калорий БЖУ</div></div>
@@ -1338,10 +1405,10 @@
       const dietPrefix={keto:'КЕТО',lchf:'LCHF',paleo:'Палео',mediterranean:'Средиземноморская'}[nut?.dietType||todayP.dietType]||'';
       advice.push(`💧 ${dietPrefix&&safeHint.startsWith(dietPrefix)?`<strong>${dietPrefix}</strong>${safeHint.slice(dietPrefix.length)}`:safeHint}`);
     }
-    const st=stepsTarget(todayP);
+    const st=stepsTarget(todayP,nut?.basisStart);
     if(st) advice.push(`🚶 <strong>План шагов:</strong> дни 1–3 — ${fmtNum(st.plan[0])}, дни 4–6 — ${fmtNum(st.plan[2])}, дни 7–10 — ${fmtNum(st.plan[6])}.`);
     if(nut?.dietType==='keto'||nut?.dietType==='lchf') advice.push('⚡ На КЕТО/LCHF увеличивайте нагрузку постепенно и следите за самочувствием.');
-    if(advice.length) h+=`<div class="card home-card home-advice-card"><div class="home-section-title">💡 Подсказки</div><div class="home-note-stack">${advice.map(x=>`<div class="home-note">${x}</div>`).join('')}</div><div class="home-kbju-note">КБЖУ пересчитываются в начале новой недели по средней динамике веса. При застое/обратной динамике калорийность корректируется на 40 ккал. Калорийность не опускается ниже BMR + 10%. При изменении веса дневные граммы КБЖУ пересчитываются автоматически.</div></div>`;
+    if(advice.length) h+=`<div class="card home-card home-advice-card"><div class="home-section-title">💡 Подсказки</div><div class="home-note-stack">${advice.map(x=>`<div class="home-note">${x}</div>`).join('')}</div><div class="home-kbju-note">КБЖУ и калорийность фиксируются на неделю. Расчёт использует средний вес, шаги и динамику тренировок за предыдущие 7 дней. Белки, жиры и углеводы рассчитываются заново от среднего недельного веса и недельной калорийности.</div></div>`;
 
     $('homeContent').innerHTML=h;
   }
@@ -1405,8 +1472,8 @@
     $('dayDetail').innerHTML=`<div class="note"><b>${fmt(d)}</b> · выполнено ${dayPercent(d)}%${isCycle?' · 🔴 День цикла':''}<div class="list" style="margin-top:7px">${state.dailyGoals.map(g=>`<div class="row"><span>${esc(g.label)}</span><span>${state.dailyDone[d][g.id]?'✅':'—'}</span></div>`).join('')}</div></div>`;
   }
 
-  const JOURNAL_LABELS={weight:'Вес',calories:'Ккал',protein:'Белки',fat:'Жиры',carbs:'Углеводы',steps:'Шаги',water:'Вода',activity:'Тренировки',fatPercent:'% Жира',burnedCalories:'Потраченные ккал',totalBurned:'Всего потрачено',calorieBalance:'Баланс ккал',trainingMinutes:'Тренировки, мин',cycle:'Дни цикла'};
-  const JOURNAL_UNITS={weight:'кг',calories:'ккал',protein:'г',fat:'г',carbs:'г',steps:'шагов',water:'мл',activity:'раз',fatPercent:'%',burnedCalories:'ккал',totalBurned:'ккал',calorieBalance:'ккал',trainingMinutes:'мин',cycle:'дней'};
+  const JOURNAL_LABELS={weight:'Вес',calories:'Ккал',protein:'Белки',fat:'Жиры',carbs:'Углеводы',steps:'Шаги',water:'Вода',activity:'Тренировки',fatPercent:'% Жира',burnedCalories:'Потраченные ккал',totalBurned:'Всего потрачено',calorieBalance:'Баланс ккал',trainingMinutes:'Тренировки, мин',trainingIntensity:'Интенсивность',activityCoefficient:'Коэф. активности',cycle:'Дни цикла'};
+  const JOURNAL_UNITS={weight:'кг',calories:'ккал',protein:'г',fat:'г',carbs:'г',steps:'шагов',water:'мл',activity:'раз',fatPercent:'%',burnedCalories:'ккал',totalBurned:'ккал',calorieBalance:'ккал',trainingMinutes:'мин',trainingIntensity:'коэф.',activityCoefficient:'коэф.',cycle:'дней'};
   function renderJournal(){
     const d=state.ui.journalDate||todayStr(),j=state.journal[d]||{};
     $('journalDate').value=d;
@@ -1439,6 +1506,7 @@
     if(!trainingType && j.activity) trainingType='strength';
     $('jTrainingType').value=trainingType;
     $('jTrainingMinutes').value=trainingType?(j.trainingMinutes??''):'';
+    $('jTrainingIntensity').value=trainingType?(j.trainingIntensity??''):'';
     $('jCycle').checked=!!state.cycleDays[d];
     const goalData=nutritionForDate(d);
     const goal=goalData?.calories;
@@ -1482,7 +1550,7 @@
     if(active==null || w==null || h==null || a==null) return null;
     return round(active+bmrMifflin(w,h,a,p.gender==='male'),0);
   }
-  function journalValue(d,k){const j=state.journal[d];if(k==='weight')return n(state.weights[d] ?? j?.weight);if(k==='fatPercent')return bodyFatAt(d);if(k==='totalBurned')return totalBurnedAt(d);if(k==='calorieBalance')return calorieBalanceAt(d);if(k==='cycle')return state.cycleDays[d]?1:0;if(!j)return null;if(k==='activity')return (j.trainingType||j.activity)?1:0;if(k==='trainingMinutes')return n(j.trainingMinutes);return n(j[k]);}
+  function journalValue(d,k){const j=state.journal[d];if(k==='weight')return n(state.weights[d] ?? j?.weight);if(k==='fatPercent')return bodyFatAt(d);if(k==='totalBurned')return totalBurnedAt(d);if(k==='calorieBalance')return calorieBalanceAt(d);if(k==='cycle')return state.cycleDays[d]?1:0;if(!j)return null;if(k==='activity')return (j.trainingType||j.activity)?1:0;if(k==='trainingMinutes')return n(j.trainingMinutes);if(k==='trainingIntensity')return n(j.trainingIntensity);if(k==='activityCoefficient'){const ws=weekStartDate(d);return dynamicActivityCoefficient(getFullProfileAt(d),ws).coefficient;}return n(j[k]);}
   function rangeFor(end,period){const e=parseDate(end),s=new Date(e);if(period==='week')s.setDate(s.getDate()-6);else if(period==='month')s.setDate(s.getDate()-29);else if(period==='3month')s.setMonth(s.getMonth()-2),s.setDate(1);else if(period==='halfyear')s.setMonth(s.getMonth()-5),s.setDate(1);else if(period==='year')s.setMonth(s.getMonth()-11),s.setDate(1);else if(state.profile.registrationDate)return [parseDate(state.profile.registrationDate),e];return [s,e];}
   function buckets(end,period,key){const [s,e]=rangeFor(end,period),out=[];if(period==='week'){for(let d=new Date(s);d<=e;d.setDate(d.getDate()+1))out.push({label:fmt(iso(d)),dates:[iso(d)]});}else{let cur=new Date(s);while(cur<=e){let a=new Date(cur),b=new Date(cur);if(period==='month')b.setDate(b.getDate()+6);else b.setMonth(b.getMonth()+1),b.setDate(0);if(b>e)b=new Date(e);let ds=[];for(let d=new Date(a);d<=b;d.setDate(d.getDate()+1))ds.push(iso(d));out.push({label:fmt(iso(a))+' — '+fmt(iso(b)),dates:ds});cur=new Date(b);cur.setDate(cur.getDate()+1);}}return out.map(x=>{const v=x.dates.map(d=>journalValue(d,key)).filter(v=>v!=null);return {...x,avg:v.length?round(v.reduce((a,b)=>a+b,0)/v.length):null};});}
   function analyticsChart(rows,unit){const r=rows.filter(x=>x.avg!=null);if(r.length<2)return '<div class="empty">Нужно минимум два периода с данными для графика.</div>';const W=640,H=250,p=38,vs=r.map(x=>x.avg),mi=Math.min(...vs),ma=Math.max(...vs),rg=ma-mi||1,pts=r.map((x,i)=>[p+i/(r.length-1)*(W-p-20),25+(1-(x.avg-mi)/rg)*(H-70),x]);const path=pts.map((x,i)=>(i?'L':'M')+x[0].toFixed(1)+' '+x[1].toFixed(1)).join(' ');return `<div class="chart"><svg viewBox="0 0 ${W} ${H}"><line x1="${p}" y1="${H-35}" x2="${W-10}" y2="${H-35}" stroke="#dbe1e8"/><path d="${path}" fill="none" stroke="#2563eb" stroke-width="4" stroke-linecap="round"/>${pts.map(x=>`<circle cx="${x[0]}" cy="${x[1]}" r="4" fill="#fff" stroke="#2563eb" stroke-width="3"><title>${esc(x[2].label)}: ${x[2].avg} ${unit}</title></circle>`).join('')}</svg></div>`;}
@@ -1670,7 +1738,7 @@
       const dp=cur!=null&&pv!=null?round(cur-pv):null, dr=cur!=null&&rv!=null?round(cur-rv):null;
       rows.push(`<tr><td>${esc(label)}</td><td>${cur!=null?cur+' '+unit:'—'}</td><td>${dp==null?'—':`<span class="${goalAwareClass(k,dp)}">${dp>0?'+':''}${dp} ${unit}</span>`}</td><td>${dr==null?'—':`${dr>0?'+':''}${dr} ${unit}`}</td></tr>`);
     };
-    ['weight','calories','protein','fat','carbs','water','steps','burnedCalories','totalBurned','calorieBalance','trainingMinutes'].forEach(k=>addRow(k,k==='trainingMinutes'?'Время тренировок':JOURNAL_LABELS[k]));
+    ['weight','calories','protein','fat','carbs','water','steps','burnedCalories','totalBurned','calorieBalance','trainingMinutes','trainingIntensity','activityCoefficient'].forEach(k=>addRow(k,k==='trainingMinutes'?'Время тренировок':JOURNAL_LABELS[k]));
     addRow('fatPercent','% Жира','%');
     addRow('cycle','Дни цикла','дней');
     MEASUREMENTS.forEach(([k,label])=>addRow(k,label,'см'));
@@ -1682,7 +1750,7 @@
     const first=vals[0], last=vals.at(-1), diff=first!=null&&last!=null?round(last-first):null;
     const p=getFullProfileAt(end);
     const target=n(p.target), goal=p.goal;
-    let targetText='—'; if(avg!=null&&target!=null) targetText=goal==='lose'?`${round(avg-target)} кг` : goal==='gain'?`${round(target-avg)} кг` : `${round(Math.abs(avg-target))} кг`;
+    let targetText='—'; if(avg!=null&&target!=null) targetText=goal==='lose'?`${round(avg-target)} кг` : goal==='gain'||goal==='muscle_gain'?`${round(target-avg)} кг` : `${round(Math.abs(avg-target))} кг`;
     $('weightDashboard').innerHTML=`<div class="dashboard-kpis"><div class="dashboard-kpi"><div class="label">Средний вес</div><div class="value">${avg!=null?avg+' кг':'—'}</div></div><div class="dashboard-kpi"><div class="label">Изменение в периоде</div><div class="value ${goalAwareClass('weight',diff)}">${diff==null?'—':(diff>0?'+':'')+diff+' кг'}</div></div><div class="dashboard-kpi"><div class="label">До цели</div><div class="value">${targetText}</div></div></div><div class="mini-note">Изменение: ${first!=null&&last!=null?first+' кг → '+last+' кг':'нет двух измерений'}${target!=null?' · цель '+target+' кг':''}</div>`;
   }
   function renderNutritionDashboard(start,end){
@@ -1693,13 +1761,15 @@
     $('energyDashboard').innerHTML=[['Потреблено',a,'ккал'],['Потрачено активностью',b,'ккал'],['Всего потрачено',t,'ккал'],['Баланс',bal,'ккал']].map(([l,v,u])=>`<div class="dashboard-kpi"><div class="label">${l}</div><div class="value">${v!=null?v+' '+u:'—'}</div><div class="sub">среднее за период</div></div>`).join('');
   }
   function trainingStats(start,end){
-    let total=0,strength=0,cardio=0,minutes=0,strengthMin=0,cardioMin=0;
-    for(let d=parseDate(start);d<=parseDate(end);d.setDate(d.getDate()+1)){const j=state.journal[iso(d)]||{},type=j.trainingType||(j.activity?'strength':'');const mins=n(j.trainingMinutes)||0;if(type){total++;minutes+=mins;if(type==='strength'){strength++;strengthMin+=mins}if(type==='cardio'){cardio++;cardioMin+=mins}}}
-    return {total,strength,cardio,minutes,strengthMin,cardioMin};
+    let total=0,strength=0,cardio=0,stretching=0,pilates=0,minutes=0,strengthMin=0,cardioMin=0,stretchingMin=0,pilatesMin=0;
+    for(let d=parseDate(start);d<=parseDate(end);d.setDate(d.getDate()+1)){const j=state.journal[iso(d)]||{},type=j.trainingType||(j.activity?'strength':'');const mins=n(j.trainingMinutes)||0;if(type){total++;minutes+=mins;if(type==='strength'){strength++;strengthMin+=mins}if(type==='cardio'){cardio++;cardioMin+=mins}if(type==='stretching'){stretching++;stretchingMin+=mins}if(type==='pilates'){pilates++;pilatesMin+=mins}}}
+    return {total,strength,cardio,stretching,pilates,minutes,strengthMin,cardioMin,stretchingMin,pilatesMin};
   }
   function renderActivityDashboard(start,end){
     const s=trainingStats(start,end),days=periodRangeDays(start,end),steps=averageValue('steps',start,end),burn=averageValue('totalBurned',start,end);
-    $('activityDashboard').innerHTML=[['Шаги',steps!=null?round(steps):null,'в среднем / день'],['Тренировки',s.total,'за период'],['Время',s.minutes,'минут'],['Силовые',s.strength,`${s.strengthMin} мин`],['Кардио',s.cardio,`${s.cardioMin} мин`],['Всего потрачено',burn,'ккал / день']].map(([l,v,u])=>`<div class="training-kpi"><div class="label">${l}</div><div class="value">${v!=null?v:'—'}</div><div class="sub">${u}</div></div>`).join('');
+    const ws=analyticsWeekStartDate(end), stats=weeklyActivityStats(ws,addDays(ws,6));
+    const intensity=stats.avgTrainingIntensity;
+    $('activityDashboard').innerHTML=[['Шаги',steps!=null?round(steps):null,'в среднем / день'],['Тренировки',s.total,'за период'],['Время',s.minutes,'минут'],['Силовые',s.strength,`${s.strengthMin} мин`],['Кардио',s.cardio,`${s.cardioMin} мин`],['Растяжка',s.stretching,`${s.stretchingMin} мин`],['Пилатес',s.pilates,`${s.pilatesMin} мин`],['Интенсивность',intensity!=null?intensity.toFixed(3):null,'средневзвешенный коэффициент'],['Всего потрачено',burn,'ккал / день']].map(([l,v,u])=>`<div class="training-kpi"><div class="label">${l}</div><div class="value">${v!=null?v:'—'}</div><div class="sub">${u}</div></div>`).join('');
   }
   function renderBodyDashboard(start,end){
     const vals=Object.keys(state.journal||{}).filter(d=>d>=start&&d<=end).map(d=>bodyFatAt(d)).filter(v=>v!=null); const avg=vals.length?round(vals.reduce((a,b)=>a+b,0)/vals.length):null;
@@ -1727,13 +1797,13 @@
   function weeklyReportMetrics(start,end){
     const weights=weightValuesInRange(start,end), avg=weights.length?round(weights.reduce((a,b)=>a+b.value,0)/weights.length):null, min=weights.length?Math.min(...weights.map(x=>x.value)):null;
     const avgM=k=>averageValue(k,start,end); const s=trainingStats(start,end);
-    return {fat:avgM('fatPercent'),avg,min,neck:avgM('neck'),waist:avgM('waist'),hips:avgM('hips'),chest:avgM('chest'),armR:avgM('armR'),armL:avgM('armL'),legR:avgM('legR'),legL:avgM('legL'),trainingCount:s.total,strengthCount:s.strength,cardioCount:s.cardio,trainingMinutes:s.minutes,strengthMinutes:s.strengthMin,cardioMinutes:s.cardioMin,cycleDays:avgM('cycle')};
+    const ws=weeklyActivityStats(start,end); const activity=dynamicActivityCoefficient(getFullProfileAt(end),start); return {fat:avgM('fatPercent'),avg,min,neck:avgM('neck'),waist:avgM('waist'),hips:avgM('hips'),chest:avgM('chest'),armR:avgM('armR'),armL:avgM('armL'),legR:avgM('legR'),legL:avgM('legL'),trainingCount:s.total,strengthCount:s.strength,cardioCount:s.cardio,stretchingCount:s.stretching,pilatesCount:s.pilates,trainingMinutes:s.minutes,strengthMinutes:s.strengthMin,cardioMinutes:s.cardioMin,stretchingMinutes:s.stretchingMin,pilatesMinutes:s.pilatesMin,avgSteps:ws.avgSteps,avgCalories:ws.avgCalories,avgTrainingIntensity:ws.avgTrainingIntensity,activityCoefficient:activity.coefficient,cycleDays:avgM('cycle')};
   }
   function renderAnalyticsWeeklyStats(){
     const rows=weeklyReportData();
     if(!rows.length){$('analyticsWeeklyStats').innerHTML='<div class="progress-empty">Пока нет завершённых недельных отчётов.</div>';return;}
     const metric=(label,value,unit='')=>`<div class="weekly-report-item"><div class="wk-label">${label}</div><div class="wk-value">${value!=null?value+' '+unit:'—'}</div></div>`;
-    $('analyticsWeeklyStats').innerHTML=rows.map(r=>{const m=weeklyReportMetrics(r.start,r.end),done=r.goals.filter(g=>g.done).length,total=r.goals.length,pct=total?Math.round(done/total*100):0,goals=r.goals.map(g=>`<div class="weekly-goal"><span class="weekly-goal-label">${esc(g.label)}</span><span class="weekly-goal-status ${g.done?'done':'not-done'}">${g.done?'✓':'✕'}</span></div>`).join('');return `<div class="weekly-report"><div class="weekly-report-date">${fmtLong(r.start)} — ${fmtLong(r.end)}</div><div class="weekly-report-grid"><div class="weekly-report-row cols3">${metric('% Жира',m.fat,'%')}${metric('Средний вес',m.avg,'кг')}${metric('Мин. вес',m.min,'кг')}</div><div class="weekly-report-row cols3">${metric('Талия',m.waist,'см')}${metric('Бёдра',m.hips,'см')}${metric('Грудь',m.chest,'см')}</div><div class="weekly-report-row cols2">${metric('Пр. рука',m.armR,'см')}${metric('Лев. рука',m.armL,'см')}</div><div class="weekly-report-row cols2">${metric('Пр. нога',m.legR,'см')}${metric('Лев. нога',m.legL,'см')}</div><div class="weekly-report-row cols2">${metric('Дни цикла',m.cycleDays,'дней')}</div></div><div class="weekly-report-bottom"><div class="weekly-goal-summary"><b>${done}/${total}</b> целей · <b>${pct}%</b><div class="weekly-goals-grid">${goals}</div></div><div class="weekly-training"><b>Всего тренировок: ${m.trainingCount}</b> · ${m.trainingMinutes} мин<br>Силовые: ${m.strengthCount} · ${m.strengthMinutes} мин<br>Кардио: ${m.cardioCount} · ${m.cardioMinutes} мин</div></div></div>`}).join('');
+    $('analyticsWeeklyStats').innerHTML=rows.map(r=>{const m=weeklyReportMetrics(r.start,r.end),done=r.goals.filter(g=>g.done).length,total=r.goals.length,pct=total?Math.round(done/total*100):0,goals=r.goals.map(g=>`<div class="weekly-goal"><span class="weekly-goal-label">${esc(g.label)}</span><span class="weekly-goal-status ${g.done?'done':'not-done'}">${g.done?'✓':'✕'}</span></div>`).join('');return `<div class="weekly-report"><div class="weekly-report-date">${fmtLong(r.start)} — ${fmtLong(r.end)}</div><div class="weekly-report-grid"><div class="weekly-report-row cols3">${metric('% Жира',m.fat,'%')}${metric('Средний вес',m.avg,'кг')}${metric('Мин. вес',m.min,'кг')}</div><div class="weekly-report-row cols3">${metric('Талия',m.waist,'см')}${metric('Бёдра',m.hips,'см')}${metric('Грудь',m.chest,'см')}</div><div class="weekly-report-row cols2">${metric('Пр. рука',m.armR,'см')}${metric('Лев. рука',m.armL,'см')}</div><div class="weekly-report-row cols2">${metric('Пр. нога',m.legR,'см')}${metric('Лев. нога',m.legL,'см')}</div><div class="weekly-report-row cols3">${metric('Шаги',m.avgSteps!=null?round(m.avgSteps):null,'/день')}${metric('Интенсивность',m.avgTrainingIntensity!=null?m.avgTrainingIntensity.toFixed(3):null,'коэф.')}${metric('Ккал',m.avgCalories,'/день')}</div><div class="weekly-report-row cols2">${metric('Дни цикла',m.cycleDays,'дней')}</div></div><div class="weekly-report-bottom"><div class="weekly-goal-summary"><b>${done}/${total}</b> целей · <b>${pct}%</b><div class="weekly-goals-grid">${goals}</div></div><div class="weekly-training"><b>Всего тренировок: ${m.trainingCount}</b> · ${m.trainingMinutes} мин<br>Силовые: ${m.strengthCount} · ${m.strengthMinutes} мин<br>Кардио: ${m.cardioCount} · ${m.cardioMinutes} мин<br>Растяжка: ${m.stretchingCount} · ${m.stretchingMinutes} мин<br>Пилатес: ${m.pilatesCount} · ${m.pilatesMinutes} мин<br>Коэффициент активности: ${m.activityCoefficient!=null?m.activityCoefficient.toFixed(3):'—'}</div></div></div>`}).join('');
   }
   function ensureDay(d){
     if(!state.dailyDone[d]) state.dailyDone[d]={};
@@ -1741,7 +1811,6 @@
   }
   function renderAnalytics(){
     const end=state.ui.analyticsDate||todayStr(),period=state.ui.analyticsPeriod||'week',key=state.ui.analyticsMetric||'weight';
-    const weekStartSelect=$('analyticsWeekStart');if(weekStartSelect)weekStartSelect.value=String(state.ui.analyticsWeekStartDay??1);
     const [start,endDate]=periodStartEnd(end,period);
     $('progressSummary').innerHTML=periodSummary(start,endDate);
     $('dashboardPeriodCaption').textContent=`${fmtLong(start)} — ${fmtLong(endDate)}`;
@@ -1884,7 +1953,7 @@
       const wk=weekStartDate(todayStr()),base=nutritionBase(getFullProfileAt(todayStr()));
       const calorieInputsChanged=String(oldDynamic.activity)!==String(next.activity)||String(oldDynamic.goal)!==String(next.goal)||String(oldDynamic.dietType)!==String(next.dietType);
       if(base && (state.nutritionWeekly[wk]==null || calorieInputsChanged)) state.nutritionWeekly[wk]=base.calories;
-      recalcWeeklyNutrition(true);
+      recalcWeeklyNutrition(false);
       save();
       
       // Close editor after save
@@ -1906,7 +1975,9 @@
       const waterMl=n($('jWater').value); j.water=waterMl!=null?waterMl/1000:null;
       j.trainingType=$('jTrainingType').value||null;
       j.trainingMinutes=n($('jTrainingMinutes').value);
+      j.trainingIntensity=n($('jTrainingIntensity').value);
       if(j.trainingType && (j.trainingMinutes==null || j.trainingMinutes<=0)) return alert('Укажите продолжительность тренировки в минутах.');
+      if(j.trainingType && j.trainingIntensity==null) return alert('Укажите интенсивность тренировки.');
       j.activity=!!j.trainingType;
       if(!j.trainingType) j.trainingMinutes=null;
       state.journal[d]=j;
@@ -1976,9 +2047,14 @@
     const host=$('homeContent'); if(!host || !state.profile.registrationDate) return;
     const today=todayStr();
 
+    const weekSelect=document.createElement('div');
+    weekSelect.className='card home-week-control';
+    weekSelect.innerHTML=`<div class="home-section-title">📅 Настройка недели</div><div class="field" style="margin:0"><label for="homeWeekStart">Начало недели</label><select id="homeWeekStart"><option value="1">Понедельник</option><option value="2">Вторник</option><option value="3">Среда</option><option value="4">Четверг</option><option value="5">Пятница</option><option value="6">Суббота</option><option value="0">Воскресенье</option></select></div><div class="mini-note">Эта настройка определяет границы недели для Планов, Динамики и расчёта КБЖУ.</div>`;
+    host.prepend(weekSelect);
+    const hs=$('homeWeekStart'); hs.value=String(state.ui.analyticsWeekStartDay??1); hs.addEventListener('change',()=>{state.ui.analyticsWeekStartDay=Number(hs.value);save();recalcWeeklyNutrition(false);renderHome();renderAnalytics();});
     const coach=coachInsight(); const streak=streakForGoals();
     const coachCard=document.createElement('div'); coachCard.className='card coach-card'; coachCard.innerHTML=`<div class="coach-kicker">FormulaVS Coach</div><h3>${esc(coach.title)}</h3><p>${esc(coach.text)}</p>${streak?`<div class="streak-pill">🔥 Серия целей: ${streak} дн.</div>`:''}<div class="coach-actions"><button class="btn coach-btn" type="button" data-coach-nav="trackers">Отметить данные</button><button class="btn coach-btn" type="button" data-coach-nav="analytics">Посмотреть прогресс</button></div>`;
-    host.appendChild(coachCard);
+    host.insertBefore(coachCard,host.children[1]||null);
     coachCard.querySelectorAll('[data-coach-nav]').forEach(btn=>btn.addEventListener('click',()=>navigate(btn.dataset.coachNav)));
   }
   const _renderHomeV3=renderHome;
@@ -2051,10 +2127,15 @@ $('quickModalClose')?.addEventListener('click',closeQuick); $('quickModal')?.add
     refreshStatus();
   }
   function init(){
-    load();renderMeasurementFields();bind();bindV3();bindHealthUI();renderProfileFields();renderHome();renderJournal();renderAnalytics();if(!state.profile.registrationDate)navigate('profile');else navigate('home');
+    load();renderMeasurementFields();bind();bindV3();bindHealthUI();
+    // Сначала рисуем интерфейс, затем пересчитываем недельный план. Ошибка в расчётах
+    // не должна блокировать Главную или Профиль.
+    renderProfileFields();renderHome();renderJournal();renderAnalytics();
+    try{recalcWeeklyNutrition(false);renderHome();renderAnalytics();}catch(e){console.warn('FormulaVS weekly nutrition recalculation skipped',e);}
+    if(!state.profile.registrationDate)navigate('profile');else navigate('home');
     setInterval(()=>{if(todayStr()!==state._lastDay){state._lastDay=todayStr();rolloverWeek();state.ui.habitDate=todayStr();state.ui.journalDate=todayStr();save();renderHome();renderJournal();renderWeek();renderAnalytics();}},30000);
     if ('serviceWorker' in navigator) {
-      const APP_VERSION='4.0.0';
+      const APP_VERSION='4.1.1';
       let reloadScheduled = false;
       function reloadOnceAfterUpdate(){
         if(reloadScheduled) return;

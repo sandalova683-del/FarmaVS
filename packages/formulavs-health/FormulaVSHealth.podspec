@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'FormulaVSHealth'
-  s.version = '4.0.0'
+  s.version = '4.1.0'
   s.summary = 'FormulaVS HealthKit bridge'
   s.license = { :type => 'MIT' }
   s.homepage = 'https://formulavs.app'

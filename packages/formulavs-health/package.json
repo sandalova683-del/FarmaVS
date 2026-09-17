@@ -1,6 +1,6 @@
 {
   "name": "@formulavs/health",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "description": "FormulaVS native health bridge for Apple HealthKit and Android Health Connect",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",

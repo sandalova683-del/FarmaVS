@@ -1,6 +1,6 @@
 {
   "name": "formulavs",
-  "version": "4.0.0",
+  "version": "4.1.1",
   "private": true,
   "description": "FormulaVS wellness tracker with Apple Health and Android Health Connect integration",
   "scripts": {
