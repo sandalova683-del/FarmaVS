@@ -355,6 +355,25 @@
     .profile-history-collapsible>summary:after{content:'⌄';float:right;color:#94a3b8}
     .profile-history-collapsible[open]>summary:after{content:'⌃'}.profile-history-nested{margin-top:10px;border-top:1px solid #edf0f4;padding-top:8px}.profile-history-nested summary{font-size:.7rem;color:#4A90D9;font-weight:750}.profile-history-zone details>summary,.profile-volumes-zone details>summary{cursor:pointer;list-style:none}.profile-history-zone details>summary::-webkit-details-marker,.profile-volumes-zone details>summary::-webkit-details-marker{display:none}.profile-history-zone details>summary:after,.profile-volumes-zone details>summary:after{content:'⌄';float:right;color:#94a3b8}.profile-history-zone details[open]>summary:after,.profile-volumes-zone details[open]>summary:after{content:'⌃'}.profile-measurement-history-list{max-height:260px;overflow:auto;padding-right:2px}.profile-history-current-label+.profile-history-list .profile-history-entry:not(:first-child){display:none}.profile-history-current-label+.profile-history-list .profile-history-card{border-left-color:#4A90D9}
     @media(max-width:560px){.home-week-row{grid-template-columns:1fr 150px;gap:8px}.home-coach-action-row{grid-template-columns:1fr 150px}.home-top-unified{padding:13px!important}.home-top-unified .coach-actions{gap:6px}.home-top-unified .coach-btn{font-size:.66rem;padding:8px 7px}}
+
+    /* FormulaVS 4.1.5 visual refinements */
+    .home-top-unified .home-coach-layout{grid-template-columns:minmax(0,1fr) minmax(300px,430px);gap:18px;align-items:center}
+    .home-top-unified .home-coach-message{font-size:.72rem;line-height:1.45;color:#cbd5e1;max-width:620px}
+    .home-top-unified .home-coach-controls{display:grid;gap:8px;justify-items:stretch}
+    .home-top-unified .home-week-row{display:grid;grid-template-columns:auto 150px;gap:8px;align-items:center}
+    .home-top-unified .home-week-label{font-size:.72rem;font-weight:800;color:#fff;white-space:nowrap}
+    .home-top-unified .home-week-select{width:150px;height:38px!important;min-height:38px;border-radius:11px!important;font-size:.72rem!important;font-weight:750!important;padding:0 10px!important}
+    .home-top-unified .coach-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:0}
+    .home-top-unified .coach-actions .coach-btn{width:100%;height:38px;min-height:38px;padding:8px 10px;font-size:.72rem;border-radius:11px}
+    .profile-volumes-zone .compact-section-title{margin-bottom:9px}
+    .profile-volume-grid-compact{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+    .profile-volume-grid-compact > *{background:#F8FAFC;border:0;border-left:3px solid #4A90D9;border-radius:12px;padding:10px 11px;min-width:0}
+    .profile-volume-grid-compact .muted{font-size:.68rem}
+    .profile-volume-grid-compact b{font-size:.9rem}
+    .profile-volumes-zone .profile-history-collapsible,.profile-history-zone .profile-history-collapsible{margin-top:10px;border-top:1px solid #edf0f4;padding-top:9px}
+    .profile-history-zone .profile-section-title{margin-bottom:9px}
+    @media(max-width:700px){.home-top-unified .home-coach-layout{grid-template-columns:1fr;gap:10px}.home-top-unified .home-coach-message{max-width:none}.home-top-unified .home-coach-controls{width:100%}}
+    @media(max-width:560px){.home-top-unified .home-week-row{grid-template-columns:1fr 150px}.home-top-unified .coach-actions{grid-template-columns:1fr 1fr}.profile-volume-grid-compact{grid-template-columns:repeat(2,minmax(0,1fr))}}
   </style>
 </head>
 <body><div id="toast" class="toast" role="status" aria-live="polite"></div>
@@ -588,7 +607,7 @@
       <div class="profile-zone profile-footer-zone">
         <div class="profile-disclaimer">⚠️ Расчёты ориентировочные и не являются медицинской диагностикой. % жира по формулам — это оценка, а не измерение.</div>
         <button class="profile-delete-btn" id="resetData" type="button">🗑 Удалить все данные</button>
-        <div class="profile-version">FormulaVS — v3.0.1</div>
+        <div class="profile-version">FormulaVS — v4.1.5</div>
       </div>
 
       <div class="modal" id="profileHistoryModal" aria-hidden="true">
@@ -612,8 +631,8 @@
     <button class="bottom-tab" data-tab="trackers"><span class="nav-icon">✓</span>Трекеры</button>
     <button class="bottom-tab" data-tab="analytics"><span class="nav-icon">⌁</span>Мой прогресс</button>
   </nav>
-  <div class="card app-settings-card" id="appSettingsCard"><div class="title">⚙️ Настройки</div><div class="settings-row"><div><b>Резервная копия и перенос данных между устройствами</b></div><button class="btn ghost settings-data-btn" id="openDataModal">Управление</button></div></div>
-  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v4.1.3</span></div>
+  <div class="card app-settings-card" id="appSettingsCard"><div class="title">⚙️ Настройки</div><div class="settings-row"><div><b>Резервная копия и перенос данных между устройствами</b></div><button class="btn ghost settings-data-btn" id="openDataModal" type="button" data-open-data-modal="1">Управление</button></div></div>
+  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v4.1.5</span></div>
 </div>
   <div id="quickModal" class="modal" aria-hidden="true"><div class="modal-card quick-modal-card"><button class="modal-close" id="quickModalClose" aria-label="Закрыть">×</button><div class="onboarding-title">Быстро добавить</div><div class="quick-grid"><button data-quick="weight">⚖️<span>Вес</span></button><button data-quick="water">💧<span>Вода</span></button><button data-quick="steps">🚶<span>Шаги</span></button><button data-quick="calories">🍽<span>Калории</span></button><button data-quick="training">🏋️<span>Тренировка</span></button><button data-quick="measurement">📏<span>Замер</span></button></div></div></div>
   <div id="dataModal" class="modal" aria-hidden="true"><div class="modal-card"><button class="modal-close" id="dataModalClose" aria-label="Закрыть">×</button><div class="onboarding-title">Резервная копия и перенос данных между устройствами</div><div class="data-actions"><button class="btn secondary" id="exportData">Экспортировать JSON</button><label class="btn ghost" for="importData">Импортировать JSON</label><input id="importData" type="file" accept="application/json,.json" class="file-upload"><button class="btn danger" id="resetDataFromModal">Удалить все данные</button></div></div></div>
@@ -2115,7 +2134,7 @@
     const topCard=document.createElement('div');
     topCard.id='homeTopUnified';
     topCard.className='card home-top-unified';
-    topCard.innerHTML=`<div class="home-coach-heading"><div class="coach-kicker">FormulaVS Coach</div></div><div class="home-coach-layout"><div class="home-coach-week-note">Эта настройка определяет границы недели для Планов, Динамики и расчёта КБЖУ.</div><div class="home-coach-controls"><div class="home-week-row"><div class="home-week-label">Начало недели</div><select id="homeWeekStart" class="home-week-select"><option value="1">Понедельник</option><option value="2">Вторник</option><option value="3">Среда</option><option value="4">Четверг</option><option value="5">Пятница</option><option value="6">Суббота</option><option value="0">Воскресенье</option></select></div><div class="home-coach-action-row"><div class="home-coach-message">Если вы уже внесли данные за день, сохраните их — FormulaVS обновит расчёты и прогресс.</div><div class="coach-actions"><button class="btn coach-btn" type="button" data-coach-nav="trackers">Отметить данные</button><button class="btn coach-btn" type="button" data-coach-nav="analytics">Посмотреть прогресс</button></div></div></div></div>`;
+    topCard.innerHTML=`<div class="home-coach-heading"><div class="coach-kicker">FormulaVS Coach</div></div><div class="home-coach-layout"><div class="home-coach-message">Если вы уже внесли данные за день, сохраните их — FormulaVS обновит расчёты и прогресс.</div><div class="home-coach-controls"><div class="home-week-row"><div class="home-week-label">Начало недели</div><select id="homeWeekStart" class="home-week-select"><option value="1">Понедельник</option><option value="2">Вторник</option><option value="3">Среда</option><option value="4">Четверг</option><option value="5">Пятница</option><option value="6">Суббота</option><option value="0">Воскресенье</option></select></div><div class="coach-actions"><button class="btn coach-btn" type="button" data-coach-nav="trackers">Отметить данные</button><button class="btn coach-btn" type="button" data-coach-nav="analytics">Посмотреть прогресс</button></div></div></div>`;
     host.prepend(topCard);
     const hs=$('homeWeekStart');
     if(hs){ hs.value=String(state.ui.analyticsWeekStartDay??1); hs.addEventListener('change',()=>{state.ui.analyticsWeekStartDay=Number(hs.value);save();recalcWeeklyNutrition(false);renderHome();renderAnalytics();}); }
@@ -2148,6 +2167,7 @@
 $('quickModalClose')?.addEventListener('click',closeQuick); $('quickModal')?.addEventListener('click',e=>{if(e.target.id==='quickModal')closeQuick();});
     document.querySelectorAll('[data-quick]').forEach(b=>b.addEventListener('click',()=>quickAction(b.dataset.quick)));
     $('openDataModal')?.addEventListener('click',()=>{$('dataModal').classList.add('show');$('dataModal').setAttribute('aria-hidden','false');});
+    document.addEventListener('click',e=>{const b=e.target.closest?.('[data-open-data-modal]');if(!b)return;e.preventDefault();e.stopPropagation();const m=$('dataModal');if(m){m.classList.add('show');m.setAttribute('aria-hidden','false');}});
     $('dataModalClose')?.addEventListener('click',()=>{$('dataModal').classList.remove('show');$('dataModal').setAttribute('aria-hidden','true');});
     $('dataModal')?.addEventListener('click',e=>{if(e.target.id==='dataModal'){$('dataModal').classList.remove('show');$('dataModal').setAttribute('aria-hidden','true');}});
     $('exportData')?.addEventListener('click',downloadJSON); $('importData')?.addEventListener('change',e=>importJSON(e.target.files?.[0]));
@@ -2202,7 +2222,7 @@ $('quickModalClose')?.addEventListener('click',closeQuick); $('quickModal')?.add
     if(state.profile.registrationDate){try{renderHome();}catch(e){console.warn('FormulaVS final home render skipped',e);}}
     setInterval(()=>{if(todayStr()!==state._lastDay){state._lastDay=todayStr();rolloverWeek();state.ui.habitDate=todayStr();state.ui.journalDate=todayStr();save();renderHome();renderJournal();renderWeek();renderAnalytics();}},30000);
     if ('serviceWorker' in navigator) {
-      const APP_VERSION='4.1.4';
+      const APP_VERSION='4.1.5';
       let reloadScheduled = false;
       function reloadOnceAfterUpdate(){
         if(reloadScheduled) return;
