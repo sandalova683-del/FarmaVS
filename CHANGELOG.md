@@ -1,3 +1,11 @@
+## 4.1.3 — Compact Coach and profile history UI
+
+- Compact unified FormulaVS Coach block on Home.
+- Home opens with populated content and safe render fallback.
+- FormulaVS logo/brand returns to Home.
+- Current body volumes and measurement history grouped into one collapsible section.
+- Previous profile parameter changes are collapsed separately; current parameters remain visible.
+
 # FormulaVS changelog
 
 ## 4.1.2 — Home grouping and measurement history

@@ -322,12 +322,20 @@
     .profile-editor-screen{display:block}
     @media(max-width:560px){.coach-actions{gap:7px}.coach-actions .coach-btn{font-size:.68rem;padding:9px 8px;border-radius:12px}}
     .health-sync-btn{margin-top:6px;border:1px solid #cfe0ff;background:#eef5ff;color:#2563eb;border-radius:11px;padding:7px 9px;font-size:.68rem;font-weight:750;width:100%;cursor:pointer}.health-sync-btn:disabled{opacity:.6;cursor:wait}.health-source{margin-top:5px;color:#94a3b8;font-size:.62rem;min-height:15px}.health-source.connected{color:#15803d}.health-source.error{color:#b91c1c}
+
+    /* FormulaVS 4.1.3 compact home/profile refinements */
+    .brand{cursor:pointer;user-select:none}.brand:focus-visible{outline:3px solid rgba(37,99,235,.18);outline-offset:5px;border-radius:14px}
+    .home-top-unified{padding:14px 15px!important;border-radius:18px!important;box-shadow:0 10px 28px rgba(15,23,42,.10)}
+    .home-top-unified .home-coach-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}
+    .home-top-unified .coach-kicker{margin:0!important;font-size:.7rem}.home-week-row{display:grid;grid-template-columns:auto minmax(145px,210px);align-items:center;gap:10px;margin-top:6px}.home-week-label{font-size:.76rem;font-weight:800;color:#fff}.home-week-note{font-size:.64rem;line-height:1.35;color:#aeb9c8;margin:6px 0 0}.home-top-unified .coach-title{font-size:.95rem;margin:10px 0 3px}.home-top-unified .coach-copy{font-size:.68rem;line-height:1.35;margin:0;color:#bfc9d6}.home-top-unified .coach-actions{margin-top:9px}.home-top-unified .streak-pill{margin-top:7px;font-size:.63rem;padding:4px 7px}.home-top-unified .coach-btn{padding:8px 10px;font-size:.7rem;border-radius:11px}
+    .profile-history-inline-title,.profile-history-current-label{font-size:.7rem;font-weight:800;color:#667085;margin:12px 0 7px}.profile-history-nested{margin-top:10px;border-top:1px solid #edf0f4;padding-top:8px}.profile-history-nested summary{font-size:.7rem;color:#4A90D9;font-weight:750}.profile-history-zone details>summary,.profile-volumes-zone details>summary{cursor:pointer;list-style:none}.profile-history-zone details>summary::-webkit-details-marker,.profile-volumes-zone details>summary::-webkit-details-marker{display:none}.profile-history-zone details>summary:after,.profile-volumes-zone details>summary:after{content:'⌄';float:right;color:#94a3b8}.profile-history-zone details[open]>summary:after,.profile-volumes-zone details[open]>summary:after{content:'⌃'}.profile-measurement-history-list{max-height:260px;overflow:auto;padding-right:2px}.profile-history-current-label+.profile-history-list .profile-history-entry:not(:first-child){display:none}.profile-history-current-label+.profile-history-list .profile-history-card{border-left-color:#4A90D9}
+    @media(max-width:560px){.home-week-row{grid-template-columns:1fr auto;gap:8px}.home-week-note{max-width:100%}.home-top-unified{padding:13px!important}.home-top-unified .coach-actions{gap:6px}.home-top-unified .coach-btn{font-size:.66rem;padding:8px 7px}}
   </style>
 </head>
 <body><div id="toast" class="toast" role="status" aria-live="polite"></div>
 <div class="app">
   <header class="hero">
-    <div class="brand">
+    <div class="brand" id="brandHome" role="button" tabindex="0" aria-label="Главный экран">
       <div class="mark" aria-label="FormulaVS">VS</div>
       <div><h1>FormulaVS</h1><div class="brand-en">Formula Vitality Slimness</div></div>
       <button class="profile-link" id="profileTop" data-tab="profile" aria-label="Профиль">👤</button>
@@ -494,20 +502,24 @@
 
       <div id="profileVolumesZone" class="profile-zone profile-volumes-zone hidden">
         <details id="profileVolumesDetails">
-          <summary>📐 Объемы тела</summary>
+          <summary>📐 Текущие объемы тела</summary>
           <div id="profileVolumesGrid" class="profile-volume-grid"></div>
+          <div class="profile-history-inline-title">История замеров</div>
+          <div id="profileMeasurementHistoryList" class="profile-measurement-history-list"></div>
         </details>
       </div>
 
       <div class="profile-zone profile-history-zone">
-        <div class="profile-section-title">📏 История замеров</div>
-        <div id="profileMeasurementHistoryList" class="profile-measurement-history-list"></div>
-      </div>
-
-      <div class="profile-zone profile-history-zone">
-        <div class="profile-section-title">📜 История параметров</div>
-        <div id="profileHistoryList" class="profile-history-list"></div>
-        <button type="button" class="profile-all-history hidden" id="profileAllHistory">📥 Все записи <span id="profileAllHistoryCount"></span></button>
+        <details id="profileParamsHistoryDetails">
+          <summary>📜 История параметров</summary>
+          <div class="profile-history-current-label">Текущие параметры</div>
+          <div id="profileHistoryList" class="profile-history-list"></div>
+          <details id="profilePreviousParamsDetails" class="profile-history-nested">
+            <summary>Предыдущие изменения <span id="profileAllHistoryCount"></span></summary>
+            <div id="profilePreviousHistoryList" class="profile-history-list"></div>
+          </details>
+          <button type="button" class="profile-all-history hidden" id="profileAllHistory">Все записи <span id="profileAllHistoryCountLegacy"></span></button>
+        </details>
       </div>
 
       <div id="profileEditor" class="hidden profile-editor-screen">
@@ -579,7 +591,7 @@
     <button class="bottom-tab" data-tab="analytics"><span class="nav-icon">⌁</span>Мой прогресс</button>
   </nav>
   <div class="card app-settings-card" id="appSettingsCard"><div class="title">⚙️ Настройки</div><div class="settings-row"><div><b>Резервная копия и перенос данных между устройствами</b></div><button class="btn ghost settings-data-btn" id="openDataModal">Управление</button></div></div>
-  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v4.1.2</span></div>
+  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v4.1.3</span></div>
 </div>
   <div id="quickModal" class="modal" aria-hidden="true"><div class="modal-card quick-modal-card"><button class="modal-close" id="quickModalClose" aria-label="Закрыть">×</button><div class="onboarding-title">Быстро добавить</div><div class="quick-grid"><button data-quick="weight">⚖️<span>Вес</span></button><button data-quick="water">💧<span>Вода</span></button><button data-quick="steps">🚶<span>Шаги</span></button><button data-quick="calories">🍽<span>Калории</span></button><button data-quick="training">🏋️<span>Тренировка</span></button><button data-quick="measurement">📏<span>Замер</span></button></div></div></div>
   <div id="dataModal" class="modal" aria-hidden="true"><div class="modal-card"><button class="modal-close" id="dataModalClose" aria-label="Закрыть">×</button><div class="onboarding-title">Резервная копия и перенос данных между устройствами</div><div class="data-actions"><button class="btn secondary" id="exportData">Экспортировать JSON</button><label class="btn ghost" for="importData">Импортировать JSON</label><input id="importData" type="file" accept="application/json,.json" class="file-upload"><button class="btn danger" id="resetDataFromModal">Удалить все данные</button></div></div></div>
@@ -590,7 +602,7 @@
 (() => {
   'use strict';
 
-  const APP_VERSION = '4.1.2';
+  const APP_VERSION = '4.1.3';
   const KEY = 'formavs_v2';
   const LEGACY_KEY = 'forma_v2';
   const todayStr = () => {
@@ -1295,7 +1307,8 @@
     const goalLabels={lose:'Снизить вес',maintain:'Поддержка веса',recomp:'Рекомпозиция',gain:'Набрать вес',muscle_gain:'Набор мышечной массы'};
     const activityLabels={'1.2':'Минимальная','1.375':'Низкая','1.55':'Умеренная','1.725':'Высокая','1.9':'Очень высокая'};
     const same=(a,b)=>String(a??'')===String(b??'');
-    const visible=history.slice(0,3);
+    const visible=history.slice(0,1);
+    const previous=history.slice(1);
     const makeCard=(h,idx)=>{
       const prev=history[idx+1];
       const changed={target:!!prev&&!same(h.target,prev.target),goal:!!prev&&!same(h.goal,prev.goal),activity:!!prev&&!same(h.activity,prev.activity),steps:!!prev&&!same(h.steps,prev.steps),dietType:!!prev&&!same(h.dietType,prev.dietType)};
@@ -1305,8 +1318,14 @@
       return `<div class="profile-history-entry ${current?'current':''}" data-history-date="${esc(h.date)}"><div class="profile-history-card"><div class="profile-history-head"><div class="profile-history-date">${current&&h.date===todayStr()?'Сегодня, ':''}${fmt(h.date)}<span class="profile-history-time">${h.time||''}</span></div>${current?'<span class="profile-current-badge">✓ Текущая</span>':''}</div><div class="profile-history-lines">${line('target','Целевой вес',h.target!==''&&h.target!=null?`${h.target} кг`:'—')}${line('goal','Цель',goalLabels[h.goal]||'—')}${line('activity','Активность',activityLabels[h.activity]||'—')}${line('steps','Шаги',steps)}${line('dietType','Питание',esc((DIET_INFO[h.dietType]||{}).name||h.dietType||'—'))}</div></div></div>`;
     };
     list.innerHTML=visible.map(makeCard).join('');
-    list.querySelectorAll('.profile-history-entry').forEach(el=>el.addEventListener('click',()=>openProfileHistoryDetail(el.dataset.historyDate)));
-    const allBtn=$('profileAllHistory');if(allBtn){allBtn.classList.toggle('hidden',history.length<=1);$('profileAllHistoryCount').textContent=`(${history.length})`;allBtn.onclick=()=>openProfileHistoryModal();}
+    const prevList=$('profilePreviousHistoryList');
+    if(prevList){
+      prevList.innerHTML=previous.length?previous.map((h,idx)=>makeCard(h,idx+1)).join(''):'<div class="note">Предыдущих изменений пока нет.</div>';
+      prevList.querySelectorAll('.profile-history-entry').forEach(el=>el.addEventListener('click',()=>openProfileHistoryDetail(el.dataset.historyDate)));
+    }
+    const prevDetails=$('profilePreviousParamsDetails'); if(prevDetails) prevDetails.classList.toggle('hidden',previous.length===0);
+    const allBtn=$('profileAllHistory');if(allBtn){allBtn.classList.add('hidden');}
+    const count=$('profileAllHistoryCount');if(count)count.textContent=previous.length?`(${previous.length})`:'';
   }
   function historyByDate(date){return state.profileHistory.find(h=>h.date===date);}
   function openProfileHistoryDetail(date){
@@ -1902,6 +1921,7 @@
     }
     document.querySelectorAll('.bottom-tab').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.tab)));
     $('profileTop')?.addEventListener('click',()=>navigate('profile'));
+    $('brandHome')?.addEventListener('click',()=>navigate('home')); $('brandHome')?.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();navigate('home');}});
     document.querySelectorAll('.tracker-mode').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tracker-mode').forEach(x=>x.classList.remove('active'));b.classList.add('active');const day=b.dataset.mode==='day';document.querySelector('.journal-card').classList.toggle('hidden',!day);$('trackerWeekContent').classList.toggle('hidden',day);}));
     setInterval(()=>{try{recalcWeeklyNutrition();const t=document.querySelector('.tab.active')?.dataset.tab;if(t==='home')renderHome();if(t==='analytics')renderAnalytics();if(t==='week')renderWeek();}catch(e){}},60000);
 
@@ -2074,19 +2094,19 @@
   }
   function renderV3HomeTop(){
     const host=$('homeContent'); if(!host || !state.profile.registrationDate) return;
-    const today=todayStr();
-
+    const old=$('homeTopUnified'); if(old) old.remove();
     const coach=coachInsight(); const streak=streakForGoals();
     const topCard=document.createElement('div');
+    topCard.id='homeTopUnified';
     topCard.className='card home-top-unified';
-    topCard.innerHTML=`<div class="home-section-title">📅 Настройка недели</div><div class="field" style="margin:0"><label for="homeWeekStart">Начало недели</label><select id="homeWeekStart"><option value="1">Понедельник</option><option value="2">Вторник</option><option value="3">Среда</option><option value="4">Четверг</option><option value="5">Пятница</option><option value="6">Суббота</option><option value="0">Воскресенье</option></select></div><div class="mini-note">Эта настройка определяет границы недели для Планов, Динамики и расчёта КБЖУ.</div><div class="coach-kicker" style="margin-top:14px">FormulaVS Coach</div><h3 class="coach-title">${esc(coach.title)}</h3><p class="coach-copy">${esc(coach.text)}</p>${streak?`<div class="streak-pill">🔥 Серия целей: ${streak} дн.</div>`:''}<div class="coach-actions"><button class="btn coach-btn" type="button" data-coach-nav="trackers">Отметить данные</button><button class="btn coach-btn" type="button" data-coach-nav="analytics">Посмотреть прогресс</button></div>`;
+    topCard.innerHTML=`<div class="home-coach-heading"><div class="coach-kicker">FormulaVS Coach</div></div><div class="home-week-row"><div class="home-week-label">Начало недели</div><select id="homeWeekStart"><option value="1">Понедельник</option><option value="2">Вторник</option><option value="3">Среда</option><option value="4">Четверг</option><option value="5">Пятница</option><option value="6">Суббота</option><option value="0">Воскресенье</option></select></div><div class="home-week-note">Эта настройка определяет границы недели для Планов, Динамики и расчёта КБЖУ.</div><h3 class="coach-title">${esc(coach.title)}</h3><p class="coach-copy">${esc(coach.text)}</p>${streak?`<div class="streak-pill">🔥 Серия целей: ${streak} дн.</div>`:''}<div class="coach-actions"><button class="btn coach-btn" type="button" data-coach-nav="trackers">Отметить данные</button><button class="btn coach-btn" type="button" data-coach-nav="analytics">Посмотреть прогресс</button></div>`;
     host.prepend(topCard);
-    const hs=$('homeWeekStart'); hs.value=String(state.ui.analyticsWeekStartDay??1); hs.addEventListener('change',()=>{state.ui.analyticsWeekStartDay=Number(hs.value);save();recalcWeeklyNutrition(false);renderHome();renderAnalytics();});
+    const hs=$('homeWeekStart');
+    if(hs){ hs.value=String(state.ui.analyticsWeekStartDay??1); hs.addEventListener('change',()=>{state.ui.analyticsWeekStartDay=Number(hs.value);save();recalcWeeklyNutrition(false);renderHome();renderAnalytics();}); }
     topCard.querySelectorAll('[data-coach-nav]').forEach(btn=>btn.addEventListener('click',()=>navigate(btn.dataset.coachNav)));
-    coachCard.querySelectorAll('[data-coach-nav]').forEach(btn=>btn.addEventListener('click',()=>navigate(btn.dataset.coachNav)));
   }
   const _renderHomeV3=renderHome;
-  renderHome=function(){ _renderHomeV3(); renderV3HomeTop(); };
+  renderHome=function(){ try{ _renderHomeV3(); renderV3HomeTop(); }catch(e){ console.warn('FormulaVS home render error',e); } };
 
   function openQuick(){ const m=$('quickModal'); if(m){m.classList.add('show');m.setAttribute('aria-hidden','false');} }
   function closeQuick(){ const m=$('quickModal'); if(m){m.classList.remove('show');m.setAttribute('aria-hidden','true');} }
@@ -2158,12 +2178,15 @@ $('quickModalClose')?.addEventListener('click',closeQuick); $('quickModal')?.add
     load();renderMeasurementFields();bind();bindV3();bindHealthUI();
     // Сначала рисуем интерфейс, затем пересчитываем недельный план. Ошибка в расчётах
     // не должна блокировать Главную или Профиль.
-    renderProfileFields();renderHome();renderJournal();renderAnalytics();
-    try{recalcWeeklyNutrition(false);renderHome();renderAnalytics();}catch(e){console.warn('FormulaVS weekly nutrition recalculation skipped',e);}
+    try{renderProfileFields();}catch(e){console.warn('FormulaVS profile render skipped',e);}
+    try{renderHome();}catch(e){console.warn('FormulaVS home initial render skipped',e);}
+    try{renderJournal();renderAnalytics();}catch(e){console.warn('FormulaVS secondary render skipped',e);}
+    try{recalcWeeklyNutrition(false);}catch(e){console.warn('FormulaVS weekly nutrition recalculation skipped',e);}
     if(!state.profile.registrationDate)navigate('profile');else navigate('home');
+    if(state.profile.registrationDate){try{renderHome();}catch(e){console.warn('FormulaVS final home render skipped',e);}}
     setInterval(()=>{if(todayStr()!==state._lastDay){state._lastDay=todayStr();rolloverWeek();state.ui.habitDate=todayStr();state.ui.journalDate=todayStr();save();renderHome();renderJournal();renderWeek();renderAnalytics();}},30000);
     if ('serviceWorker' in navigator) {
-      const APP_VERSION='4.1.2';
+      const APP_VERSION='4.1.3';
       let reloadScheduled = false;
       function reloadOnceAfterUpdate(){
         if(reloadScheduled) return;
