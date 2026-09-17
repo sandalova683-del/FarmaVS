@@ -1,5 +1,5 @@
 {
-  "version": "4.1.5",
+  "version": "4.1.6",
   "updated": "2026-09-15",
   "healthIntegration": {
     "ios": "Apple HealthKit / stepCount read",
