@@ -105,7 +105,7 @@
     .profile-volume-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 16px 16px}
     .profile-volume-item{background:#F8FAFC;border-radius:8px;padding:10px 12px;display:flex;justify-content:space-between;gap:8px;align-items:center}
     .profile-volume-item span{font-size:11px;color:#8E98A3}.profile-volume-item b{font-size:14px;color:#1A1A1A}
-    .profile-history-zone{border-top:1px solid #E8ECF0;padding-top:24px}
+    .profile-measurement-history-list{display:grid;gap:8px}.profile-measurement-history-item{border:1px solid #e5e7eb;border-radius:14px;padding:10px 12px;background:#fafbfc}.profile-measurement-history-head{display:flex;justify-content:space-between;gap:10px;font-size:.76rem;font-weight:750}.profile-measurement-history-values{display:flex;flex-wrap:wrap;gap:5px 10px;margin-top:7px;font-size:.7rem;color:#64748b}.profile-measurement-history-values b{color:#111827}.profile-measurement-history-item.registration{background:#f8fbff;border-color:#cfe2ff}.profile-history-zone{border-top:1px solid #E8ECF0;padding-top:24px}
     .profile-history-list{display:grid;gap:8px;margin-top:0}
     .profile-history-entry{display:block;cursor:pointer}
     .profile-history-card{background:#F8FAFC;border:0;border-left:3px solid #E8ECF0;border-radius:12px;padding:12px;transition:.15s}
@@ -308,7 +308,7 @@
     :root{--bg:#f4f6fa;--card:#fff;--surface:#f8fafc;--ink:#152033;--muted:#667085;--line:#e4e8ef;--accent:#2563eb;--accent2:#1d4ed8;--green:#16a34a;--red:#dc2626;--amber:#d97706;--purple:#7c3aed;--shadow:0 8px 28px rgba(15,23,42,.055);--r:20px;--focus:rgba(37,99,235,.12)}
     .quick-modal-card{max-width:420px}.quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.quick-grid button{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:16px;padding:15px 8px;font-weight:800;display:grid;gap:7px;place-items:center}.quick-grid button:first-letter{font-size:1.25rem}.quick-grid button:hover{border-color:#9bb9f8;box-shadow:0 0 0 3px var(--focus)}
     .data-actions{display:grid;gap:9px}.data-actions .btn,.data-actions label{width:100%;text-align:center}.data-actions label{cursor:pointer}
-    .coach-card{background:linear-gradient(145deg,#111827,#1e293b);color:#fff;border:0}.coach-card .muted{color:#cbd5e1}.coach-card .coach-kicker{font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:#93c5fd;font-weight:850}.coach-card h3{margin:4px 0 7px;font-size:1.15rem}.coach-card p{margin:0;color:#dbe4f0;font-size:.82rem}.coach-actions{display:flex;gap:8px;margin-top:12px}.coach-actions button{width:auto}.streak-pill{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:5px 8px;font-size:.7rem;margin-top:10px}
+    .coach-card{background:linear-gradient(145deg,#111827,#1e293b);color:#fff;border:0}.home-top-unified{background:linear-gradient(145deg,#111827,#1e293b);color:#fff;border:0}.home-top-unified .home-section-title{color:#fff}.home-top-unified .field label{color:#cbd5e1}.home-top-unified select{background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.18)}.home-top-unified .mini-note{color:#94a3b8}.home-top-unified .coach-copy{font-size:.74rem;line-height:1.4;color:#cbd5e1;margin:3px 0 0}.home-top-unified .coach-title{margin:3px 0 5px;font-size:1.02rem}.coach-card .muted{color:#cbd5e1}.coach-card .coach-kicker{font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:#93c5fd;font-weight:850}.coach-card h3{margin:4px 0 7px;font-size:1.15rem}.coach-card p{margin:0;color:#dbe4f0;font-size:.82rem}.coach-actions{display:flex;gap:8px;margin-top:12px}.coach-actions button{width:auto}.streak-pill{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:5px 8px;font-size:.7rem;margin-top:10px}
     .home-focus{border:1px solid #d7e4ff;background:linear-gradient(180deg,#fff,#f8fbff)}
     .focus-title{font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);font-weight:850}.focus-main{font-size:1.2rem;font-weight:850;margin-top:3px}.focus-sub{color:var(--muted);font-size:.78rem;margin-top:3px}
     .focus-list{display:grid;gap:7px;margin-top:12px}.focus-item{display:flex;justify-content:space-between;gap:10px;padding:9px 10px;background:var(--surface);border-radius:13px}.focus-item span{color:var(--muted)}.focus-item b{font-size:.78rem}
@@ -500,6 +500,11 @@
       </div>
 
       <div class="profile-zone profile-history-zone">
+        <div class="profile-section-title">📏 История замеров</div>
+        <div id="profileMeasurementHistoryList" class="profile-measurement-history-list"></div>
+      </div>
+
+      <div class="profile-zone profile-history-zone">
         <div class="profile-section-title">📜 История параметров</div>
         <div id="profileHistoryList" class="profile-history-list"></div>
         <button type="button" class="profile-all-history hidden" id="profileAllHistory">📥 Все записи <span id="profileAllHistoryCount"></span></button>
@@ -573,11 +578,11 @@
     <button class="bottom-tab" data-tab="trackers"><span class="nav-icon">✓</span>Трекеры</button>
     <button class="bottom-tab" data-tab="analytics"><span class="nav-icon">⌁</span>Мой прогресс</button>
   </nav>
-  <div class="card app-settings-card" id="appSettingsCard"><div class="title">⚙️ Настройки</div><div class="settings-row"><div><b>Данные</b><small>Резервная копия и перенос между устройствами</small></div><button class="btn ghost settings-data-btn" id="openDataModal">Управление</button></div></div>
-  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v4.1.1</span></div>
+  <div class="card app-settings-card" id="appSettingsCard"><div class="title">⚙️ Настройки</div><div class="settings-row"><div><b>Резервная копия и перенос данных между устройствами</b></div><button class="btn ghost settings-data-btn" id="openDataModal">Управление</button></div></div>
+  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v4.1.2</span></div>
 </div>
   <div id="quickModal" class="modal" aria-hidden="true"><div class="modal-card quick-modal-card"><button class="modal-close" id="quickModalClose" aria-label="Закрыть">×</button><div class="onboarding-title">Быстро добавить</div><div class="quick-grid"><button data-quick="weight">⚖️<span>Вес</span></button><button data-quick="water">💧<span>Вода</span></button><button data-quick="steps">🚶<span>Шаги</span></button><button data-quick="calories">🍽<span>Калории</span></button><button data-quick="training">🏋️<span>Тренировка</span></button><button data-quick="measurement">📏<span>Замер</span></button></div></div></div>
-  <div id="dataModal" class="modal" aria-hidden="true"><div class="modal-card"><button class="modal-close" id="dataModalClose" aria-label="Закрыть">×</button><div class="onboarding-title">Данные</div><div class="data-actions"><button class="btn secondary" id="exportData">Экспортировать JSON</button><label class="btn ghost" for="importData">Импортировать JSON</label><input id="importData" type="file" accept="application/json,.json" class="file-upload"><button class="btn danger" id="resetDataFromModal">Удалить все данные</button></div></div></div>
+  <div id="dataModal" class="modal" aria-hidden="true"><div class="modal-card"><button class="modal-close" id="dataModalClose" aria-label="Закрыть">×</button><div class="onboarding-title">Резервная копия и перенос данных между устройствами</div><div class="data-actions"><button class="btn secondary" id="exportData">Экспортировать JSON</button><label class="btn ghost" for="importData">Импортировать JSON</label><input id="importData" type="file" accept="application/json,.json" class="file-upload"><button class="btn danger" id="resetDataFromModal">Удалить все данные</button></div></div></div>
   <div id="dietModal" class="modal"><div class="modal-card"><button class="modal-close" id="dietModalClose">×</button><div id="dietModalTitle" class="onboarding-title"></div><div id="dietModalBody" style="color:#475569;line-height:1.55"></div></div></div>
 
 <script src="js/health-service.js"></script>
@@ -585,7 +590,7 @@
 (() => {
   'use strict';
 
-  const APP_VERSION = '4.1.1';
+  const APP_VERSION = '4.1.2';
   const KEY = 'formavs_v2';
   const LEGACY_KEY = 'forma_v2';
   const todayStr = () => {
@@ -622,7 +627,7 @@
     profile:{name:'',email:'',photo:'',gender:'female',birth:'',height:'',weight:'',target:'',goal:'maintain',steps:'',activity:'1.2',dietType:'mediterranean',registrationDate:null,baseMeasurements:{},registrationSnapshot:null},
     weights:{}, measurements:{}, journal:{}, nutritionWeekly:{}, dailyGoals:structuredClone(DEFAULT_DAILY), weeklyGoals:structuredClone(DEFAULT_WEEKLY),
     dailyDone:{}, weeklyDone:{}, weeklyHistory:{}, cycleDays:{},
-    profileHistory:[],
+    profileHistory:[], measurementHistory:[],
     ui:{month:todayStr().slice(0,7),habitDate:todayStr(),journalDate:todayStr(),analyticsDate:todayStr(),analyticsPeriod:'week',analyticsMetric:'weight',analyticsWeekStartDay:1,isProfileEditorOpen:false}
   };
 
@@ -643,6 +648,7 @@
         state={...state,...parsed,profile:{...state.profile,...(parsed.profile||{})},ui:{...state.ui,...(parsed.ui||{})}};
         if(!state.cycleDays || typeof state.cycleDays!=='object') state.cycleDays={};
         if(!state.profileHistory || !Array.isArray(state.profileHistory)) state.profileHistory=[];
+        if(!state.measurementHistory || !Array.isArray(state.measurementHistory)) state.measurementHistory=[];
         if(state.profile.locks) delete state.profile.locks;
       }
     }catch(e){ console.warn(e); }
@@ -670,6 +676,7 @@
     rolloverWeek();
     if(!state.cycleDays) state.cycleDays={};
     if(!state.profileHistory || !Array.isArray(state.profileHistory)) state.profileHistory=[];
+    if(!state.measurementHistory || !Array.isArray(state.measurementHistory)) state.measurementHistory=[];
     if(state.profile.registrationSnapshot?.registrationDate){
       state.profile.registrationDate=state.profile.registrationSnapshot.registrationDate;
     } else if(state.profile.registrationDate){
@@ -687,13 +694,24 @@
     }
     if(state.profile.registrationSnapshot && !state.profileHistory.some(h=>h.date===state.profile.registrationSnapshot.registrationDate)){
       const s=state.profile.registrationSnapshot;
-      state.profileHistory.push({date:s.registrationDate,time:'',target:s.target,goal:s.goal,activity:s.activity,steps:s.steps,dietType:s.dietType||'mediterranean'});
+      state.profileHistory.push({date:s.registrationDate,time:'',target:s.target,goal:s.goal,activity:s.activity,steps:s.steps,dietType:s.dietType||'mediterranean',baseMeasurements:{...(s.baseMeasurements||{})}});
     }
     if(state.profile.registrationSnapshot){
       const rt=state.profile.registrationSnapshot.target;
       if(rt!==undefined && rt!=='') state.profileHistory.forEach(h=>{ if(h.target===undefined || h.target==='') h.target=rt; });
     }
-    state.profileHistory=state.profileHistory.map(h=>({date:h.date,time:h.time||'',goal:h.goal||'maintain',activity:h.activity||'1.2',steps:h.steps??'',dietType:h.dietType||'mediterranean'}));
+    state.profileHistory=state.profileHistory.map(h=>({date:h.date,time:h.time||'',target:h.target??'',goal:h.goal||'maintain',activity:h.activity||'1.2',steps:h.steps??'',dietType:h.dietType||'mediterranean',baseMeasurements:{...(h.baseMeasurements||{})}}));
+    // Миграция: исходные замеры регистрации и существующие дневные замеры становятся историей.
+    const reg=state.profile.registrationSnapshot;
+    if(reg?.registrationDate && reg.baseMeasurements && Object.keys(reg.baseMeasurements).length && !state.measurementHistory.some(x=>x.source==='registration')){
+      state.measurementHistory.unshift({date:reg.registrationDate,time:'',source:'registration',values:{...reg.baseMeasurements}});
+    }
+    for(const [d,m] of Object.entries(state.measurements||{})){
+      if(m && typeof m==='object' && Object.keys(m).some(k=>n(m[k])!=null) && !state.measurementHistory.some(x=>x.date===d && x.source!=='registration')){
+        state.measurementHistory.push({date:d,time:'',source:'daily',values:{...m}});
+      }
+    }
+    state.measurementHistory.sort((a,b)=>`${b.date} ${b.time||''}`.localeCompare(`${a.date} ${a.time||''}`));
     if(!state.ui.habitDate) state.ui.habitDate=todayStr();
     if(!state.ui.month) state.ui.month=todayStr().slice(0,7);
     save();
@@ -1265,6 +1283,12 @@
   }
 
   function renderProfileHistory(){
+    const measurementList=$('profileMeasurementHistoryList');
+    if(measurementList){
+      const entries=[...state.measurementHistory].sort((a,b)=>`${b.date} ${b.time||''}`.localeCompare(`${a.date} ${a.time||''}`));
+      const makeValues=(values)=>MEASUREMENTS.map(([k,label])=>{const v=n(values?.[k]);return v!=null?`<span>${esc(label)} <b>${v} см</b></span>`:''}).filter(Boolean).join('');
+      measurementList.innerHTML=entries.length?entries.slice(0,8).map(e=>`<div class="profile-measurement-history-item ${e.source==='registration'?'registration':''}"><div class="profile-measurement-history-head"><span>${e.source==='registration'?'Исходные замеры · ':''}${fmt(e.date)}</span><span>${e.time||''}</span></div><div class="profile-measurement-history-values">${makeValues(e.values)}</div></div>`).join(''):'<div class="note">История замеров пока пуста.</div>';
+    }
     const list=$('profileHistoryList');if(!list)return;
     const history=[...state.profileHistory].sort((a,b)=>b.date.localeCompare(a.date));
     if(!history.length){list.innerHTML='<div class="note">История изменений пуста. Ваши первые параметры появятся здесь.</div>';$('profileAllHistory')?.classList.add('hidden');return;}
@@ -1943,7 +1967,7 @@
       }else{
         const changed=String(oldDynamic.target)!==String(next.target)||oldDynamic.goal!==next.goal||oldDynamic.activity!==next.activity||String(oldDynamic.steps)!==String(next.steps)||oldDynamic.dietType!==next.dietType;
         if(changed){
-          const h={date:date,time:new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'}),target:p.target,goal:p.goal,activity:p.activity,steps:p.steps,dietType:p.dietType};
+          const h={date:date,time:new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'}),target:p.target,goal:p.goal,activity:p.activity,steps:p.steps,dietType:p.dietType,baseMeasurements:{...(p.baseMeasurements||{})}};
           const sameIndex=state.profileHistory.findIndex(x=>x.date===h.date);
           if(sameIndex>=0) state.profileHistory[sameIndex]=h; else state.profileHistory.push(h);
           state.profileHistory.sort((a,b)=>a.date.localeCompare(b.date));
@@ -2005,7 +2029,12 @@
       if(d>todayStr())return alert('Нельзя добавлять замер в будущее.');
       const m={};for(const [k] of MEASUREMENTS){const v=n($('m_'+k)?.value);if(v!=null)m[k]=v;}
       if(!Object.keys(m).length)return alert('Введите хотя бы один объём.');
-      state.measurements[d]=m;state.ui.measureDate=d;save();renderWeek();toast('Данные сохранены');
+      state.measurements[d]=m;
+      const nowTime=new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});
+      state.measurementHistory=Array.isArray(state.measurementHistory)?state.measurementHistory:[];
+      state.measurementHistory.push({date:d,time:nowTime,source:'daily',values:{...m}});
+      state.measurementHistory.sort((a,b)=>`${b.date} ${b.time||''}`.localeCompare(`${a.date} ${a.time||''}`));
+      state.ui.measureDate=d;save();renderWeek();renderProfileDashboard();renderProfileHistory();toast('Данные сохранены');
     });
     $('analyticsWeekStart').addEventListener('change',()=>{
       state.ui.analyticsWeekStartDay=Number($('analyticsWeekStart').value);
@@ -2047,14 +2076,13 @@
     const host=$('homeContent'); if(!host || !state.profile.registrationDate) return;
     const today=todayStr();
 
-    const weekSelect=document.createElement('div');
-    weekSelect.className='card home-week-control';
-    weekSelect.innerHTML=`<div class="home-section-title">📅 Настройка недели</div><div class="field" style="margin:0"><label for="homeWeekStart">Начало недели</label><select id="homeWeekStart"><option value="1">Понедельник</option><option value="2">Вторник</option><option value="3">Среда</option><option value="4">Четверг</option><option value="5">Пятница</option><option value="6">Суббота</option><option value="0">Воскресенье</option></select></div><div class="mini-note">Эта настройка определяет границы недели для Планов, Динамики и расчёта КБЖУ.</div>`;
-    host.prepend(weekSelect);
-    const hs=$('homeWeekStart'); hs.value=String(state.ui.analyticsWeekStartDay??1); hs.addEventListener('change',()=>{state.ui.analyticsWeekStartDay=Number(hs.value);save();recalcWeeklyNutrition(false);renderHome();renderAnalytics();});
     const coach=coachInsight(); const streak=streakForGoals();
-    const coachCard=document.createElement('div'); coachCard.className='card coach-card'; coachCard.innerHTML=`<div class="coach-kicker">FormulaVS Coach</div><h3>${esc(coach.title)}</h3><p>${esc(coach.text)}</p>${streak?`<div class="streak-pill">🔥 Серия целей: ${streak} дн.</div>`:''}<div class="coach-actions"><button class="btn coach-btn" type="button" data-coach-nav="trackers">Отметить данные</button><button class="btn coach-btn" type="button" data-coach-nav="analytics">Посмотреть прогресс</button></div>`;
-    host.insertBefore(coachCard,host.children[1]||null);
+    const topCard=document.createElement('div');
+    topCard.className='card home-top-unified';
+    topCard.innerHTML=`<div class="home-section-title">📅 Настройка недели</div><div class="field" style="margin:0"><label for="homeWeekStart">Начало недели</label><select id="homeWeekStart"><option value="1">Понедельник</option><option value="2">Вторник</option><option value="3">Среда</option><option value="4">Четверг</option><option value="5">Пятница</option><option value="6">Суббота</option><option value="0">Воскресенье</option></select></div><div class="mini-note">Эта настройка определяет границы недели для Планов, Динамики и расчёта КБЖУ.</div><div class="coach-kicker" style="margin-top:14px">FormulaVS Coach</div><h3 class="coach-title">${esc(coach.title)}</h3><p class="coach-copy">${esc(coach.text)}</p>${streak?`<div class="streak-pill">🔥 Серия целей: ${streak} дн.</div>`:''}<div class="coach-actions"><button class="btn coach-btn" type="button" data-coach-nav="trackers">Отметить данные</button><button class="btn coach-btn" type="button" data-coach-nav="analytics">Посмотреть прогресс</button></div>`;
+    host.prepend(topCard);
+    const hs=$('homeWeekStart'); hs.value=String(state.ui.analyticsWeekStartDay??1); hs.addEventListener('change',()=>{state.ui.analyticsWeekStartDay=Number(hs.value);save();recalcWeeklyNutrition(false);renderHome();renderAnalytics();});
+    topCard.querySelectorAll('[data-coach-nav]').forEach(btn=>btn.addEventListener('click',()=>navigate(btn.dataset.coachNav)));
     coachCard.querySelectorAll('[data-coach-nav]').forEach(btn=>btn.addEventListener('click',()=>navigate(btn.dataset.coachNav)));
   }
   const _renderHomeV3=renderHome;
@@ -2135,7 +2163,7 @@ $('quickModalClose')?.addEventListener('click',closeQuick); $('quickModal')?.add
     if(!state.profile.registrationDate)navigate('profile');else navigate('home');
     setInterval(()=>{if(todayStr()!==state._lastDay){state._lastDay=todayStr();rolloverWeek();state.ui.habitDate=todayStr();state.ui.journalDate=todayStr();save();renderHome();renderJournal();renderWeek();renderAnalytics();}},30000);
     if ('serviceWorker' in navigator) {
-      const APP_VERSION='4.1.1';
+      const APP_VERSION='4.1.2';
       let reloadScheduled = false;
       function reloadOnceAfterUpdate(){
         if(reloadScheduled) return;
