@@ -325,9 +325,19 @@
 
     /* FormulaVS 4.1.3 compact home/profile refinements */
     .brand{cursor:pointer;user-select:none}.brand:focus-visible{outline:3px solid rgba(37,99,235,.18);outline-offset:5px;border-radius:14px}
-    .home-top-unified{padding:14px 15px!important;border-radius:18px!important;box-shadow:0 10px 28px rgba(15,23,42,.10)}
-    .home-top-unified .home-coach-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}
-    .home-top-unified .coach-kicker{margin:0!important;font-size:.7rem}.home-week-row{display:grid;grid-template-columns:auto minmax(145px,210px);align-items:center;gap:10px;margin-top:6px}.home-week-label{font-size:.76rem;font-weight:800;color:#fff}.home-week-note{font-size:.64rem;line-height:1.35;color:#aeb9c8;margin:6px 0 0}.home-top-unified .coach-title{font-size:.95rem;margin:10px 0 3px}.home-top-unified .coach-copy{font-size:.68rem;line-height:1.35;margin:0;color:#bfc9d6}.home-top-unified .coach-actions{margin-top:9px}.home-top-unified .streak-pill{margin-top:7px;font-size:.63rem;padding:4px 7px}.home-top-unified .coach-btn{padding:8px 10px;font-size:.7rem;border-radius:11px}
+    .home-top-unified{padding:15px 16px!important;border-radius:18px!important;box-shadow:0 10px 28px rgba(15,23,42,.10)}
+    .home-top-unified .home-coach-heading{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+    .home-top-unified .coach-kicker{margin:0!important;font-size:.9rem;line-height:1.1;font-weight:900;letter-spacing:.01em;text-transform:none;color:#fff}
+    .home-coach-layout{display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:16px;align-items:center}
+    .home-coach-message{font-size:.72rem;line-height:1.45;color:#cbd5e1;max-width:620px}
+    .home-coach-controls{display:grid;gap:7px;justify-items:stretch}
+    .home-week-row{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:8px}
+    .home-week-label{font-size:.72rem;font-weight:800;color:#fff;white-space:nowrap}
+    .home-week-select{height:38px!important;width:100%;min-width:0;border-radius:11px!important;font-size:.72rem!important;font-weight:750!important;padding:0 10px!important}
+    .home-top-unified .coach-actions{display:grid;grid-template-columns:1fr;gap:7px;margin-top:0}
+    .home-top-unified .coach-btn{width:100%;height:38px;padding:8px 10px;font-size:.72rem;border-radius:11px}
+    .home-top-unified .coach-copy,.home-top-unified .coach-title,.home-top-unified .streak-pill{display:none!important}
+    @media(max-width:700px){.home-coach-layout{grid-template-columns:1fr;gap:10px}.home-coach-message{max-width:none}.home-coach-controls{width:100%}}
     .profile-history-inline-title,.profile-history-current-label{font-size:.7rem;font-weight:800;color:#667085;margin:12px 0 7px}.profile-history-nested{margin-top:10px;border-top:1px solid #edf0f4;padding-top:8px}.profile-history-nested summary{font-size:.7rem;color:#4A90D9;font-weight:750}.profile-history-zone details>summary,.profile-volumes-zone details>summary{cursor:pointer;list-style:none}.profile-history-zone details>summary::-webkit-details-marker,.profile-volumes-zone details>summary::-webkit-details-marker{display:none}.profile-history-zone details>summary:after,.profile-volumes-zone details>summary:after{content:'⌄';float:right;color:#94a3b8}.profile-history-zone details[open]>summary:after,.profile-volumes-zone details[open]>summary:after{content:'⌃'}.profile-measurement-history-list{max-height:260px;overflow:auto;padding-right:2px}.profile-history-current-label+.profile-history-list .profile-history-entry:not(:first-child){display:none}.profile-history-current-label+.profile-history-list .profile-history-card{border-left-color:#4A90D9}
     @media(max-width:560px){.home-week-row{grid-template-columns:1fr auto;gap:8px}.home-week-note{max-width:100%}.home-top-unified{padding:13px!important}.home-top-unified .coach-actions{gap:6px}.home-top-unified .coach-btn{font-size:.66rem;padding:8px 7px}}
   </style>
@@ -1920,8 +1930,8 @@
       });
     }
     document.querySelectorAll('.bottom-tab').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.tab)));
-    $('profileTop')?.addEventListener('click',()=>navigate('profile'));
-    $('brandHome')?.addEventListener('click',()=>navigate('home')); $('brandHome')?.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();navigate('home');}});
+    $('profileTop')?.addEventListener('click',(e)=>{e.preventDefault();e.stopPropagation();navigate('profile');});
+    $('brandHome')?.addEventListener('click',(e)=>{if(e.target.closest('#profileTop'))return;navigate('home');}); $('brandHome')?.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();navigate('home');}});
     document.querySelectorAll('.tracker-mode').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tracker-mode').forEach(x=>x.classList.remove('active'));b.classList.add('active');const day=b.dataset.mode==='day';document.querySelector('.journal-card').classList.toggle('hidden',!day);$('trackerWeekContent').classList.toggle('hidden',day);}));
     setInterval(()=>{try{recalcWeeklyNutrition();const t=document.querySelector('.tab.active')?.dataset.tab;if(t==='home')renderHome();if(t==='analytics')renderAnalytics();if(t==='week')renderWeek();}catch(e){}},60000);
 
@@ -2084,22 +2094,16 @@
     return streak;
   }
   function coachInsight(){
-    const d=todayStr(), j=state.journal[d]||{}, p=getFullProfileAt(d), nut=nutritionForDate(d), steps=n(j.steps), water=n(j.water), kcal=n(j.calories);
-    if(!p.registrationDate && !state.profile.registrationDate) return {title:'Начнём с базы',text:'Заполните профиль — после этого FormulaVS сможет считать цели и прогресс.'};
-    if(nut && kcal!=null && kcal>nut.calories*1.15) return {title:'Сегодня калорий выше плана',text:`Фактически ${round(kcal,0)} ккал при ориентире ${round(nut.calories,0)} ккал. Не нужно компенсировать это голодом — просто вернитесь к обычному режиму.`};
-    if(nut && steps!=null && p.steps && steps<Number(p.steps)*.55) return {title:'Главный фокус — активность',text:`До вашей цели ${Number(p.steps).toLocaleString('ru-RU')} шагов ещё есть запас. Спокойная прогулка — самый простой способ закрыть часть дефицита.`};
-    if(nut && water!=null && nut.waterL && water<nut.waterL*.65) return {title:'Главный фокус — вода',text:`Сегодня отмечено ${round(water,2)} л при ориентире около ${round(nut.waterL,2)} л.`};
-    if(nut && j.protein!=null && nut.proteinMinimum && n(j.protein)<nut.proteinMinimum*.7) return {title:'Обратите внимание на белок',text:`Белка ${round(j.protein,0)} г. Ориентир FormulaVS — не менее ${round(nut.proteinMinimum,0)} г.`};
-    return {title:'Дневник готов к обновлению',text:'Если вы уже внесли данные за день, сохраните их — FormulaVS обновит расчёты и прогресс.'};
+    return {text:'Если вы уже внесли данные за день, сохраните их — FormulaVS обновит расчёты и прогресс.'};
   }
   function renderV3HomeTop(){
     const host=$('homeContent'); if(!host || !state.profile.registrationDate) return;
     const old=$('homeTopUnified'); if(old) old.remove();
-    const coach=coachInsight(); const streak=streakForGoals();
+    const coach=coachInsight();
     const topCard=document.createElement('div');
     topCard.id='homeTopUnified';
     topCard.className='card home-top-unified';
-    topCard.innerHTML=`<div class="home-coach-heading"><div class="coach-kicker">FormulaVS Coach</div></div><div class="home-week-row"><div class="home-week-label">Начало недели</div><select id="homeWeekStart"><option value="1">Понедельник</option><option value="2">Вторник</option><option value="3">Среда</option><option value="4">Четверг</option><option value="5">Пятница</option><option value="6">Суббота</option><option value="0">Воскресенье</option></select></div><div class="home-week-note">Эта настройка определяет границы недели для Планов, Динамики и расчёта КБЖУ.</div><h3 class="coach-title">${esc(coach.title)}</h3><p class="coach-copy">${esc(coach.text)}</p>${streak?`<div class="streak-pill">🔥 Серия целей: ${streak} дн.</div>`:''}<div class="coach-actions"><button class="btn coach-btn" type="button" data-coach-nav="trackers">Отметить данные</button><button class="btn coach-btn" type="button" data-coach-nav="analytics">Посмотреть прогресс</button></div>`;
+    topCard.innerHTML=`<div class="home-coach-heading"><div class="coach-kicker">FormulaVS Coach</div></div><div class="home-coach-layout"><div class="home-coach-message">${esc(coach.text)}</div><div class="home-coach-controls"><div class="home-week-row"><div class="home-week-label">Начало недели</div><select id="homeWeekStart" class="home-week-select"><option value="1">Понедельник</option><option value="2">Вторник</option><option value="3">Среда</option><option value="4">Четверг</option><option value="5">Пятница</option><option value="6">Суббота</option><option value="0">Воскресенье</option></select></div><div class="home-week-note">Эта настройка определяет границы недели для Планов, Динамики и расчёта КБЖУ.</div><div class="coach-actions"><button class="btn coach-btn" type="button" data-coach-nav="trackers">Отметить данные</button><button class="btn coach-btn" type="button" data-coach-nav="analytics">Посмотреть прогресс</button></div></div></div>`;
     host.prepend(topCard);
     const hs=$('homeWeekStart');
     if(hs){ hs.value=String(state.ui.analyticsWeekStartDay??1); hs.addEventListener('change',()=>{state.ui.analyticsWeekStartDay=Number(hs.value);save();recalcWeeklyNutrition(false);renderHome();renderAnalytics();}); }
@@ -2186,7 +2190,7 @@ $('quickModalClose')?.addEventListener('click',closeQuick); $('quickModal')?.add
     if(state.profile.registrationDate){try{renderHome();}catch(e){console.warn('FormulaVS final home render skipped',e);}}
     setInterval(()=>{if(todayStr()!==state._lastDay){state._lastDay=todayStr();rolloverWeek();state.ui.habitDate=todayStr();state.ui.journalDate=todayStr();save();renderHome();renderJournal();renderWeek();renderAnalytics();}},30000);
     if ('serviceWorker' in navigator) {
-      const APP_VERSION='4.1.3';
+      const APP_VERSION='4.1.4';
       let reloadScheduled = false;
       function reloadOnceAfterUpdate(){
         if(reloadScheduled) return;
@@ -2216,7 +2220,8 @@ $('quickModalClose')?.addEventListener('click',closeQuick); $('quickModal')?.add
       navigator.serviceWorker.addEventListener('controllerchange',reloadOnceAfterUpdate);
     }
   }
-  init();
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init,{once:true}); else init();
+  window.addEventListener('pageshow',()=>{ if(state?.profile?.registrationDate){ try{ navigate('home'); }catch(_){} } });
 })();
 </script>
 </body>
