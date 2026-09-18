@@ -580,7 +580,13 @@
     @media(max-width:560px){
       .profile-volume-current-card .profile-history-lines{grid-template-columns:1fr 1fr!important;gap:5px 10px!important}
     }
-  </style>
+  
+    /* FormulaVS 4.1.11: current volumes show date, time and current badge like current parameters. */
+    .profile-volume-current-card .profile-current-badge{
+      display:inline-flex!important;align-items:center!important;white-space:nowrap!important;
+    }
+    .profile-volume-current-card .profile-history-time{margin-left:5px!important}
+</style>
 </head>
 <body><div id="toast" class="toast" role="status" aria-live="polite"></div>
 <div class="app">
@@ -838,7 +844,7 @@
     <button class="bottom-tab" data-tab="analytics"><span class="nav-icon">⌁</span>Мой прогресс</button>
   </nav>
   <div class="card app-settings-card" id="appSettingsCard"><div class="title">⚙️ Настройки</div><div class="settings-row"><div><b>Резервная копия и перенос данных между устройствами</b></div><button class="btn ghost settings-data-btn" id="openDataModal" type="button" data-open-data-modal="1" onclick="var m=document.getElementById('dataModal'); if(m){m.classList.add('show');m.setAttribute('aria-hidden','false');}">Управление</button></div></div>
-  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v4.1.10</span></div>
+  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v4.1.11</span></div>
 </div>
   <div id="quickModal" class="modal" aria-hidden="true"><div class="modal-card quick-modal-card"><button class="modal-close" id="quickModalClose" aria-label="Закрыть">×</button><div class="onboarding-title">Быстро добавить</div><div class="quick-grid"><button data-quick="weight">⚖️<span>Вес</span></button><button data-quick="water">💧<span>Вода</span></button><button data-quick="steps">🚶<span>Шаги</span></button><button data-quick="calories">🍽<span>Калории</span></button><button data-quick="training">🏋️<span>Тренировка</span></button><button data-quick="measurement">📏<span>Замер</span></button></div></div></div>
   <div id="dataModal" class="modal" aria-hidden="true"><div class="modal-card"><button type="button" class="modal-close" id="dataModalClose" aria-label="Закрыть" onclick="event.preventDefault();event.stopPropagation();var m=document.getElementById('dataModal');if(m){m.classList.remove('show');m.setAttribute('aria-hidden','true');}">×</button><div class="onboarding-title">Резервная копия и перенос данных между устройствами</div><div class="data-actions"><button class="btn secondary" id="exportData">Экспортировать JSON</button><label class="btn ghost" for="importData">Импортировать JSON</label><input id="importData" type="file" accept="application/json,.json" class="file-upload"><button class="btn danger" id="resetDataFromModal">Удалить все данные</button></div></div></div>
@@ -849,7 +855,7 @@
 (() => {
   'use strict';
 
-  const APP_VERSION = '4.1.10';
+  const APP_VERSION = '4.1.11';
   const KEY = 'formavs_v2';
   const LEGACY_KEY = 'forma_v2';
   const todayStr = () => {
@@ -1538,14 +1544,20 @@
       if(measurementDates.length===1) return p.baseMeasurements&&Object.keys(p.baseMeasurements).length?p.baseMeasurements:null;
       return null;
     })();
+    const currentVolumeEntry=(()=>{
+      if(!currentMeasurementDate || !state.measurementHistory?.length) return null;
+      const sameValues=(a,b)=>MEASUREMENTS.every(([k])=>{const av=n(a?.[k]),bv=n(b?.[k]);return av==null&&bv==null||av!=null&&bv!=null&&av===bv;});
+      return [...state.measurementHistory].sort((a,b)=>`${b.date} ${b.time||''}`.localeCompare(`${a.date} ${a.time||''}`)).find(e=>e.date===currentMeasurementDate && sameValues(e.values,lm))||null;
+    })();
     const volumeDate=currentMeasurementDate?fmt(currentMeasurementDate):'—';
+    const volumeTime=currentVolumeEntry?.time||'';
     if(zone&&vg){
       zone.classList.remove('hidden');
       if(!vals.length){
         vg.innerHTML='<div class="profile-history-card profile-volume-current-card"><div class="profile-history-head"><div class="profile-history-date">Текущие замеры</div></div><div class="note">Текущих замеров пока нет.</div></div>';
       }else{
         const rows=vals.map(([key,label,v])=>{const pv=n(prevMeasurement?.[key]);let cls='';if(pv!=null&&v!==pv) cls=v>pv?'increased':'decreased';return `<div class="profile-history-line"><span>${esc(label)}: <b class="${cls}">${v} см</b></span></div>`}).join('');
-        vg.innerHTML=`<div class="profile-history-card profile-volume-current-card"><div class="profile-history-head"><div class="profile-history-date">${esc(volumeDate)}</div></div><div class="profile-history-lines">${rows}</div></div>`;
+        vg.innerHTML=`<div class="profile-history-card profile-volume-current-card"><div class="profile-history-head"><div class="profile-history-date">${esc(volumeDate)}${volumeTime?`<span class="profile-history-time">${esc(volumeTime)}</span>`:''}</div><span class="profile-current-badge">✓ Текущая</span></div><div class="profile-history-lines">${rows}</div></div>`;
       }
     }
   }
