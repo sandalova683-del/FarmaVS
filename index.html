@@ -394,6 +394,36 @@
     .profile-history-zone .profile-history-line.changed b{color:#4A90D9}
     @media(max-width:700px){.home-top-unified .home-coach-layout{grid-template-columns:1fr;gap:10px}.home-top-unified .home-coach-message{max-width:none}.home-top-unified .home-coach-controls{width:100%}}
     @media(max-width:560px){.home-top-unified .home-week-row{grid-template-columns:1fr 1fr}.home-top-unified .coach-actions{grid-template-columns:1fr 1fr}.profile-volume-grid-compact{grid-template-columns:1fr 1fr;grid-template-rows:repeat(4,auto);gap:6px 10px}}
+  
+
+    /* FormulaVS 4.1.8 profile history/volume refinements */
+    .profile-volumes-zone .profile-history-collapsible>summary,
+    .profile-history-zone .profile-history-collapsible>summary{
+      min-height:18px;box-sizing:border-box
+    }
+    .profile-volume-grid-compact{
+      display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+      grid-template-rows:repeat(4,minmax(0,auto))!important;grid-auto-flow:column!important;
+      gap:8px 12px!important;padding:0!important
+    }
+    .profile-volume-grid-compact > .profile-volume-item{
+      background:#fafbfc!important;border:1px solid #e5e7eb!important;border-left:1px solid #e5e7eb!important;
+      border-radius:14px!important;padding:10px 12px!important;min-height:58px!important;
+      display:flex!important;flex-direction:column!important;align-items:flex-start!important;
+      justify-content:center!important;gap:4px!important;box-sizing:border-box!important
+    }
+    .profile-volume-grid-compact .profile-volume-item span{
+      display:block!important;font-size:.7rem!important;color:#64748b!important;line-height:1.25!important
+    }
+    .profile-volume-grid-compact .profile-volume-item b{
+      display:block!important;font-size:.82rem!important;font-weight:750!important;color:#111827!important;line-height:1.2!important
+    }
+    .profile-volume-grid-compact .profile-volume-item.increased b{color:#dc2626!important}
+    .profile-volume-grid-compact .profile-volume-item.decreased b{color:#16a34a!important}
+    @media(max-width:560px){
+      .profile-volume-grid-compact{grid-template-columns:repeat(2,minmax(0,1fr))!important;grid-template-rows:repeat(4,minmax(0,auto))!important;gap:7px 9px!important}
+      .profile-volume-grid-compact > .profile-volume-item{min-height:54px!important;padding:9px 10px!important}
+    }
   </style>
 </head>
 <body><div id="toast" class="toast" role="status" aria-live="polite"></div>
@@ -577,7 +607,7 @@
         <div class="profile-section-title compact-section-title">📋 Текущие параметры</div>
         <div id="profileHistoryList" class="profile-history-list profile-current-only"></div>
         <details id="profileParamsHistoryDetails" class="profile-history-collapsible">
-          <summary>История параметров <span id="profileAllHistoryCount"></span></summary>
+          <summary>История параметров</summary>
           <div id="profilePreviousHistoryList" class="profile-history-list"></div>
           <button type="button" class="profile-all-history hidden" id="profileAllHistory">Все записи <span id="profileAllHistoryCountLegacy"></span></button>
         </details>
@@ -652,7 +682,7 @@
     <button class="bottom-tab" data-tab="analytics"><span class="nav-icon">⌁</span>Мой прогресс</button>
   </nav>
   <div class="card app-settings-card" id="appSettingsCard"><div class="title">⚙️ Настройки</div><div class="settings-row"><div><b>Резервная копия и перенос данных между устройствами</b></div><button class="btn ghost settings-data-btn" id="openDataModal" type="button" data-open-data-modal="1" onclick="window.__formulaVSOpenDataModal&&window.__formulaVSOpenDataModal()">Управление</button></div></div>
-  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v4.1.7</span></div>
+  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v4.1.8</span></div>
 </div>
   <div id="quickModal" class="modal" aria-hidden="true"><div class="modal-card quick-modal-card"><button class="modal-close" id="quickModalClose" aria-label="Закрыть">×</button><div class="onboarding-title">Быстро добавить</div><div class="quick-grid"><button data-quick="weight">⚖️<span>Вес</span></button><button data-quick="water">💧<span>Вода</span></button><button data-quick="steps">🚶<span>Шаги</span></button><button data-quick="calories">🍽<span>Калории</span></button><button data-quick="training">🏋️<span>Тренировка</span></button><button data-quick="measurement">📏<span>Замер</span></button></div></div></div>
   <div id="dataModal" class="modal" aria-hidden="true"><div class="modal-card"><button class="modal-close" id="dataModalClose" aria-label="Закрыть">×</button><div class="onboarding-title">Резервная копия и перенос данных между устройствами</div><div class="data-actions"><button class="btn secondary" id="exportData">Экспортировать JSON</button><label class="btn ghost" for="importData">Импортировать JSON</label><input id="importData" type="file" accept="application/json,.json" class="file-upload"><button class="btn danger" id="resetDataFromModal">Удалить все данные</button></div></div></div>
@@ -663,7 +693,7 @@
 (() => {
   'use strict';
 
-  const APP_VERSION = '4.1.7';
+  const APP_VERSION = '4.1.8';
   const KEY = 'formavs_v2';
   const LEGACY_KEY = 'forma_v2';
   const todayStr = () => {
@@ -1345,7 +1375,7 @@
     const zone=$('profileVolumesZone'),vg=$('profileVolumesGrid'),lm=profileCurrentMeasurements();
     const vals=MEASUREMENTS.map(([k,label])=>[label,n(lm?.[k]??p.baseMeasurements?.[k])]).filter(([,v])=>v!=null);
     const prevMeasurement=(()=>{const dates=Object.keys(state.measurements||{}).filter(d=>d<=(todayStr())).sort(); if(dates.length<2)return null; return state.measurements[dates.at(-2)]||null;})();
-    if(zone&&vg){zone.classList.remove('hidden');vg.innerHTML=vals.length?vals.map(([l,v])=>{const key=MEASUREMENTS.find(x=>x[1]===l)?.[0];const pv=n(prevMeasurement?.[key]);const changed=pv!=null&&v!=null&&pv!==v;return `<div class="profile-volume-item${changed?' changed':''}"><span>${esc(l)}</span><b>${v} см</b></div>`}).join(''):'<div class="note">Текущих замеров пока нет.</div>';}
+    if(zone&&vg){zone.classList.remove('hidden');vg.innerHTML=vals.length?vals.map(([l,v])=>{const key=MEASUREMENTS.find(x=>x[1]===l)?.[0];const pv=n(prevMeasurement?.[key]);let cls='';if(pv!=null&&v!=null&&pv!==v) cls=v>pv?'increased':'decreased';return `<div class="profile-volume-item${cls?' '+cls:''}"><span>${esc(l)}</span><b>${v} см</b></div>`}).join(''):'<div class="note">Текущих замеров пока нет.</div>';}
   }
 
   function renderDietInfo(){
@@ -1396,7 +1426,6 @@
     }
     const prevDetails=$('profileParamsHistoryDetails'); if(prevDetails) prevDetails.classList.toggle('hidden',previous.length===0);
     const allBtn=$('profileAllHistory');if(allBtn){allBtn.classList.add('hidden');}
-    const count=$('profileAllHistoryCount');if(count)count.textContent=previous.length?`(${previous.length})`:'';
   }
   function historyByDate(date){return state.profileHistory.find(h=>h.date===date);}
   function openProfileHistoryDetail(date){
