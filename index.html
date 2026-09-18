@@ -396,7 +396,7 @@
     @media(max-width:560px){.home-top-unified .home-week-row{grid-template-columns:1fr 1fr}.home-top-unified .coach-actions{grid-template-columns:1fr 1fr}.profile-volume-grid-compact{grid-template-columns:1fr 1fr;grid-template-rows:repeat(4,auto);gap:6px 10px}}
   
 
-    /* FormulaVS 4.1.8 profile history/volume refinements */
+    /* FormulaVS 4.1.9 profile history/volume refinements */
     .profile-volumes-zone .profile-history-collapsible>summary,
     .profile-history-zone .profile-history-collapsible>summary{
       min-height:18px;box-sizing:border-box
@@ -423,6 +423,107 @@
     @media(max-width:560px){
       .profile-volume-grid-compact{grid-template-columns:repeat(2,minmax(0,1fr))!important;grid-template-rows:repeat(4,minmax(0,auto))!important;gap:7px 9px!important}
       .profile-volume-grid-compact > .profile-volume-item{min-height:54px!important;padding:9px 10px!important}
+    }
+
+    /* FormulaVS 4.1.9 final profile refinements */
+    .profile-volumes-zone .profile-history-collapsible>summary,
+    .profile-history-zone .profile-history-collapsible>summary{
+      display:flex!important;
+      align-items:center!important;
+      min-height:18px!important;
+      height:18px!important;
+      padding:0!important;
+      margin:0!important;
+      gap:0!important;
+      box-sizing:border-box!important;
+      font-size:.7rem!important;
+      line-height:18px!important;
+      font-weight:750!important;
+      color:#4A90D9!important;
+      cursor:pointer!important;
+      list-style:none!important;
+    }
+    .profile-volumes-zone .profile-history-collapsible>summary:before,
+    .profile-history-zone .profile-history-collapsible>summary:before{
+      content:'▸'!important;
+      display:inline-block!important;
+      flex:0 0 12px!important;
+      width:12px!important;
+      margin:0 4px 0 0!important;
+      padding:0!important;
+      color:#8A97A8!important;
+      font-size:10px!important;
+      line-height:18px!important;
+      transform:none!important;
+      transition:transform .15s!important;
+    }
+    .profile-volumes-zone .profile-history-collapsible[open]>summary:before,
+    .profile-history-zone .profile-history-collapsible[open]>summary:before{
+      transform:rotate(90deg)!important;
+    }
+    .profile-volumes-zone .profile-history-collapsible>summary:after,
+    .profile-history-zone .profile-history-collapsible>summary:after{
+      content:none!important;
+      display:none!important;
+    }
+
+    /* Current body measurements: one clean block, values beside labels. */
+    .profile-volume-grid-compact{
+      display:grid!important;
+      grid-template-columns:1fr 1fr!important;
+      grid-template-rows:repeat(4,minmax(0,auto))!important;
+      grid-auto-flow:column!important;
+      column-gap:28px!important;
+      row-gap:0!important;
+      padding:2px 0 0!important;
+      background:#F8FAFC!important;
+      border:1px solid #E8ECF0!important;
+      border-radius:12px!important;
+      overflow:hidden!important;
+    }
+    .profile-volume-grid-compact > .profile-volume-item{
+      min-height:34px!important;
+      padding:7px 10px!important;
+      margin:0!important;
+      background:transparent!important;
+      border:0!important;
+      border-radius:0!important;
+      display:flex!important;
+      flex-direction:row!important;
+      align-items:center!important;
+      justify-content:space-between!important;
+      gap:10px!important;
+      box-sizing:border-box!important;
+    }
+    .profile-volume-grid-compact > .profile-volume-item:nth-child(-n+3),
+    .profile-volume-grid-compact > .profile-volume-item:nth-child(n+5):nth-child(-n+7){
+      border-bottom:1px solid #E8ECF0!important;
+    }
+    .profile-volume-grid-compact > .profile-volume-item:nth-child(4),
+    .profile-volume-grid-compact > .profile-volume-item:nth-child(8){
+      border-bottom:0!important;
+    }
+    .profile-volume-grid-compact .profile-volume-item span{
+      display:inline!important;
+      margin:0!important;
+      font-size:.7rem!important;
+      line-height:1.25!important;
+      color:#5A6B7C!important;
+    }
+    .profile-volume-grid-compact .profile-volume-item b{
+      display:inline!important;
+      margin:0!important;
+      font-size:.76rem!important;
+      line-height:1.25!important;
+      font-weight:700!important;
+      color:#1A1A1A!important;
+      white-space:nowrap!important;
+    }
+    .profile-volume-grid-compact .profile-volume-item.increased b{color:#dc2626!important}
+    .profile-volume-grid-compact .profile-volume-item.decreased b{color:#16a34a!important}
+    @media(max-width:560px){
+      .profile-volume-grid-compact{column-gap:14px!important}
+      .profile-volume-grid-compact > .profile-volume-item{min-height:33px!important;padding:7px 8px!important}
     }
   </style>
 </head>
@@ -681,8 +782,8 @@
     <button class="bottom-tab" data-tab="trackers"><span class="nav-icon">✓</span>Трекеры</button>
     <button class="bottom-tab" data-tab="analytics"><span class="nav-icon">⌁</span>Мой прогресс</button>
   </nav>
-  <div class="card app-settings-card" id="appSettingsCard"><div class="title">⚙️ Настройки</div><div class="settings-row"><div><b>Резервная копия и перенос данных между устройствами</b></div><button class="btn ghost settings-data-btn" id="openDataModal" type="button" data-open-data-modal="1" onclick="window.__formulaVSOpenDataModal&&window.__formulaVSOpenDataModal()">Управление</button></div></div>
-  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v4.1.8</span></div>
+  <div class="card app-settings-card" id="appSettingsCard"><div class="title">⚙️ Настройки</div><div class="settings-row"><div><b>Резервная копия и перенос данных между устройствами</b></div><button class="btn ghost settings-data-btn" id="openDataModal" type="button" data-open-data-modal="1" onclick="var m=document.getElementById('dataModal'); if(m){m.classList.add('show');m.setAttribute('aria-hidden','false');}">Управление</button></div></div>
+  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v4.1.9</span></div>
 </div>
   <div id="quickModal" class="modal" aria-hidden="true"><div class="modal-card quick-modal-card"><button class="modal-close" id="quickModalClose" aria-label="Закрыть">×</button><div class="onboarding-title">Быстро добавить</div><div class="quick-grid"><button data-quick="weight">⚖️<span>Вес</span></button><button data-quick="water">💧<span>Вода</span></button><button data-quick="steps">🚶<span>Шаги</span></button><button data-quick="calories">🍽<span>Калории</span></button><button data-quick="training">🏋️<span>Тренировка</span></button><button data-quick="measurement">📏<span>Замер</span></button></div></div></div>
   <div id="dataModal" class="modal" aria-hidden="true"><div class="modal-card"><button class="modal-close" id="dataModalClose" aria-label="Закрыть">×</button><div class="onboarding-title">Резервная копия и перенос данных между устройствами</div><div class="data-actions"><button class="btn secondary" id="exportData">Экспортировать JSON</button><label class="btn ghost" for="importData">Импортировать JSON</label><input id="importData" type="file" accept="application/json,.json" class="file-upload"><button class="btn danger" id="resetDataFromModal">Удалить все данные</button></div></div></div>
@@ -693,7 +794,7 @@
 (() => {
   'use strict';
 
-  const APP_VERSION = '4.1.8';
+  const APP_VERSION = '4.1.9';
   const KEY = 'formavs_v2';
   const LEGACY_KEY = 'forma_v2';
   const todayStr = () => {
