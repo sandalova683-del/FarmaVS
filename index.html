@@ -94,6 +94,7 @@
     .profile-tile-label{font-size:10px;color:#8E98A3;line-height:1.2;margin-bottom:5px}
     .profile-tile-value{font-family:"SF Pro Display",-apple-system,sans-serif;font-size:16px;font-weight:600;color:#1A1A1A;line-height:1.25;overflow-wrap:anywhere}
     .profile-plan-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .profile-activity-grid{grid-template-columns:1fr 1fr}
     .profile-plan-full{grid-column:1/-1}
     .profile-plan-value{display:flex;align-items:center;gap:7px}
     .profile-plan-icon{font-size:17px}
@@ -581,7 +582,7 @@
       .profile-volume-current-card .profile-history-lines{grid-template-columns:1fr 1fr!important;gap:5px 10px!important}
     }
   
-    /* FormulaVS 4.1.11: current volumes show date, time and current badge like current parameters. */
+    /* FormulaVS 4.1.13: profile nutrition section simplified to universal "Питание". */
     .profile-volume-current-card .profile-current-badge{
       display:inline-flex!important;align-items:center!important;white-space:nowrap!important;
     }
@@ -748,12 +749,14 @@
       </div>
 
       <div class="profile-zone">
-        <div class="profile-section-title">🥗 План питания</div>
+        <div class="profile-section-title">Питание</div>
         <div class="profile-plan-grid">
-          <div id="profileActivityTile" class="profile-tile profile-plan-half"></div>
-          <div id="profileStepsTile" class="profile-tile profile-plan-half"></div>
           <div id="profileDietTile" class="profile-tile profile-plan-full"></div>
         </div>
+      </div>
+      <div class="profile-zone">
+        <div class="profile-section-title">Активность</div>
+        <div id="profileActivityGrid" class="profile-tile-grid profile-activity-grid"></div>
       </div>
 
       <div id="profileVolumesZone" class="profile-zone profile-volumes-zone">
@@ -844,7 +847,7 @@
     <button class="bottom-tab" data-tab="analytics"><span class="nav-icon">⌁</span>Мой прогресс</button>
   </nav>
   <div class="card app-settings-card" id="appSettingsCard"><div class="title">⚙️ Настройки</div><div class="settings-row"><div><b>Резервная копия и перенос данных между устройствами</b></div><button class="btn ghost settings-data-btn" id="openDataModal" type="button" data-open-data-modal="1" onclick="var m=document.getElementById('dataModal'); if(m){m.classList.add('show');m.setAttribute('aria-hidden','false');}">Управление</button></div></div>
-  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v4.1.11</span></div>
+  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v4.1.12</span></div>
 </div>
   <div id="quickModal" class="modal" aria-hidden="true"><div class="modal-card quick-modal-card"><button class="modal-close" id="quickModalClose" aria-label="Закрыть">×</button><div class="onboarding-title">Быстро добавить</div><div class="quick-grid"><button data-quick="weight">⚖️<span>Вес</span></button><button data-quick="water">💧<span>Вода</span></button><button data-quick="steps">🚶<span>Шаги</span></button><button data-quick="calories">🍽<span>Калории</span></button><button data-quick="training">🏋️<span>Тренировка</span></button><button data-quick="measurement">📏<span>Замер</span></button></div></div></div>
   <div id="dataModal" class="modal" aria-hidden="true"><div class="modal-card"><button type="button" class="modal-close" id="dataModalClose" aria-label="Закрыть" onclick="event.preventDefault();event.stopPropagation();var m=document.getElementById('dataModal');if(m){m.classList.remove('show');m.setAttribute('aria-hidden','true');}">×</button><div class="onboarding-title">Резервная копия и перенос данных между устройствами</div><div class="data-actions"><button class="btn secondary" id="exportData">Экспортировать JSON</button><label class="btn ghost" for="importData">Импортировать JSON</label><input id="importData" type="file" accept="application/json,.json" class="file-upload"><button class="btn danger" id="resetDataFromModal">Удалить все данные</button></div></div></div>
@@ -855,7 +858,7 @@
 (() => {
   'use strict';
 
-  const APP_VERSION = '4.1.11';
+  const APP_VERSION = '4.1.13';
   const KEY = 'formavs_v2';
   const LEGACY_KEY = 'forma_v2';
   const todayStr = () => {
@@ -1531,9 +1534,14 @@
       const tiles=[['Рост',p.height?`${p.height} см`:'—'],['Вес',p.weight?`${p.weight} кг`:'—'],['Целевой вес',p.target?`${p.target} кг`:'—'],['Возраст',ageVal!=null?`${ageVal} лет`:'—'],['Пол',gender],['Цель',profileGoalLabel(p.goal)]];
       grid.innerHTML=tiles.map(([l,v])=>`<div class="profile-tile"><div class="profile-tile-label">${l}</div><div class="profile-tile-value">${esc(v)}</div></div>`).join('');
     }
-    const at=$('profileActivityTile');if(at)at.innerHTML=`<div class="profile-tile-label">Активность</div><div class="profile-tile-value profile-plan-value"><span class="profile-plan-icon">🚶‍♀️</span>${esc(profileActivityLabel(p.activity))}</div>`;
-    const st=$('profileStepsTile');if(st)st.innerHTML=`<div class="profile-tile-label">Средние шаги/день</div><div class="profile-tile-value">${p.steps?Number(p.steps).toLocaleString('ru-RU'):'—'}</div>`;
     const dt=$('profileDietTile');const d=DIET_INFO[p.dietType||'mediterranean'];if(dt)dt.innerHTML=`<div class="profile-tile-label">Тип питания</div><div class="profile-tile-value profile-plan-value"><span class="profile-plan-icon">🥗</span>${esc(d?.name||'—')}</div>`;
+    const ag=$('profileActivityGrid');
+    if(ag){
+      const activityLabels={'1.2':'Минимальная','1.375':'Низкая','1.55':'Умеренная','1.725':'Высокая','1.9':'Очень высокая'};
+      const activityValue=activityLabels[String(p.activity)]||'—';
+      const stepsValue=p.steps!==''&&p.steps!=null&&Number.isFinite(Number(p.steps))?Number(p.steps).toLocaleString('ru-RU'):'—';
+      ag.innerHTML=`<div class="profile-tile"><div class="profile-tile-label">Активность</div><div class="profile-tile-value">${esc(activityValue)}</div></div><div class="profile-tile"><div class="profile-tile-label">Средние шаги / день</div><div class="profile-tile-value">${esc(stepsValue)}</div></div>`;
+    }
     const zone=$('profileVolumesZone'),vg=$('profileVolumesGrid');
     const measurementDates=Object.keys(state.measurements||{}).filter(d=>d<=todayStr()).sort();
     const currentMeasurementDate=measurementDates.at(-1)||p.registrationDate||'';
