@@ -38,7 +38,7 @@
     .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px;margin:0 0 14px;box-shadow:var(--shadow)}
     .title{font-weight:750;font-size:1.03rem;margin-bottom:14px;display:flex;align-items:center;gap:8px}
     .grid2{display:grid;grid-template-columns:1fr 1fr;gap:11px}
-    .journal-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 11px}.journal-grid .field{margin-bottom:0}.journal-card .check{margin-top:13px}.journal-date-field input{font-weight:800}.journal-date-field label{font-weight:800}.journal-goals{margin-top:16px;padding-top:16px;border-top:1px solid var(--line)}.journal-save{margin-top:16px}.journal-goals .note{margin-bottom:10px}.journal-calc{width:100%;min-height:44px;border:1px solid #d8dee8;background:#f5f7fb;color:var(--ink);border-radius:14px;padding:11px 12px;font-weight:800;display:flex;align-items:center}.journal-calc.muted{font-weight:650;color:#64748b}.journal-calc-label{display:block;color:#64748b;font-size:.78rem;font-weight:650;margin:0 0 5px}.journal-full{grid-column:1 / -1} input:disabled,select:disabled{background:#f1f5f9;color:#64748b;opacity:.78;cursor:not-allowed}
+    .journal-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 11px}.journal-grid .field{margin-bottom:0}.journal-card .check{margin-top:13px}.journal-date-field input{font-weight:800}.journal-date-field label{font-weight:800}.journal-goals{margin-top:16px;padding-top:16px;border-top:1px solid var(--line)}.journal-save{margin-top:16px}.journal-goals .note{margin-bottom:10px}.journal-calc{width:100%;min-height:44px;border:1px solid #d8dee8;background:#f5f7fb;color:var(--ink);border-radius:14px;padding:11px 12px;font-weight:800;display:flex;align-items:center}.journal-calc.muted{font-weight:650;color:#64748b}.journal-calc-label{display:block;color:#64748b;font-size:.78rem;font-weight:650;margin:0 0 5px}.journal-full{grid-column:1 / -1} input:disabled,select:disabled{background:#f1f5f9;color:#64748b;opacity:.78;cursor:not-allowed}.journal-section-title{margin:18px 0 9px;padding-top:12px;border-top:1px solid var(--line);font-size:.9rem;font-weight:800;color:var(--ink)}.journal-date-row{max-width:50%;}.journal-date-row .field{margin-bottom:0}.journal-data-grid{margin-top:10px}.journal-activity-grid{margin-top:2px}.journal-cycle{margin-top:2px}.journal-activity-grid .field:nth-last-child(-n+2){margin-top:0}.journal-goals{margin-top:4px}.journal-section-title:first-of-type{margin-top:12px;padding-top:0;border-top:0}@media(max-width:700px){.journal-date-row{max-width:none}.journal-grid{gap:8px}.journal-section-title{margin-top:15px}}
     .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
     .field{margin-bottom:11px}.field label{display:block;color:#64748b;font-size:.78rem;font-weight:650;margin:0 0 5px}
     input,select{width:100%;border:1px solid #d8dee8;background:#fbfcfe;color:var(--ink);border-radius:14px;padding:11px 12px;outline:none}
@@ -606,26 +606,37 @@
 
     <section id="view-trackers" class="view">
       <div class="card journal-card">
-        <div class="title">📝 Данные за день</div>
+        <div class="title">📝 Дневник</div>
         <div class="note journal-hint">Выбери день, чтобы внести данные или изменить уже сохранённые данные.</div>
-        <div class="journal-grid">
+        <div class="journal-section-title">Данные</div>
+        <div class="journal-date-row">
           <div class="field journal-date-field"><label>Дата</label><input id="journalDate" type="date"></div>
+        </div>
+        <div class="journal-grid journal-data-grid">
           <div class="field"><label>Вес, кг</label><input id="jWeight" type="number" min="20" max="300" step=".1" placeholder="Последний вес"></div>
           <div class="field"><label>Ккал</label><input id="jCalories" type="number" min="0"></div>
           <div class="field"><label>Цель</label><div id="jCalorieGoal" class="journal-calc">—</div></div>
           <div class="field"><label>Белки, г</label><input id="jProtein" type="number" min="0" step=".1"></div>
           <div class="field"><label>Жиры, г</label><input id="jFat" type="number" min="0" step=".1"></div>
           <div class="field"><label>Углеводы, г</label><input id="jCarbs" type="number" min="0" step=".1"></div>
-          <div class="field"><label>Вода, мл</label><input id="jWater" type="number" min="0" step="50"></div>
+          <div class="field journal-full"><label>Вода, мл</label><input id="jWater" type="number" min="0" step="50"></div>
+        </div>
+
+        <div class="journal-section-title">Активность</div>
+        <div class="journal-grid journal-activity-grid">
           <div class="field"><label>Шаги</label><input id="jSteps" type="number" min="0"><button id="syncSteps" type="button" class="health-sync-btn">↻ Получить из телефона</button><div id="stepsSource" class="health-source" aria-live="polite"></div></div>
-          <div class="field"><label>Потраченные ккал</label><input id="jBurnedCalories" type="number" min="0"></div>
           <div class="field"><label>Тренировка</label><select id="jTrainingType"><option value="">Нет тренировки</option><option value="strength">Силовая</option><option value="cardio">Кардио</option><option value="stretching">Растяжка</option><option value="pilates">Пилатес</option></select></div>
-          <div class="field"><label>Продолжительность, мин</label><input id="jTrainingMinutes" type="number" min="0" step="5" placeholder="Например, 45"></div>
           <div class="field"><label>Интенсивность тренировки</label><select id="jTrainingIntensity"><option value="">Не указана</option><option value="1.375">Низкая</option><option value="1.55">Умеренная</option><option value="1.725">Высокая</option><option value="1.9">Очень высокая</option></select></div>
+          <div class="field"><label>Продолжительность, мин</label><input id="jTrainingMinutes" type="number" min="0" step="5" placeholder="Например, 45"></div>
+          <div class="field"><label>Потраченные ккал</label><input id="jBurnedCalories" type="number" min="0"></div>
           <div class="field"><label>Всего потрачено ккал</label><div id="jTotalBurned" class="journal-calc">—</div></div>
           <div class="field"><label>Баланс ккал</label><div id="jCalorieBalance" class="journal-calc">—</div></div>
-          <div class="field journal-full"><label>Цикл</label><div class="check" style="margin:0;border-color:var(--accent);background:#f0f4ff"><input type="checkbox" id="jCycle"><label for="jCycle" style="font-weight:600">🔄 Сегодня месячные</label></div></div>
         </div>
+
+        <div class="journal-section-title">Цикл</div>
+        <div class="journal-cycle"><div class="check" style="margin:0;border-color:var(--accent);background:#f0f4ff"><input type="checkbox" id="jCycle"><label for="jCycle" style="font-weight:600">🔄 Сегодня месячные</label></div></div>
+
+        <div class="journal-section-title">Ежедневные цели</div>
         <div class="journal-goals">
           <div id="dailyList" class="list"></div>
           <div class="add"><input id="newDaily" placeholder="Новая ежедневная цель"><button id="addDaily">+</button></div>
@@ -843,7 +854,7 @@
   </main>
   <nav class="bottom-nav" id="bottomNav">
     <button class="bottom-tab active" data-tab="home"><span class="nav-icon">⌂</span>Главная</button>
-    <button class="bottom-tab" data-tab="trackers"><span class="nav-icon">✓</span>Трекеры</button>
+    <button class="bottom-tab" data-tab="trackers"><span class="nav-icon">✓</span>Дневник</button>
     <button class="bottom-tab" data-tab="analytics"><span class="nav-icon">⌁</span>Мой прогресс</button>
   </nav>
   <div class="card app-settings-card" id="appSettingsCard"><div class="title">⚙️ Настройки</div><div class="settings-row"><div><b>Резервная копия и перенос данных между устройствами</b></div><button class="btn ghost settings-data-btn" id="openDataModal" type="button" data-open-data-modal="1" onclick="var m=document.getElementById('dataModal'); if(m){m.classList.add('show');m.setAttribute('aria-hidden','false');}">Управление</button></div></div>
@@ -858,7 +869,7 @@
 (() => {
   'use strict';
 
-  const APP_VERSION = '4.1.13';
+  const APP_VERSION = '4.1.14';
   const KEY = 'formavs_v2';
   const LEGACY_KEY = 'forma_v2';
   const todayStr = () => {
@@ -879,7 +890,7 @@
   const round = (v,d=1) => Math.round(v*10**d)/10**d;
   const clamp = (v,a,b) => Math.min(b,Math.max(a,v));
 
-  const DEFAULT_DAILY = [{id:'veg',label:'🌿 500 г растительной пищи',fixed:true}];
+  const DEFAULT_DAILY = [{id:'veg',label:'🌿 500 г растительной пищи',fixed:false}];
   const DEFAULT_WEEKLY = [
     {id:'redmeat',label:'🥩 Красное мясо',fixed:true},
     {id:'fish',label:'🐟 Рыба',fixed:true},
@@ -938,7 +949,6 @@
     if(!state.nutritionWeekly || typeof state.nutritionWeekly!=='object') state.nutritionWeekly={};
     if(!state.nutritionWeeklyMeta || typeof state.nutritionWeeklyMeta!=='object') state.nutritionWeeklyMeta={};
     if(state._nutritionAlgorithmVersion!==2){ state._nutritionAlgorithmVersion=2; }
-    for(const d of DEFAULT_DAILY) if(!state.dailyGoals.some(x=>x && x.id===d.id)) state.dailyGoals.unshift({...d});
     for(const w of DEFAULT_WEEKLY) if(!state.weeklyGoals.some(x=>x && x.id===w.id)) state.weeklyGoals.push({...w});
     normalizeGoalLabels();
     rolloverWeek();
@@ -989,7 +999,7 @@
       ['🌿 🌿','🌿'],['🥩 🥩','🥩'],['🐟 🐟','🐟'],['🍖 🍖','🍖'],['🦐 🦐','🦐']
     ];
     const clean=(label)=>{let s=String(label||'');for(const [a,b] of map)s=s.replaceAll(a,b);return s;};
-    state.dailyGoals=state.dailyGoals.map(g=>({...g,label:clean(g.label)}));
+    state.dailyGoals=state.dailyGoals.map(g=>({...g,label:clean(g.label),fixed:g.id==='veg'?false:!!g.fixed}));
     state.weeklyGoals=state.weeklyGoals.map(g=>({...g,label:clean(g.label)}));
   }
   function toast(message){
@@ -2175,7 +2185,7 @@
     document.querySelectorAll('.bottom-tab').forEach(x=>x.classList.toggle('active',x.dataset.tab===tab));
     $('profileTop')?.classList.toggle('active',tab==='profile');
     $('appSettingsCard')?.classList.toggle('show',tab==='profile');
-    if(tab==='home')renderHome(); if(tab==='trackers'){renderJournal();renderWeek();} if(tab==='analytics')renderAnalytics(); if(tab==='profile')renderProfileFields();
+    if(tab==='home')renderHome(); if(tab==='trackers'){state.ui.journalDate=todayStr();save();renderJournal();renderWeek();} if(tab==='analytics')renderAnalytics(); if(tab==='profile')renderProfileFields();
     window.scrollTo({top:0,behavior:'smooth'});
   }
 
