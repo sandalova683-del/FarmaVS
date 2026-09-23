@@ -2198,8 +2198,13 @@
   function renderMeasurementFields(){
     const fields=$('measurementFields');
     if(!fields)return;
-    const bm=state.profile?.baseMeasurements||{};
-    fields.innerHTML=MEASUREMENTS.map(([k,label])=>`<div class=\"field\"><label>${label}</label><input id=\"m_${k}\" type=\"number\" step=\".1\" min=\"1\" max=\"300\" value=\"${esc(state.measurements?.[state.ui?.measureDate||todayStr()]?.[k]??'')}\"></div>`).join('');
+    const measurementDates=Object.keys(state.measurements||{}).sort();
+    const lastDate=measurementDates.at(-1);
+    const lastMeasurement=lastDate?state.measurements[lastDate]:{};
+    fields.innerHTML=MEASUREMENTS.map(([k,label])=>{
+      const hint=lastMeasurement?.[k]!=null?String(lastMeasurement[k]):'';
+      return `<div class=\"field\"><label>${label}</label><input id=\"m_${k}\" type=\"number\" step=\".1\" min=\"1\" max=\"300\" value=\"\" placeholder=\"${esc(hint)}\"></div>`;
+    }).join('');
     const mDate=$('mDate');
     if(mDate && !mDate.value)mDate.value=state.ui?.measureDate||todayStr();
   }
@@ -2511,7 +2516,9 @@ $('quickModalClose')?.addEventListener('click',closeQuick); $('quickModal')?.add
     refreshStatus();
   }
   function init(){
-    load();renderMeasurementFields();bind();bindV3();bindHealthUI();
+    load();
+    if(!state.ui.measureDate) state.ui.measureDate=todayStr();
+    renderMeasurementFields();bind();bindV3();bindHealthUI();
     // Сначала рисуем интерфейс, затем пересчитываем недельный план. Ошибка в расчётах
     // не должна блокировать Главную или Профиль.
     try{renderProfileFields();}catch(e){console.warn('FormulaVS profile render skipped',e);}
@@ -2522,7 +2529,7 @@ $('quickModalClose')?.addEventListener('click',closeQuick); $('quickModal')?.add
     if(state.profile.registrationDate){try{renderHome();}catch(e){console.warn('FormulaVS final home render skipped',e);}}
     setInterval(()=>{if(todayStr()!==state._lastDay){state._lastDay=todayStr();rolloverWeek();state.ui.habitDate=todayStr();state.ui.journalDate=todayStr();save();renderHome();renderJournal();renderWeek();renderAnalytics();}},30000);
     if ('serviceWorker' in navigator) {
-      const APP_VERSION='4.1.18';
+      const APP_VERSION='4.1.19';
       let reloadScheduled = false;
       function reloadOnceAfterUpdate(){
         if(reloadScheduled) return;
