@@ -657,13 +657,13 @@
           <div class="note">Заполняйте объёмы один раз в неделю, чтобы отслеживать изменения и результаты.</div>
           <div class="field" style="margin-top:10px"><label>Дата замера</label><input id="mDate" type="date"></div>
           <div class="grid2" id="measurementFields"></div>
-          <button class="btn journal-save" id="saveMeasurement">Сохранить неделю</button>
         </div>
         <div class="card">
           <div class="title">Еженедельные цели</div>
           <div id="weeklyList" class="list"></div>
           <div class="add"><input id="newWeekly" placeholder="Своя недельная цель"><button id="addWeekly">+</button></div>
           <div id="weeklyStats" style="margin-top:10px"></div>
+          <button class="btn journal-save" id="saveMeasurement">Сохранить неделю</button>
         </div>
       </div>
     </section>
@@ -876,7 +876,7 @@
 (() => {
   'use strict';
 
-  const APP_VERSION = '4.1.18';
+  const APP_VERSION = '4.1.20';
   const KEY = 'formavs_v2';
   const LEGACY_KEY = 'forma_v2';
   const todayStr = () => {
@@ -2529,7 +2529,7 @@ $('quickModalClose')?.addEventListener('click',closeQuick); $('quickModal')?.add
     if(state.profile.registrationDate){try{renderHome();}catch(e){console.warn('FormulaVS final home render skipped',e);}}
     setInterval(()=>{if(todayStr()!==state._lastDay){state._lastDay=todayStr();rolloverWeek();state.ui.habitDate=todayStr();state.ui.journalDate=todayStr();save();renderHome();renderJournal();renderWeek();renderAnalytics();}},30000);
     if ('serviceWorker' in navigator) {
-      const APP_VERSION='4.1.19';
+      const APP_VERSION='4.1.20';
       let reloadScheduled = false;
       function reloadOnceAfterUpdate(){
         if(reloadScheduled) return;
