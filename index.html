@@ -38,7 +38,7 @@
     .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px;margin:0 0 14px;box-shadow:var(--shadow)}
     .title{font-weight:750;font-size:1.03rem;margin-bottom:14px;display:flex;align-items:center;gap:8px}
     .grid2{display:grid;grid-template-columns:1fr 1fr;gap:11px}
-    .journal-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 11px}.journal-grid .field{margin-bottom:0}.journal-card .check{margin-top:13px}.journal-date-field input{font-weight:800}.journal-date-field label{font-weight:800}.journal-goals{margin-top:16px;padding-top:16px;border-top:1px solid var(--line)}.journal-save{margin-top:16px}.journal-goals .note{margin-bottom:10px}.journal-calc{width:100%;min-height:44px;border:1px solid #d8dee8;background:#f5f7fb;color:var(--ink);border-radius:14px;padding:11px 12px;font-weight:800;display:flex;align-items:center}.journal-calc.muted{font-weight:650;color:#64748b}.journal-calc-label{display:block;color:#64748b;font-size:.78rem;font-weight:650;margin:0 0 5px}.journal-full{grid-column:1 / -1} input:disabled,select:disabled{background:#f1f5f9;color:#64748b;opacity:.78;cursor:not-allowed}.journal-header{margin:-18px -18px 16px;padding:15px 16px;border-radius:22px 22px 16px 16px;background:linear-gradient(145deg,#111827,#1e293b);color:#fff}.journal-header-title{font-size:1.03rem;font-weight:900;display:flex;align-items:center;gap:8px;margin-bottom:10px}.journal-hint{margin-bottom:10px}.journal-section-title{margin:18px 0 9px;padding-top:12px;border-top:1px solid var(--line);font-size:.9rem;font-weight:800;color:var(--ink)}.journal-date-row{max-width:none}.journal-date-weight-row{display:grid;grid-template-columns:1fr 1fr;gap:11px}.journal-date-row .field{margin-bottom:0}.journal-data-grid{margin-top:10px}.journal-activity-grid{margin-top:2px}.journal-cycle{margin-top:2px}.journal-activity-grid .field:nth-last-child(-n+2){margin-top:0}.journal-activity-grid .field:last-child .journal-calc{justify-content:center;text-align:center}.journal-goals{margin-top:4px}.journal-section-title:first-of-type{margin-top:12px;padding-top:0;border-top:0} .journal-save{background:rgba(255,255,255,.10)!important;color:#fff!important;border:1px solid rgba(255,255,255,.18)!important}.journal-save:hover{background:rgba(255,255,255,.16)!important}.journal-card .journal-header{position:relative;z-index:2}.journal-day-content{}@media(max-width:700px){.journal-date-row{max-width:none}.journal-grid{gap:8px}.journal-section-title{margin-top:15px}}
+    .journal-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 11px}.journal-grid .field{margin-bottom:0}.journal-card .check{margin-top:13px}.journal-date-field input{font-weight:800}.journal-date-field label{font-weight:800}.journal-goals{margin-top:16px;padding-top:16px;border-top:1px solid var(--line)}.journal-save{margin-top:16px}.journal-goals .note{margin-bottom:10px}.journal-calc{width:100%;min-height:44px;border:1px solid #d8dee8;background:#f5f7fb;color:var(--ink);border-radius:14px;padding:11px 12px;font-weight:800;display:flex;align-items:center}.journal-calc.muted{font-weight:650;color:#64748b}.journal-calc-label{display:block;color:#64748b;font-size:.78rem;font-weight:650;margin:0 0 5px}.journal-full{grid-column:1 / -1} input:disabled,select:disabled{background:#f1f5f9;color:#64748b;opacity:.78;cursor:not-allowed}.journal-header{margin:-18px -18px 16px;padding:15px 16px;border-radius:22px 22px 16px 16px;background:linear-gradient(145deg,#111827,#1e293b);color:#fff}.journal-header-title{font-size:1.03rem;font-weight:900;display:flex;align-items:center;gap:8px;margin-bottom:10px}.journal-hint{margin-bottom:10px}.journal-section-title{margin:18px 0 9px;padding-top:12px;border-top:1px solid var(--line);font-size:.9rem;font-weight:800;color:var(--ink)}.journal-date-row{max-width:none}.journal-date-weight-row{display:grid;grid-template-columns:1fr 1fr;gap:11px}.journal-date-row .field{margin-bottom:0}.journal-data-grid{margin-top:10px}.journal-activity-grid{margin-top:2px}.journal-cycle{margin-top:2px}.journal-activity-grid .field:nth-last-child(-n+2){margin-top:0}.journal-activity-grid .field:last-child .journal-calc{justify-content:center;text-align:center}.journal-goals{margin-top:4px}.journal-section-title:first-of-type{margin-top:12px;padding-top:0;border-top:0} .journal-save{background:#111827!important;color:#fff!important;border:1px solid #111827!important;box-shadow:none!important}.journal-save:hover{background:#1e293b!important;color:#fff!important}.journal-save:active{background:#0f172a!important;color:#fff!important}.journal-card .journal-header{position:relative;z-index:2}.journal-day-content{}@media(max-width:700px){.journal-date-row{max-width:none}.journal-grid{gap:8px}.journal-section-title{margin-top:15px}}
     .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
     .field{margin-bottom:11px}.field label{display:block;color:#64748b;font-size:.78rem;font-weight:650;margin:0 0 5px}
     input,select{width:100%;border:1px solid #d8dee8;background:#fbfcfe;color:var(--ink);border-radius:14px;padding:11px 12px;outline:none}
@@ -876,7 +876,7 @@
 (() => {
   'use strict';
 
-  const APP_VERSION = '4.1.17';
+  const APP_VERSION = '4.1.18';
   const KEY = 'formavs_v2';
   const LEGACY_KEY = 'forma_v2';
   const todayStr = () => {
@@ -2381,24 +2381,23 @@
       save();renderAnalytics();
     });
     document.querySelectorAll('.progress-metric').forEach(b=>b.addEventListener('click',()=>{state.ui.analyticsMetric=b.dataset.metric;save();renderAnalytics();}));
-    document.querySelectorAll('.progress-period').forEach(b=>b.addEventListener('click',()=>{state.ui.analyticsPeriod=b.dataset.period;save();renderAnalytics();}));
-    // Robust delegated handler for analytics period buttons. Keeps the controls working
-    // even if another render/re-render replaces or interferes with their listeners.
-    document.addEventListener('click',e=>{
-      const b=e.target?.closest?.('.progress-period');
-      if(!b)return;
-      e.preventDefault();
-      e.stopImmediatePropagation();
-      const period=b.dataset.period||'week';
-      if(state.ui.analyticsPeriod===period){
-        document.querySelectorAll('.progress-period').forEach(x=>x.classList.toggle('active',x.dataset.period===period));
-        return;
-      }
-      state.ui.analyticsPeriod=period;
-      if(period==='week') state.ui.analyticsDate=todayStr();
-      save();
-      renderAnalytics();
-    },true);
+    // Analytics period controls: bind once at document level so they survive every re-render.
+    if(!window.__fvsProgressPeriodBound){
+      window.__fvsProgressPeriodBound=true;
+      const handleProgressPeriod=e=>{
+        const b=e.target?.closest?.('#progressPeriods .progress-period');
+        if(!b)return;
+        e.preventDefault();
+        e.stopPropagation();
+        const period=b.dataset.period||'week';
+        state.ui.analyticsPeriod=period;
+        if(period==='week') state.ui.analyticsDate=todayStr();
+        save();
+        renderAnalytics();
+      };
+      document.addEventListener('pointerup',handleProgressPeriod,true);
+      document.addEventListener('click',handleProgressPeriod,true);
+    }
     $('progressPrev').addEventListener('click',()=>shiftAnalyticsPeriod(-1));
     $('progressNext').addEventListener('click',()=>shiftAnalyticsPeriod(1));
     $('prevMonth').addEventListener('click',()=>{const [y,m]=state.ui.month.split('-').map(Number);const d=new Date(y,m-2,1);state.ui.month=iso(d).slice(0,7);save();renderCalendar();});
@@ -2523,7 +2522,7 @@ $('quickModalClose')?.addEventListener('click',closeQuick); $('quickModal')?.add
     if(state.profile.registrationDate){try{renderHome();}catch(e){console.warn('FormulaVS final home render skipped',e);}}
     setInterval(()=>{if(todayStr()!==state._lastDay){state._lastDay=todayStr();rolloverWeek();state.ui.habitDate=todayStr();state.ui.journalDate=todayStr();save();renderHome();renderJournal();renderWeek();renderAnalytics();}},30000);
     if ('serviceWorker' in navigator) {
-      const APP_VERSION='4.1.5';
+      const APP_VERSION='4.1.18';
       let reloadScheduled = false;
       function reloadOnceAfterUpdate(){
         if(reloadScheduled) return;
