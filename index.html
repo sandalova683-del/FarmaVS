@@ -38,7 +38,7 @@
     .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px;margin:0 0 14px;box-shadow:var(--shadow)}
     .title{font-weight:750;font-size:1.03rem;margin-bottom:14px;display:flex;align-items:center;gap:8px}
     .grid2{display:grid;grid-template-columns:1fr 1fr;gap:11px}
-    .journal-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 11px}.journal-grid .field{margin-bottom:0}.journal-card .check{margin-top:13px}.journal-date-field input{font-weight:800}.journal-date-field label{font-weight:800}.journal-goals{margin-top:16px;padding-top:16px;border-top:1px solid var(--line)}.journal-save{margin-top:16px}.journal-goals .note{margin-bottom:10px}.journal-calc{width:100%;min-height:44px;border:1px solid #d8dee8;background:#f5f7fb;color:var(--ink);border-radius:14px;padding:11px 12px;font-weight:800;display:flex;align-items:center}.journal-calc.muted{font-weight:650;color:#64748b}.journal-calc-label{display:block;color:#64748b;font-size:.78rem;font-weight:650;margin:0 0 5px}.journal-full{grid-column:1 / -1} input:disabled,select:disabled{background:#f1f5f9;color:#64748b;opacity:.78;cursor:not-allowed}.journal-section-title{margin:18px 0 9px;padding-top:12px;border-top:1px solid var(--line);font-size:.9rem;font-weight:800;color:var(--ink)}.journal-date-row{max-width:50%;}.journal-date-row .field{margin-bottom:0}.journal-data-grid{margin-top:10px}.journal-activity-grid{margin-top:2px}.journal-cycle{margin-top:2px}.journal-activity-grid .field:nth-last-child(-n+2){margin-top:0}.journal-goals{margin-top:4px}.journal-section-title:first-of-type{margin-top:12px;padding-top:0;border-top:0}@media(max-width:700px){.journal-date-row{max-width:none}.journal-grid{gap:8px}.journal-section-title{margin-top:15px}}
+    .journal-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 11px}.journal-grid .field{margin-bottom:0}.journal-card .check{margin-top:13px}.journal-date-field input{font-weight:800}.journal-date-field label{font-weight:800}.journal-goals{margin-top:16px;padding-top:16px;border-top:1px solid var(--line)}.journal-save{margin-top:16px}.journal-goals .note{margin-bottom:10px}.journal-calc{width:100%;min-height:44px;border:1px solid #d8dee8;background:#f5f7fb;color:var(--ink);border-radius:14px;padding:11px 12px;font-weight:800;display:flex;align-items:center}.journal-calc.muted{font-weight:650;color:#64748b}.journal-calc-label{display:block;color:#64748b;font-size:.78rem;font-weight:650;margin:0 0 5px}.journal-full{grid-column:1 / -1} input:disabled,select:disabled{background:#f1f5f9;color:#64748b;opacity:.78;cursor:not-allowed}.journal-header{margin:-18px -18px 16px;padding:15px 16px;border-radius:22px 22px 16px 16px;background:linear-gradient(145deg,#111827,#1e293b);color:#fff}.journal-header-title{font-size:1.03rem;font-weight:900;display:flex;align-items:center;gap:8px;margin-bottom:10px}.journal-hint{margin-bottom:10px}.journal-section-title{margin:18px 0 9px;padding-top:12px;border-top:1px solid var(--line);font-size:.9rem;font-weight:800;color:var(--ink)}.journal-date-row{max-width:none}.journal-date-weight-row{display:grid;grid-template-columns:1fr 1fr;gap:11px}.journal-date-row .field{margin-bottom:0}.journal-data-grid{margin-top:10px}.journal-activity-grid{margin-top:2px}.journal-cycle{margin-top:2px}.journal-activity-grid .field:nth-last-child(-n+2){margin-top:0}.journal-activity-grid .field:last-child .journal-calc{justify-content:center;text-align:center}.journal-goals{margin-top:4px}.journal-section-title:first-of-type{margin-top:12px;padding-top:0;border-top:0}@media(max-width:700px){.journal-date-row{max-width:none}.journal-grid{gap:8px}.journal-section-title{margin-top:15px}}
     .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
     .field{margin-bottom:11px}.field label{display:block;color:#64748b;font-size:.78rem;font-weight:650;margin:0 0 5px}
     input,select{width:100%;border:1px solid #d8dee8;background:#fbfcfe;color:var(--ink);border-radius:14px;padding:11px 12px;outline:none}
@@ -217,9 +217,9 @@
     .weekly-goal-status{font-size:.9rem;font-weight:800;flex:0 0 auto}
     .weekly-goal-status.done{color:#16a34a}.weekly-goal-status.not-done{color:#f43f5e}
     .progress-empty{padding:20px 8px;color:#94a3b8;text-align:center}
-    .tracker-switch{display:flex;gap:8px;margin-bottom:12px}
-    .tracker-switch button{flex:1;border:1px solid var(--line);background:#fff;border-radius:13px;padding:10px;font-weight:750;color:#475569}
-    .tracker-switch button.active{background:#2563eb;color:#fff;border-color:#2563eb}
+    .tracker-switch{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0}
+    .tracker-switch button{min-height:38px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.10);color:#fff;border-radius:11px;padding:8px 10px;font-weight:800;font-size:.72rem}
+    .tracker-switch button.active{background:#fff;color:#111827;border-color:rgba(255,255,255,.18)}
     .journal-calc{width:100%;min-height:44px;border:1px solid #d8dee8;background:#f5f7fb;color:var(--ink);border-radius:14px;padding:11px 12px;font-weight:800;display:flex;align-items:center}
     .journal-calc.muted{font-weight:650;color:#64748b}
     .diet-card-modern{margin-top:9px;border:1px solid #e2e8f0;border-radius:13px;background:#fbfcfe;padding:10px 13px}
@@ -606,20 +606,26 @@
 
     <section id="view-trackers" class="view">
       <div class="card journal-card">
-        <div class="title">📝 Дневник</div>
+        <div class="journal-header">
+          <div class="journal-header-title">📝 Дневник</div>
+          <div class="tracker-switch">
+            <button type="button" class="tracker-mode active" data-mode="day">Дневник дня</button>
+            <button type="button" class="tracker-mode" data-mode="week">Дневник недели</button>
+          </div>
+        </div>
         <div class="note journal-hint">Выбери день, чтобы внести данные или изменить уже сохранённые данные.</div>
         <div class="journal-section-title">Данные</div>
-        <div class="journal-date-row">
+        <div class="journal-date-row journal-date-weight-row">
           <div class="field journal-date-field"><label>Дата</label><input id="journalDate" type="date"></div>
+          <div class="field"><label>Вес, кг</label><input id="jWeight" type="number" min="20" max="300" step=".1" placeholder="Последний вес"></div>
         </div>
         <div class="journal-grid journal-data-grid">
-          <div class="field"><label>Вес, кг</label><input id="jWeight" type="number" min="20" max="300" step=".1" placeholder="Последний вес"></div>
           <div class="field"><label>Ккал</label><input id="jCalories" type="number" min="0"></div>
           <div class="field"><label>Цель</label><div id="jCalorieGoal" class="journal-calc">—</div></div>
           <div class="field"><label>Белки, г</label><input id="jProtein" type="number" min="0" step=".1"></div>
           <div class="field"><label>Жиры, г</label><input id="jFat" type="number" min="0" step=".1"></div>
           <div class="field"><label>Углеводы, г</label><input id="jCarbs" type="number" min="0" step=".1"></div>
-          <div class="field journal-full"><label>Вода, мл</label><input id="jWater" type="number" min="0" step="50"></div>
+          <div class="field"><label>Вода, мл</label><input id="jWater" type="number" min="0" step="50"></div>
         </div>
 
         <div class="journal-section-title">Активность</div>
@@ -643,7 +649,6 @@
         </div>
         <button class="btn green journal-save" id="saveJournal">Сохранить день</button>
       </div>
-      <div class="tracker-switch"><button type="button" class="tracker-mode active" data-mode="day">📅 День</button><button type="button" class="tracker-mode" data-mode="week">📆 Неделя</button></div>
       <div id="trackerWeekContent" class="hidden">
         <div class="card">
           <div class="title">📆 Дневник недели</div>
@@ -869,7 +874,7 @@
 (() => {
   'use strict';
 
-  const APP_VERSION = '4.1.14';
+  const APP_VERSION = '4.1.15';
   const KEY = 'formavs_v2';
   const LEGACY_KEY = 'forma_v2';
   const todayStr = () => {
