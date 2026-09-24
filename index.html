@@ -590,7 +590,7 @@
 
     /* FormulaVS Progress redesign */
     .progress-card{background:#fff;border-radius:16px;padding:16px;margin-bottom:16px;box-shadow:0 2px 8px rgba(15,23,42,.04)}
-    .progress-card__title{font-size:15px;font-weight:600;color:#172033;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+    .progress-card__title{font-size:15px;font-weight:600;color:#172033;margin-bottom:12px;display:flex;align-items:center;gap:8px}.progress-card__hint{font-size:11px;color:#8e98a3;margin:-6px 0 12px;line-height:1.4}.progress-activity-list{display:grid;gap:8px}.progress-activity-row{display:grid;grid-template-columns:1.2fr .8fr .8fr .9fr;gap:8px;align-items:center;background:#f8fafc;border-radius:12px;padding:9px 10px;font-size:12px}.progress-activity-row b{font-size:13px;color:#172033}.progress-activity-row .muted{color:#8e98a3}.progress-training-buckets{display:grid;gap:8px}.progress-training-bucket{background:#f8fafc;border-radius:12px;padding:10px}.progress-training-bucket__head{display:flex;justify-content:space-between;gap:8px;font-size:12px;font-weight:700;color:#172033;margin-bottom:7px}.progress-training-types{display:grid;gap:5px}.progress-training-type{display:grid;grid-template-columns:1fr auto auto;gap:8px;font-size:11px;color:#5a6b7c}.progress-training-type b{color:#172033}.progress-training-total{margin-top:7px;font-size:11px;color:#8e98a3}.progress-macro-stack{display:flex;align-items:flex-end;gap:8px;height:180px;padding:12px 8px 8px}.progress-macro-stack-group{flex:1;display:flex;align-items:flex-end;justify-content:center;height:100%}.progress-macro-stack-bar{width:min(42px,80%);height:100%;display:flex;flex-direction:column-reverse;border-radius:5px 5px 2px 2px;overflow:hidden;background:#e6eaf0}.progress-macro-stack-bar span{display:block;min-height:0}.progress-macro-stack-bar .protein{background:#4A90E2}.progress-macro-stack-bar .fat{background:#F5A623}.progress-macro-stack-bar .carbs{background:#D0021B}.progress-macro-values{display:flex;gap:8px;padding:0 8px 3px;font-size:9px;color:#8e98a3;text-align:center}.progress-macro-values span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cycle-calendar-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}.cycle-calendar-head button{width:32px;height:32px;border:0;border-radius:999px;background:#111827;color:#fff;font-size:20px}.progress-cycle-calendar .day{position:relative}.progress-cycle-calendar .cycle-mark{position:absolute;left:50%;bottom:3px;transform:translateX(-50%);width:6px;height:6px;border-radius:50%;background:#D0021B}.progress-cycle-calendar .cycle-active{background:#fff1f2!important;border-color:#fecdd3!important}
     .progress-header-card{padding-bottom:12px}
     .progress-periods-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;overflow:visible;padding-bottom:8px}
     .progress-periods-grid .progress-period{width:100%;padding:9px 8px;font-size:13px}
@@ -718,7 +718,7 @@
       </div>
 
       <div class="progress-card">
-        <div class="progress-card__title">Ключевые показатели</div>
+        <div class="progress-card__title">Ключевые показатели периода</div><div class="progress-card__hint">Среднее значение в сравнении с предыдущим таким же периодом</div>
         <div id="progressKeyMetrics" class="progress-key-metrics"></div>
       </div>
 
@@ -761,6 +761,13 @@
             </div>
           </div>
         </details>
+      </div>
+
+      <div class="progress-card progress-cycle-card">
+        <div class="progress-card__title">🩸 Цикл</div>
+        <div class="cycle-calendar-head"><button id="progressCyclePrev" type="button" aria-label="Предыдущий месяц">‹</button><strong id="progressCycleMonth"></strong><button id="progressCycleNext" type="button" aria-label="Следующий месяц">›</button></div>
+        <div class="weekdays"><span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span></div>
+        <div id="progressCycleCalendar" class="calendar progress-cycle-calendar"></div>
       </div>
     </section>
 
@@ -893,7 +900,7 @@
 (() => {
   'use strict';
 
-  const APP_VERSION = '4.1.23';
+  const APP_VERSION = '4.1.24';
   const KEY = 'formavs_v2';
   const LEGACY_KEY = 'forma_v2';
   const todayStr = () => {
@@ -1930,8 +1937,8 @@
     return round(active+bmrMifflin(w,h,a,p.gender==='male'),0);
   }
   function journalValue(d,k){const j=state.journal[d];if(k==='weight')return n(state.weights[d] ?? j?.weight);if(k==='fatPercent')return bodyFatAt(d);if(k==='totalBurned')return totalBurnedAt(d);if(k==='calorieBalance')return calorieBalanceAt(d);if(k==='cycle')return state.cycleDays[d]?1:0;if(!j)return null;if(k==='activity')return (j.trainingType||j.activity)?1:0;if(k==='trainingMinutes')return n(j.trainingMinutes);if(k==='trainingIntensity')return n(j.trainingIntensity);if(k==='activityCoefficient'){const ws=weekStartDate(d);return dynamicActivityCoefficient(getFullProfileAt(d),ws).coefficient;}return n(j[k]);}
-  function rangeFor(end,period){const e=parseDate(end),s=new Date(e);if(period==='week')s.setDate(s.getDate()-6);else if(period==='month')s.setDate(s.getDate()-29);else if(period==='3month')s.setMonth(s.getMonth()-2),s.setDate(1);else if(period==='halfyear')s.setMonth(s.getMonth()-5),s.setDate(1);else if(period==='year')s.setMonth(s.getMonth()-11),s.setDate(1);else if(state.profile.registrationDate)return [parseDate(state.profile.registrationDate),e];return [s,e];}
-  function buckets(end,period,key){const [s,e]=rangeFor(end,period),out=[];if(period==='week'){for(let d=new Date(s);d<=e;d.setDate(d.getDate()+1))out.push({label:fmt(iso(d)),dates:[iso(d)]});}else{let cur=new Date(s);while(cur<=e){let a=new Date(cur),b=new Date(cur);if(period==='month')b.setDate(b.getDate()+6);else b.setMonth(b.getMonth()+1),b.setDate(0);if(b>e)b=new Date(e);let ds=[];for(let d=new Date(a);d<=b;d.setDate(d.getDate()+1))ds.push(iso(d));out.push({label:fmt(iso(a))+' — '+fmt(iso(b)),dates:ds});cur=new Date(b);cur.setDate(cur.getDate()+1);}}return out.map(x=>{const v=x.dates.map(d=>journalValue(d,key)).filter(v=>v!=null);return {...x,avg:v.length?round(v.reduce((a,b)=>a+b,0)/v.length):null};});}
+  function rangeFor(end,period){const e=parseDate(end),s=new Date(e);if(period==='week')s.setDate(s.getDate()-6);else if(period==='month')s.setDate(s.getDate()-29);else if(period==='3month')s.setDate(s.getDate()-89);else if(period==='halfyear')s.setDate(s.getDate()-179);else if(period==='year')s.setDate(s.getDate()-364);else if(state.profile.registrationDate)return [parseDate(state.profile.registrationDate),e];return [s,e];}
+  function buckets(end,period,key){const [s,e]=rangeFor(end,period),out=[];if(period==='week'){for(let d=new Date(s);d<=e;d.setDate(d.getDate()+1))out.push({label:fmt(iso(d)),dates:[iso(d)]});}else{let cur=new Date(s);while(cur<=e){let a=new Date(cur),b=new Date(cur);b.setDate(b.getDate()+6);if(b>e)b=new Date(e);let ds=[];for(let d=new Date(a);d<=b;d.setDate(d.getDate()+1))ds.push(iso(d));out.push({label:fmt(iso(a))+' — '+fmt(iso(b)),dates:ds});cur=new Date(b);cur.setDate(cur.getDate()+1);}}return out.map(x=>{const v=x.dates.map(d=>journalValue(d,key)).filter(v=>v!=null);return {...x,avg:v.length?round(v.reduce((a,b)=>a+b,0)/v.length):null};});}
   function analyticsChart(rows,unit){const r=rows.filter(x=>x.avg!=null);if(r.length<2)return '<div class="empty">Нужно минимум два периода с данными для графика.</div>';const W=640,H=250,p=38,vs=r.map(x=>x.avg),mi=Math.min(...vs),ma=Math.max(...vs),rg=ma-mi||1,pts=r.map((x,i)=>[p+i/(r.length-1)*(W-p-20),25+(1-(x.avg-mi)/rg)*(H-70),x]);const path=pts.map((x,i)=>(i?'L':'M')+x[0].toFixed(1)+' '+x[1].toFixed(1)).join(' ');return `<div class="chart"><svg viewBox="0 0 ${W} ${H}"><line x1="${p}" y1="${H-35}" x2="${W-10}" y2="${H-35}" stroke="#dbe1e8"/><path d="${path}" fill="none" stroke="#2563eb" stroke-width="4" stroke-linecap="round"/>${pts.map(x=>`<circle cx="${x[0]}" cy="${x[1]}" r="4" fill="#fff" stroke="#2563eb" stroke-width="3"><title>${esc(x[2].label)}: ${x[2].avg} ${unit}</title></circle>`).join('')}</svg></div>`;}
   function analyticsPeriodDays(period){
     if(period==='week') return 6;
@@ -2191,99 +2198,117 @@
   function progressMetricConfig(key){
     return {
       weight:{label:'Вес',unit:'кг',type:'line'},fatPercent:{label:'% Жира',unit:'%',type:'line'},calories:{label:'Ккал',unit:'ккал',type:'bar'},
-      macros:{label:'БЖУ',unit:'г',type:'macros'},steps:{label:'Шаги',unit:'шагов',type:'bar',color:'green'},water:{label:'Вода',unit:'л',type:'bar',color:'blue'},
-      training:{label:'Тренировки',unit:'раз',type:'bar',color:'orange'},cycle:{label:'Цикл',unit:'дней',type:'cycle',color:'green'}
+      macros:{label:'БЖУ',unit:'г',type:'macros'},steps:{label:'Шаги',unit:'шагов',type:'bar',color:'green'},water:{label:'Вода',unit:'л',type:'bar',color:'orange'},
+      training:{label:'Тренировки',unit:'раз',type:'training'}
     }[key]||{label:key,unit:'',type:'line'};
+  }
+  function fatProgressRows(end,period){
+    const [start,endDate]=periodStartEnd(end,period), rows=[];
+    if(period==='week'){
+      const v=weeklyReportMetrics(start,endDate).fat;
+      const value=v!=null?v:latestKnownValue('fatPercent',endDate);
+      if(value!=null) rows.push({label:fmtLong(start)+' — '+fmtLong(endDate),dates:[start,endDate],value:round(value)});
+      return {start,end:endDate,rows};
+    }
+    let cur=parseDate(start);
+    while(cur<=parseDate(endDate)){
+      const a=iso(cur), b=cur.getTime()+6*86400000<=parseDate(endDate).getTime()?addDays(a,6):endDate;
+      const v=weeklyReportMetrics(a,b).fat;
+      const value=v!=null?v:latestKnownValue('fatPercent',b);
+      if(value!=null) rows.push({label:fmtLong(a)+' — '+fmtLong(b),dates:[a,b],value:round(value)});
+      cur=parseDate(addDays(b,1));
+    }
+    return {start,end:endDate,rows};
   }
   function progressBucketSeries(key,end,period){
     const [start,endDate]=periodStartEnd(end,period);
+    if(key==='fatPercent') return fatProgressRows(end,period);
     if(key==='macros'){
       const bs=buckets(endDate,period,'calories').map(b=>{const vals={protein:[],fat:[],carbs:[]};for(const d of b.dates){for(const k of Object.keys(vals)){const v=n(journalValue(d,k));if(v!=null)vals[k].push(v);}}return {...b,protein:vals.protein.length?round(vals.protein.reduce((a,v)=>a+v,0)/vals.protein.length):null,fat:vals.fat.length?round(vals.fat.reduce((a,v)=>a+v,0)/vals.fat.length):null,carbs:vals.carbs.length?round(vals.carbs.reduce((a,v)=>a+v,0)/vals.carbs.length):null};});
       return {start:start,end:endDate,rows:bs.filter(b=>b.protein!=null||b.fat!=null||b.carbs!=null)};
     }
     if(key==='training'){
-      const bs=buckets(endDate,period,'calories').map(b=>({...b,value:trainingStats(b.dates[0],b.dates.at(-1)).total}));
-      return {start:start,end:endDate,rows:bs.filter(b=>b.value>0)};
-    }
-    if(key==='cycle'){
-      const bs=buckets(endDate,period,'calories').map(b=>({...b,value:b.dates.filter(d=>state.cycleDays[d]).length}));
+      let bs;if(period==='week'){const s=trainingStats(start,endDate),ws=weeklyActivityStats(start,endDate);bs=[{label:fmtLong(start)+' — '+fmtLong(endDate),dates:[start,endDate],value:s.total,minutes:s.minutes,intensity:ws.avgTrainingIntensity,strength:s.strength,cardio:s.cardio,stretching:s.stretching,pilates:s.pilates,strengthMin:s.strengthMin,cardioMin:s.cardioMin,stretchingMin:s.stretchingMin,pilatesMin:s.pilatesMin}];}else{bs=buckets(endDate,period,'calories').map(b=>{const s=trainingStats(b.dates[0],b.dates.at(-1)),ws=weeklyActivityStats(b.dates[0],b.dates.at(-1));return {...b,value:s.total,minutes:s.minutes,intensity:ws.avgTrainingIntensity,strength:s.strength,cardio:s.cardio,stretching:s.stretching,pilates:s.pilates,strengthMin:s.strengthMin,cardioMin:s.cardioMin,stretchingMin:s.stretchingMin,pilatesMin:s.pilatesMin};});}
       return {start:start,end:endDate,rows:bs.filter(b=>b.value>0)};
     }
     const bs=buckets(endDate,period,key).filter(b=>b.avg!=null).map(b=>({...b,value:b.avg}));
-    if(key==='fatPercent'){
-      const rows=buckets(endDate,period,'calories').map(b=>{const vals=b.dates.map(d=>bodyFatAt(d)).filter(v=>v!=null);return {...b,value:vals.length?round(vals.reduce((a,v)=>a+v,0)/vals.length):null};}).filter(b=>b.value!=null);
-      return {start:start,end:endDate,rows};
-    }
     return {start:start,end:endDate,rows:bs};
   }
   function progressEmpty(){return '<div class="progress-empty"><div class="progress-empty__icon">📊</div><div>Добавьте данные за 2+ дня, чтобы увидеть график</div></div>';}
   function progressChartLabels(rows){return `<div class="progress-chart-labels">${rows.map(r=>`<span>${esc((r.label||'').split(' — ')[0])}</span>`).join('')}</div>`;}
   function renderProgressVisual(key,end,period){
     const cfg=progressMetricConfig(key), series=progressBucketSeries(key,end,period), rows=series.rows;
-    if(rows.length<2) return progressEmpty();
+    if(cfg.type==='line' && rows.length<1) return progressEmpty();
     if(cfg.type==='line'){
       const W=760,H=200,L=38,R=10,T=14,B=30,vals=rows.map(r=>r.value),min=Math.min(...vals),max=Math.max(...vals),range=max-min||1;
-      const x=i=>L+i/(rows.length-1)*(W-L-R),y=v=>T+(1-(v-min)/range)*(H-T-B);
+      const x=i=>rows.length===1?(W+L-R)/2:L+i/(rows.length-1)*(W-L-R),y=v=>T+(1-(v-min)/range)*(H-T-B);
       const grid=[0,1,2,3].map(i=>{const yy=T+i*(H-T-B)/3;const v=max-range*i/3;return `<line x1="${L}" y1="${yy}" x2="${W-R}" y2="${yy}" stroke="#E6EAF0" stroke-dasharray="4 4"/><text x="4" y="${yy+4}" fill="#8E98A3" font-size="11">${round(v)}</text>`}).join('');
-      const path=rows.map((r,i)=>(i?'L':'M')+x(i).toFixed(1)+' '+y(r.value).toFixed(1)).join(' ');
-      const points=rows.map((r,i)=>`<circle cx="${x(i)}" cy="${y(r.value)}" r="4.5" fill="#fff" stroke="#2563EB" stroke-width="2"><title>${esc(r.label)}: ${r.value} ${cfg.unit}</title></circle>`).join('');
+      const path=rows.length>1?rows.map((r,i)=>(i?'L':'M')+x(i).toFixed(1)+' '+y(r.value).toFixed(1)).join(' '):'';
+      const points=rows.map((r,i)=>`<circle cx="${x(i)}" cy="${y(r.value)}" r="5" fill="#fff" stroke="#2563EB" stroke-width="3"><title>${esc(r.label)}: ${r.value} ${cfg.unit}</title></circle>`).join('');
       const labels=rows.map((r,i)=>{if(rows.length>7&&i%Math.ceil(rows.length/7)!==0&&i!==rows.length-1)return '';return `<text x="${x(i)}" y="${H-8}" text-anchor="middle" fill="#8E98A3" font-size="10">${esc(r.label.split(' — ')[0])}</text>`}).join('');
-      return `<div class="progress-chart"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="График ${esc(cfg.label)}"><title>График ${esc(cfg.label)}</title>${grid}<path d="${path}" fill="none" stroke="#2563EB" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>${points}${labels}</svg></div>`;
+      return `<div class="progress-chart"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="График ${esc(cfg.label)}"><title>График ${esc(cfg.label)}</title>${grid}${path?`<path d="${path}" fill="none" stroke="#2563EB" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`:''}${points}${labels}</svg></div>`;
     }
     if(cfg.type==='macros'){
-      const max=Math.max(...rows.flatMap(r=>[r.protein||0,r.fat||0,r.carbs||0]),1);
-      const bars=rows.map(r=>`<div class="progress-bar-group"><div class="progress-bar protein" style="height:${Math.max(3,Math.round((r.protein||0)/max*145))}px" title="Белки: ${r.protein??'—'} г"></div><div class="progress-bar orange" style="height:${Math.max(3,Math.round((r.fat||0)/max*145))}px" title="Жиры: ${r.fat??'—'} г"></div><div class="progress-bar red" style="height:${Math.max(3,Math.round((r.carbs||0)/max*145))}px" title="Углеводы: ${r.carbs??'—'} г"></div></div>`).join('');
-      return `<div class="progress-chart"><div class="progress-chart-bars">${bars}</div>${progressChartLabels(rows)}</div>`;
+      const groups=rows.map(r=>{const pk=(r.protein||0)*4,fk=(r.fat||0)*9,ck=(r.carbs||0)*4,total=pk+fk+ck||1;return {r,pp:pk/total*100,fp:fk/total*100,cp:ck/total*100};});
+      const bars=groups.map(g=>`<div class="progress-macro-stack-group"><div class="progress-macro-stack-bar" title="Белки ${round(g.pp)}% · Жиры ${round(g.fp)}% · Углеводы ${round(g.cp)}%"><span class="carbs" style="height:${g.cp}%"></span><span class="fat" style="height:${g.fp}%"></span><span class="protein" style="height:${g.pp}%"></span></div></div>`).join('');
+      return `<div class="progress-chart"><div class="progress-macro-stack">${bars}</div>${progressChartLabels(rows)}</div>`;
     }
-    if(cfg.type==='cycle'){
-      const items=rows.map(r=>`<div class="progress-bar-group" title="${esc(r.label)}: ${r.value} дней"><div class="progress-bar ${cfg.color||'orange'}" style="height:${Math.max(8,Math.round(Math.min(1,r.value/Math.max(1,r.dates.length))*145))}px"></div></div>`).join('');
-      return `<div class="progress-chart"><div class="progress-chart-bars">${items}</div>${progressChartLabels(rows)}</div>`;
+    if(cfg.type==='training'){
+      const types=[['strength','Силовые','strengthMin'],['cardio','Кардио','cardioMin'],['stretching','Растяжка','stretchingMin'],['pilates','Пилатес','pilatesMin']];
+      const cards=rows.map(r=>`<div class="progress-training-bucket"><div class="progress-training-bucket__head"><span>${esc(r.label)}</span><span>${r.value} тр. · ${r.minutes} мин · интенсивность ${r.intensity!=null?r.intensity.toFixed(2):'—'}</span></div><div class="progress-training-types">${types.map(([k,label,minKey])=>`<div class="progress-training-type"><span>${label}</span><b>${r[k]}</b><span>${r[minKey]} мин</span></div>`).join('')}</div></div>`).join('');
+      return `<div class="progress-training-buckets">${cards}</div>`;
     }
     const max=Math.max(...rows.map(r=>r.value||0),1);
-    const bars=rows.map(r=>`<div class="progress-bar-group"><div class="progress-bar ${cfg.color||'blue'}" style="height:${Math.max(3,Math.round((r.value||0)/max*145))}px" title="${esc(r.label)}: ${r.value} ${cfg.unit}"></div></div>`).join('');
-    return `<div class="progress-chart"><div class="progress-chart-bars">${bars}</div>${progressChartLabels(rows)}</div>`;
+    const bars=rows.map(r=>`<div class="progress-bar-group"><div style="font-size:10px;font-weight:700;color:#172033;margin-bottom:3px">${r.value}${cfg.unit?' '+cfg.unit:''}</div><div class="progress-bar ${cfg.color||'blue'}" style="height:${Math.max(3,Math.round((r.value||0)/max*125))}px" title="${esc(r.label)}: ${r.value} ${cfg.unit}"></div></div>`).join('');
+    return `<div class="progress-chart"><div style="font-size:11px;color:#5a6b7c;margin:0 8px 2px">${cfg.label} · ${cfg.unit}</div><div class="progress-chart-bars">${bars}</div>${progressChartLabels(rows)}</div>`;
   }
-  function progressCurrentValue(key,start,end){
-    if(key==='training') return trainingStats(start,end).total;
-    if(key==='cycle') return averageValue('cycle',start,end);
-    if(key==='macros') return null;
-    return averageValue(key,start,end);
-  }
-  function progressChangeClass(key,diff){
-    if(diff==null||Math.abs(diff)<0.0001)return 'progress-neutral';
-    if(key==='weight'){const g=state.profile.goal;if(g==='lose')return diff<0?'progress-good':'progress-bad';if(g==='gain'||g==='muscle_gain')return diff>0?'progress-good':'progress-bad';return Math.abs(diff)<=0.2?'progress-good':'progress-bad';}
-    return diff>0?'progress-good':'progress-neutral';
-  }
+  function progressCurrentValue(key,start,end){if(key==='training')return trainingStats(start,end).total;if(key==='macros')return null;return averageValue(key,start,end);}
+  function progressChangeClass(key,diff){if(diff==null||Math.abs(diff)<0.0001)return 'progress-neutral';if(key==='weight'){const g=state.profile.goal;if(g==='lose')return diff<0?'progress-good':'progress-bad';if(g==='gain'||g==='muscle_gain')return diff>0?'progress-good':'progress-bad';return Math.abs(diff)<=0.2?'progress-good':'progress-bad';}return diff>0?'progress-good':'progress-neutral';}
   function progressKeyMetrics(start,end){
-    const prev=previousPeriodStartEnd(start,end);
-    const defs=[['weight','Вес','кг'],['calories','Ккал','ккал'],['steps','Шаги',''],['water','Вода','л']];
-    return defs.map(([k,label,unit])=>{const cur=averageValue(k,start,end), old=averageValue(k,prev[0],prev[1]), diff=cur!=null&&old!=null?round(cur-old):null;return `<div class="progress-tile"><div class="progress-tile__label">${label}</div><div class="progress-tile__value">${cur!=null?cur+' '+unit:'—'}</div>${diff!=null?`<div class="progress-tile__change ${progressChangeClass(k,diff)}">${diff>0?'+':''}${diff} ${unit}</div>`:'<div class="progress-tile__change progress-neutral">—</div>'}</div>`;}).join('');
+    const prev=previousPeriodStartEnd(start,end),defs=[['weight','Вес','кг'],['calories','Ккал','ккал'],['steps','Шаги',''],['water','Вода','л']];
+    return defs.map(([k,label,unit])=>{const cur=averageValue(k,start,end),old=averageValue(k,prev[0],prev[1]),diff=cur!=null&&old!=null?round(cur-old):null;return `<div class="progress-tile"><div class="progress-tile__label">${label}</div><div class="progress-tile__value">${cur!=null?cur+' '+unit:'—'}</div>${diff!=null?`<div class="progress-tile__change ${progressChangeClass(k,diff)}">${diff>0?'+':''}${diff} ${unit}</div>`:'<div class="progress-tile__change progress-neutral">—</div>'}</div>`;}).join('');
+  }
+  function latestKnownValue(key,end){
+    if(key==='fatPercent'){const ds=Object.keys(state.journal||{}).filter(d=>d<=end).sort().reverse();for(const d of ds){const v=bodyFatAt(d);if(v!=null)return round(v);}return null;}
+    if(MEASUREMENTS.some(([k])=>k===key)){const ds=Object.keys(state.measurements||{}).filter(d=>d<=end).sort().reverse();for(const d of ds){const v=n(state.measurements[d]?.[key]);if(v!=null)return v;}return null;}
+    const ds=new Set([...Object.keys(state.journal||{}),...Object.keys(state.weights||{})]);for(const d of [...ds].filter(d=>d<=end).sort().reverse()){const v=journalValue(d,key);if(v!=null)return v;}return key==='weight'?n(state.profile.weight):null;
   }
   function lastWeightAtOrBefore(end){const ds=Object.keys(state.weights||{}).filter(d=>d<=end).sort();return ds.length?n(state.weights[ds.at(-1)]):n(state.profile.weight);}
   function renderProgressGoal(end){
     const p=getFullProfileAt(end),target=n(p.target),start=n(state.weights?.[state.profile.registrationDate]??state.profile.registrationSnapshot?.weight??p.weight),current=lastWeightAtOrBefore(end);
     if(target==null||start==null||current==null){$('progressGoal').innerHTML='<div class="progress-empty" style="padding:18px 8px"><div>Задайте стартовый и целевой вес в профиле</div></div>';return;}
-    const total=target-start, done=current-start, pct=Math.abs(total)<.01?(Math.abs(current-target)<.5?100:0):clamp(Math.round(done/total*100),0,100), remaining=round(Math.abs(current-target),1), direction=target<start?'снижение веса':'набор веса';
-    $('progressGoal').innerHTML=`<div class="progress-goal-line"><span>Старт <b>${start} кг</b></span><span>Цель <b>${target} кг</b></span></div><div class="progress-bar-track"><div class="progress-bar-fill" style="width:${pct}%"></div></div><div class="progress-goal-foot"><span>${pct}%</span><span>${remaining===0?'Цель достигнута':'Осталось: '+remaining+' кг'}</span></div>`;
+    const total=target-start,done=current-start,pct=Math.abs(total)<.01?(Math.abs(current-target)<.5?100:0):clamp(Math.round(done/total*100),0,100),remaining=round(Math.abs(current-target),1);$('progressGoal').innerHTML=`<div class="progress-goal-line"><span>Старт <b>${start} кг</b></span><span>Цель <b>${target} кг</b></span></div><div class="progress-bar-track"><div class="progress-bar-fill" style="width:${pct}%"></div></div><div class="progress-goal-foot"><span>${pct}%</span><span>${remaining===0?'Цель достигнута':'Осталось: '+remaining+' кг'}</span></div>`;
   }
   function renderProgressRegistration(start,end){
     const defs=[['weight','Вес','кг'],['fatPercent','% Жира','%'],['waist','Талия','см']];
-    $('progressRegistration').innerHTML=defs.map(([k,label,unit])=>{const cur=averageValue(k,start,end),reg=registrationDateValue(k),d=cur!=null&&reg!=null?round(cur-reg):null;return `<div class="progress-tile"><div class="progress-tile__label">${label}</div><div class="progress-tile__value">${d==null?'—':(d>0?'+':'')+d+' '+unit}</div><div class="progress-tile__change ${goalAwareClass(k,d)}">от регистрации</div></div>`;}).join('');
+    $('progressRegistration').innerHTML=defs.map(([k,label,unit])=>{const cur=latestKnownValue(k,end),reg=registrationDateValue(k),d=cur!=null&&reg!=null?round(cur-reg):null;return `<div class="progress-tile"><div class="progress-tile__label">${label}</div><div class="progress-tile__value">${cur==null?'—':cur+' '+unit}</div><div class="progress-tile__change ${goalAwareClass(k,d)}">${d==null?'от регистрации':(d>0?'+':'')+d+' '+unit+' · от регистрации'}</div></div>`;}).join('');
   }
   function renderProgressActivity(start,end){
-    const stepRows=buckets(end, state.ui.analyticsPeriod||'week','steps').filter(r=>r.avg!=null), trainBuckets=buckets(end,state.ui.analyticsPeriod||'week','calories'), trainRows=trainBuckets.map(r=>({...r,value:trainingStats(r.dates[0],r.dates.at(-1)).total}));
-    const mini=(rows,color='blue')=>{if(rows.length<2)return progressEmpty();const max=Math.max(...rows.map(r=>r.value??r.avg??0),1),bars=rows.map(r=>`<div class="progress-bar-group"><div class="progress-bar ${color==='orange'?'orange':''}" style="height:${Math.max(3,Math.round((r.value??r.avg??0)/max*58))}px"></div></div>`).join('');return `<div class="progress-activity-mini"><div class="progress-chart-bars" style="height:70px;padding:0 2px 0">${bars}</div></div>`;};
-    const steps=averageValue('steps',start,end),train=trainingStats(start,end),summary=`Средние шаги: <b>${steps!=null?round(steps):'—'}</b> / день · Тренировки: <b>${train.total}</b> · Время: <b>${train.minutes}</b> мин`;
-    $('progressActivity').innerHTML=`<div class="progress-activity-tile"><div class="progress-activity-title">Шаги</div><div class="progress-activity-value">${steps!=null?round(steps):'—'} / день</div>${mini(stepRows)}</div><div class="progress-activity-tile"><div class="progress-activity-title">Тренировки</div><div class="progress-activity-value">${train.total} раза</div>${mini(trainRows,'orange')}</div>`;
-    $('progressActivitySummary').innerHTML=summary;
+    const steps=averageValue('steps',start,end),train=trainingStats(start,end),ws=weeklyActivityStats(start,end),types=[['Силовые',train.strength,train.strengthMin],['Кардио',train.cardio,train.cardioMin],['Растяжка',train.stretching,train.stretchingMin],['Пилатес',train.pilates,train.pilatesMin]];
+    $('progressActivity').innerHTML=`<div class="progress-activity-list"><div class="progress-activity-row"><span>Средние шаги</span><b>${steps!=null?round(steps):'—'} / день</b><span class="muted">за период</span><span></span></div><div class="progress-activity-row"><span>Количество тренировок</span><b>${train.total}</b><span class="muted">за период</span><span></span></div><div class="progress-activity-row"><span>Общее время тренировок</span><b>${train.minutes} мин</b><span class="muted">за период</span><span></span></div><div class="progress-activity-row"><span>Средняя интенсивность</span><b>${ws.avgTrainingIntensity!=null?ws.avgTrainingIntensity.toFixed(2):'—'}</b><span class="muted">коэф.</span><span></span></div></div><div class="progress-card__title" style="margin-top:14px;margin-bottom:8px">Виды тренировок</div><div class="progress-activity-list">${types.map(([label,count,min])=>`<div class="progress-activity-row"><span>${label}</span><b>${count}</b><span class="muted">${min} мин</span><span>${train.total?Math.round(count/train.total*100):0}%</span></div>`).join('')}</div>`;
+    $('progressActivitySummary').innerHTML='';
   }
   function renderProgressLegend(key){
-    const cfg=progressMetricConfig(key); if(key==='macros')return '<span class="progress-legend-item"><i class="progress-legend-dot"></i>Белки</span><span class="progress-legend-item"><i class="progress-legend-dot orange"></i>Жиры</span><span class="progress-legend-item"><i class="progress-legend-dot green"></i>Углеводы</span>';
-    return `<span class="progress-legend-item"><i class="progress-legend-dot"></i>${cfg.label} · ${cfg.type==='line'?'ежедневные измерения':'средние значения'}</span>`;
+    const cfg=progressMetricConfig(key);if(key==='macros')return '<span class="progress-legend-item"><i class="progress-legend-dot" style="background:#4A90E2"></i>Белки</span><span class="progress-legend-item"><i class="progress-legend-dot orange" style="background:#F5A623"></i>Жиры</span><span class="progress-legend-item"><i class="progress-legend-dot green" style="background:#D0021B"></i>Углеводы</span>';
+    if(key==='fatPercent')return '<span class="progress-legend-item"><i class="progress-legend-dot"></i>% Жира · недельный показатель</span>';
+    if(key==='training')return '<span class="progress-legend-item">За каждый период: количество · длительность · интенсивность · виды тренировок</span>';
+    return `<span class="progress-legend-item"><i class="progress-legend-dot"></i>${cfg.label}</span>`;
   }
   function renderAllProgressModal(start,end){
     const defs=[['weight','Вес','кг'],['fatPercent','% Жира','%'],['calories','Ккал','ккал'],['protein','Белки','г'],['fat','Жиры','г'],['carbs','Углеводы','г'],['water','Вода','л'],['steps','Шаги',''],['burnedCalories','Потраченные ккал','ккал'],['totalBurned','Всего потрачено','ккал'],['calorieBalance','Баланс ккал','ккал'],['trainingMinutes','Тренировки','мин'],['trainingIntensity','Интенсивность','коэф.'],['activityCoefficient','Коэф. активности',''],['cycle','Дни цикла','дней'],...MEASUREMENTS.map(([k,l])=>[k,l,'см'])];
     $('allProgressModalBody').innerHTML=`<div class="progress-all-grid"><div class="progress-all-head">Показатель · Среднее · От регистрации</div>${defs.map(([k,l,u])=>{const cur=averageValue(k,start,end),reg=registrationDateValue(k);return `<div class="progress-all-row"><span>${esc(l)}</span><span>${cur!=null?cur+' '+u:'—'}</span><span class="muted">${cur!=null&&reg!=null?((cur-reg>0?'+':'')+round(cur-reg)+' '+u):'—'}</span></div>`}).join('')}</div>`;
+  }
+  function renderProgressCycleCalendar(){
+    const el=$('progressCycleCalendar'), title=$('progressCycleMonth'); if(!el||!title)return;
+    const base=state.ui.progressCycleMonth||todayStr().slice(0,7)+'-01', d=parseDate(base), y=d.getFullYear(), m=d.getMonth();
+    title.textContent=d.toLocaleDateString('ru-RU',{month:'long',year:'numeric'});
+    const first=new Date(y,m,1), offset=(first.getDay()+6)%7, days=new Date(y,m+1,0).getDate();
+    let html=''; for(let i=0;i<offset;i++) html+='<div class="day muted"></div>';
+    for(let day=1;day<=days;day++){const ds=iso(new Date(y,m,day)),active=!!state.cycleDays?.[ds];html+=`<div class="day ${active?'cycle-active':''} ${ds===todayStr()?'today':''}"><span>${day}</span>${active?'<i class="cycle-mark"></i>':''}</div>`;}
+    el.innerHTML=html;
+  }
+  function shiftProgressCycleMonth(dir){
+    const base=state.ui.progressCycleMonth||todayStr().slice(0,7)+'-01', d=parseDate(base); d.setMonth(d.getMonth()+dir); d.setDate(1); state.ui.progressCycleMonth=iso(d); save(); renderProgressCycleCalendar();
   }
   function renderAnalytics(){
     const end=state.ui.analyticsDate||todayStr(),period=state.ui.analyticsPeriod||'week',key=state.ui.analyticsMetric||'weight';
@@ -2301,6 +2326,7 @@
     renderCalendar();
     renderAllProgressModal(start,endDate);
   }
+  if(!window.__fvsProgressCycleBound){window.__fvsProgressCycleBound=true;document.addEventListener('click',e=>{if(e.target?.id==='progressCyclePrev')shiftProgressCycleMonth(-1);if(e.target?.id==='progressCycleNext')shiftProgressCycleMonth(1);},true);}
   function navigate(tab){
     document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
     const target=tab==='trackers'?'trackers':tab; const v=$('view-'+target); if(v)v.classList.add('active');
@@ -2643,7 +2669,7 @@ $('quickModalClose')?.addEventListener('click',closeQuick); $('quickModal')?.add
     if(state.profile.registrationDate){try{renderHome();}catch(e){console.warn('FormulaVS final home render skipped',e);}}
     setInterval(()=>{if(todayStr()!==state._lastDay){state._lastDay=todayStr();rolloverWeek();state.ui.habitDate=todayStr();state.ui.journalDate=todayStr();save();renderHome();renderJournal();renderWeek();renderAnalytics();}},30000);
     if ('serviceWorker' in navigator) {
-      const APP_VERSION='4.1.23';
+      const APP_VERSION='4.1.24';
       let reloadScheduled = false;
       function reloadOnceAfterUpdate(){
         if(reloadScheduled) return;
