@@ -170,7 +170,7 @@
     .progress-periods{display:flex;gap:8px;overflow-x:auto;padding:0 0 10px;scrollbar-width:none}
     .progress-periods::-webkit-scrollbar{display:none}
     .progress-period{border:0;background:#f1f1f1;color:#777;border-radius:999px;padding:9px 18px;font-weight:600;white-space:nowrap;flex-shrink:0}
-    .progress-period.active{background:var(--accent);color:#fff}
+    .progress-period.active{background:#111827!important;color:#fff!important}
     .progress-range{display:flex;align-items:center;justify-content:center;gap:14px;margin:3px 0 26px;color:#5b5b5b;font-size:.86rem}
     .progress-range button{border:0;background:#f1f1f1;color:#aaa;width:38px;height:38px;border-radius:50%;font-size:1.45rem;line-height:1;transition:background .15s}
     .progress-range button:not(:disabled):hover{background:#e0e0e0;color:#666}
@@ -595,7 +595,7 @@
     .progress-periods-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;overflow:visible;padding-bottom:8px}
     .progress-periods-grid .progress-period{width:100%;padding:9px 8px;font-size:13px}
     .progress-range{margin:4px 0 2px;gap:10px}
-    .progress-range button{width:32px;height:32px;font-size:1.25rem;background:#f8fafc;color:#5a6b7c}
+    .progress-range button{width:32px;height:32px;font-size:1.25rem;background:#111827;color:#fff;border:0;border-radius:999px}.progress-range button:disabled{opacity:.45}
     .progress-key-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
     .progress-tile{background:#f8fafc;border-radius:12px;padding:12px;min-height:72px;min-width:0}
     .progress-tile__label{font-size:10px;font-weight:700;color:#8e98a3;margin-bottom:4px}
@@ -604,18 +604,18 @@
     .progress-good{color:#16a34a}.progress-bad{color:#dc2626}.progress-neutral{color:#8e98a3}
     .progress-tabs{gap:8px;padding-bottom:8px}
     .progress-tab{border:0;background:#f8fafc;color:#5a6b7c;border-radius:999px;padding:8px 14px;font-size:13px;font-weight:600;white-space:nowrap;flex-shrink:0}
-    .progress-tab--active,.progress-metric.active{background:#2563eb!important;color:#fff!important}
+    .progress-tab--active,.progress-metric.active{background:#111827!important;color:#fff!important}
     .progress-chart-wrap{margin:0}
     .progress-chart{background:#f8fafc;border-radius:12px;padding:12px;overflow:hidden;min-height:200px}
     .progress-chart svg{width:100%;height:200px;display:block}
     .progress-chart-bars{height:200px;display:flex;align-items:flex-end;gap:6px;padding:12px 8px 8px}
     .progress-bar-group{flex:1;min-width:0;height:100%;display:flex;align-items:flex-end;justify-content:center;gap:2px}
-    .progress-bar{width:100%;max-width:22px;background:#2563eb;border-radius:4px 4px 2px 2px;min-height:3px}
-    .progress-bar.orange{background:#d97706}.progress-bar.green{background:#16a34a}.progress-bar.gray{background:#8e98a3}
+    .progress-bar{width:100%;max-width:22px;background:#2563EB;border-radius:4px 4px 2px 2px;min-height:3px}
+    .progress-bar.protein{background:#4A90E2}.progress-bar.orange{background:#F5A623}.progress-bar.green{background:#16A34A}.progress-bar.red{background:#D0021B}.progress-bar.gray{background:#8e98a3}
     .progress-chart-labels{display:flex;gap:6px;padding:0 8px 2px;font-size:9px;color:#8e98a3;text-align:center}
     .progress-chart-labels span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .progress-legend{display:flex;flex-wrap:wrap;gap:8px 14px;margin:8px 0 0;color:#5a6b7c;font-size:12px}
-    .progress-legend-item{display:flex;align-items:center;gap:6px}.progress-legend-dot{width:8px;height:8px;border-radius:50%;background:#2563eb}.progress-legend-dot.orange{background:#d97706}.progress-legend-dot.green{background:#16a34a}
+    .progress-legend-item{display:flex;align-items:center;gap:6px}.progress-legend-dot{width:8px;height:8px;border-radius:50%;background:#2563EB}.progress-legend-dot.orange{background:#F5A623}.progress-legend-dot.green{background:#16A34A}
     .progress-empty{text-align:center;padding:32px 16px;color:#8e98a3;font-size:13px}.progress-empty__icon{font-size:32px;margin-bottom:8px}
     .progress-goal-line{display:flex;justify-content:space-between;gap:10px;font-size:13px;color:#5a6b7c;margin-bottom:10px}.progress-goal-line b{color:#172033}
     .progress-bar-track{height:8px;background:#e6eaf0;border-radius:999px;overflow:hidden}.progress-bar-fill{height:100%;background:#16a34a;border-radius:999px;transition:width .5s ease}
@@ -748,11 +748,6 @@
         <div id="progressActivitySummary" class="progress-activity-summary"></div>
       </div>
 
-      <div class="progress-card">
-        <div class="progress-card__title">🎯 Цели недели <span id="progressWeeklyCount" class="progress-inline-count"></span></div>
-        <div id="weeklyGoalDashboard"></div>
-      </div>
-
       <div class="progress-card progress-calendar-card">
         <details id="progressCalendarDetails">
           <summary>▶ 📅 Календарь целей</summary>
@@ -760,6 +755,10 @@
             <div class="calendarHead"><button id="prevMonth" aria-label="Предыдущий месяц">‹</button><strong id="monthTitle"></strong><button id="nextMonth" aria-label="Следующий месяц">›</button></div>
             <div class="weekdays"><span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span></div>
             <div id="habitCalendar" class="calendar"></div><div id="dayDetail" style="margin-top:11px"></div>
+            <div class="progress-calendar-goals">
+              <div class="progress-card__title">🎯 Цели недели <span id="progressWeeklyCount" class="progress-inline-count"></span></div>
+              <div id="weeklyGoalDashboard"></div>
+            </div>
           </div>
         </details>
       </div>
@@ -894,7 +893,7 @@
 (() => {
   'use strict';
 
-  const APP_VERSION = '4.1.21';
+  const APP_VERSION = '4.1.23';
   const KEY = 'formavs_v2';
   const LEGACY_KEY = 'forma_v2';
   const todayStr = () => {
@@ -2192,8 +2191,8 @@
   function progressMetricConfig(key){
     return {
       weight:{label:'Вес',unit:'кг',type:'line'},fatPercent:{label:'% Жира',unit:'%',type:'line'},calories:{label:'Ккал',unit:'ккал',type:'bar'},
-      macros:{label:'БЖУ',unit:'г',type:'macros'},steps:{label:'Шаги',unit:'шагов',type:'bar'},water:{label:'Вода',unit:'л',type:'bar'},
-      training:{label:'Тренировки',unit:'раз',type:'bar'},cycle:{label:'Цикл',unit:'дней',type:'cycle'}
+      macros:{label:'БЖУ',unit:'г',type:'macros'},steps:{label:'Шаги',unit:'шагов',type:'bar',color:'green'},water:{label:'Вода',unit:'л',type:'bar',color:'blue'},
+      training:{label:'Тренировки',unit:'раз',type:'bar',color:'orange'},cycle:{label:'Цикл',unit:'дней',type:'cycle',color:'green'}
     }[key]||{label:key,unit:'',type:'line'};
   }
   function progressBucketSeries(key,end,period){
@@ -2233,15 +2232,15 @@
     }
     if(cfg.type==='macros'){
       const max=Math.max(...rows.flatMap(r=>[r.protein||0,r.fat||0,r.carbs||0]),1);
-      const bars=rows.map(r=>`<div class="progress-bar-group"><div class="progress-bar" style="height:${Math.max(3,Math.round((r.protein||0)/max*145))}px" title="Белки: ${r.protein??'—'} г"></div><div class="progress-bar orange" style="height:${Math.max(3,Math.round((r.fat||0)/max*145))}px" title="Жиры: ${r.fat??'—'} г"></div><div class="progress-bar green" style="height:${Math.max(3,Math.round((r.carbs||0)/max*145))}px" title="Углеводы: ${r.carbs??'—'} г"></div></div>`).join('');
+      const bars=rows.map(r=>`<div class="progress-bar-group"><div class="progress-bar protein" style="height:${Math.max(3,Math.round((r.protein||0)/max*145))}px" title="Белки: ${r.protein??'—'} г"></div><div class="progress-bar orange" style="height:${Math.max(3,Math.round((r.fat||0)/max*145))}px" title="Жиры: ${r.fat??'—'} г"></div><div class="progress-bar red" style="height:${Math.max(3,Math.round((r.carbs||0)/max*145))}px" title="Углеводы: ${r.carbs??'—'} г"></div></div>`).join('');
       return `<div class="progress-chart"><div class="progress-chart-bars">${bars}</div>${progressChartLabels(rows)}</div>`;
     }
     if(cfg.type==='cycle'){
-      const items=rows.map(r=>`<div class="progress-bar-group" title="${esc(r.label)}: ${r.value} дней"><div class="progress-bar orange" style="height:${Math.max(8,Math.round(Math.min(1,r.value/Math.max(1,r.dates.length))*145))}px"></div></div>`).join('');
+      const items=rows.map(r=>`<div class="progress-bar-group" title="${esc(r.label)}: ${r.value} дней"><div class="progress-bar ${cfg.color||'orange'}" style="height:${Math.max(8,Math.round(Math.min(1,r.value/Math.max(1,r.dates.length))*145))}px"></div></div>`).join('');
       return `<div class="progress-chart"><div class="progress-chart-bars">${items}</div>${progressChartLabels(rows)}</div>`;
     }
     const max=Math.max(...rows.map(r=>r.value||0),1);
-    const bars=rows.map(r=>`<div class="progress-bar-group"><div class="progress-bar" style="height:${Math.max(3,Math.round((r.value||0)/max*145))}px" title="${esc(r.label)}: ${r.value} ${cfg.unit}"></div></div>`).join('');
+    const bars=rows.map(r=>`<div class="progress-bar-group"><div class="progress-bar ${cfg.color||'blue'}" style="height:${Math.max(3,Math.round((r.value||0)/max*145))}px" title="${esc(r.label)}: ${r.value} ${cfg.unit}"></div></div>`).join('');
     return `<div class="progress-chart"><div class="progress-chart-bars">${bars}</div>${progressChartLabels(rows)}</div>`;
   }
   function progressCurrentValue(key,start,end){
@@ -2644,7 +2643,7 @@ $('quickModalClose')?.addEventListener('click',closeQuick); $('quickModal')?.add
     if(state.profile.registrationDate){try{renderHome();}catch(e){console.warn('FormulaVS final home render skipped',e);}}
     setInterval(()=>{if(todayStr()!==state._lastDay){state._lastDay=todayStr();rolloverWeek();state.ui.habitDate=todayStr();state.ui.journalDate=todayStr();save();renderHome();renderJournal();renderWeek();renderAnalytics();}},30000);
     if ('serviceWorker' in navigator) {
-      const APP_VERSION='4.1.20';
+      const APP_VERSION='4.1.23';
       let reloadScheduled = false;
       function reloadOnceAfterUpdate(){
         if(reloadScheduled) return;
