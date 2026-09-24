@@ -587,6 +587,46 @@
       display:inline-flex!important;align-items:center!important;white-space:nowrap!important;
     }
     .profile-volume-current-card .profile-history-time{margin-left:5px!important}
+
+    /* FormulaVS Progress redesign */
+    .progress-card{background:#fff;border-radius:16px;padding:16px;margin-bottom:16px;box-shadow:0 2px 8px rgba(15,23,42,.04)}
+    .progress-card__title{font-size:15px;font-weight:600;color:#172033;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+    .progress-header-card{padding-bottom:12px}
+    .progress-periods-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;overflow:visible;padding-bottom:8px}
+    .progress-periods-grid .progress-period{width:100%;padding:9px 8px;font-size:13px}
+    .progress-range{margin:4px 0 2px;gap:10px}
+    .progress-range button{width:32px;height:32px;font-size:1.25rem;background:#f8fafc;color:#5a6b7c}
+    .progress-key-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+    .progress-tile{background:#f8fafc;border-radius:12px;padding:12px;min-height:72px;min-width:0}
+    .progress-tile__label{font-size:10px;font-weight:700;color:#8e98a3;margin-bottom:4px}
+    .progress-tile__value{font-size:16px;font-weight:600;color:#172033;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .progress-tile__change{font-size:10px;font-weight:700;margin-top:4px;white-space:nowrap}
+    .progress-good{color:#16a34a}.progress-bad{color:#dc2626}.progress-neutral{color:#8e98a3}
+    .progress-tabs{gap:8px;padding-bottom:8px}
+    .progress-tab{border:0;background:#f8fafc;color:#5a6b7c;border-radius:999px;padding:8px 14px;font-size:13px;font-weight:600;white-space:nowrap;flex-shrink:0}
+    .progress-tab--active,.progress-metric.active{background:#2563eb!important;color:#fff!important}
+    .progress-chart-wrap{margin:0}
+    .progress-chart{background:#f8fafc;border-radius:12px;padding:12px;overflow:hidden;min-height:200px}
+    .progress-chart svg{width:100%;height:200px;display:block}
+    .progress-chart-bars{height:200px;display:flex;align-items:flex-end;gap:6px;padding:12px 8px 8px}
+    .progress-bar-group{flex:1;min-width:0;height:100%;display:flex;align-items:flex-end;justify-content:center;gap:2px}
+    .progress-bar{width:100%;max-width:22px;background:#2563eb;border-radius:4px 4px 2px 2px;min-height:3px}
+    .progress-bar.orange{background:#d97706}.progress-bar.green{background:#16a34a}.progress-bar.gray{background:#8e98a3}
+    .progress-chart-labels{display:flex;gap:6px;padding:0 8px 2px;font-size:9px;color:#8e98a3;text-align:center}
+    .progress-chart-labels span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .progress-legend{display:flex;flex-wrap:wrap;gap:8px 14px;margin:8px 0 0;color:#5a6b7c;font-size:12px}
+    .progress-legend-item{display:flex;align-items:center;gap:6px}.progress-legend-dot{width:8px;height:8px;border-radius:50%;background:#2563eb}.progress-legend-dot.orange{background:#d97706}.progress-legend-dot.green{background:#16a34a}
+    .progress-empty{text-align:center;padding:32px 16px;color:#8e98a3;font-size:13px}.progress-empty__icon{font-size:32px;margin-bottom:8px}
+    .progress-goal-line{display:flex;justify-content:space-between;gap:10px;font-size:13px;color:#5a6b7c;margin-bottom:10px}.progress-goal-line b{color:#172033}
+    .progress-bar-track{height:8px;background:#e6eaf0;border-radius:999px;overflow:hidden}.progress-bar-fill{height:100%;background:#16a34a;border-radius:999px;transition:width .5s ease}
+    .progress-goal-foot{display:flex;justify-content:space-between;margin-top:8px;font-size:12px;color:#5a6b7c}
+    .progress-registration-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+    .progress-link{border:0;background:transparent;color:#2563eb;padding:8px 0 0;font-size:13px;font-weight:600}
+    .progress-activity-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.progress-activity-tile{background:#f8fafc;border-radius:12px;padding:10px;min-width:0}.progress-activity-title{font-size:12px;font-weight:600;color:#5a6b7c;margin-bottom:5px}.progress-activity-value{font-size:16px;font-weight:700;color:#172033}.progress-activity-mini{height:70px;margin-top:6px}.progress-activity-mini svg{width:100%;height:100%;display:block}.progress-activity-summary{margin-top:10px;font-size:12px;color:#5a6b7c;line-height:1.45}
+    .progress-inline-count{margin-left:auto;font-size:12px;color:#5a6b7c;font-weight:600}.weekly-goals-grid{display:grid;gap:8px}.weekly-goal{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:7px 0;font-size:14px}.weekly-goal-status.done{color:#16a34a}.weekly-goal-status.not-done{color:#8e98a3}.progress-weekly-bar{margin:0 0 8px}.progress-calendar-card details{margin:0}.progress-calendar-card summary{cursor:pointer;list-style:none;font-size:15px;font-weight:600;color:#172033}.progress-calendar-card summary::-webkit-details-marker{display:none}.progress-calendar-card details[open] summary{margin-bottom:14px}.progress-calendar-body{padding-top:2px}
+    .progress-all-modal-card{max-width:620px}.progress-all-grid{display:grid;gap:8px}.progress-all-row{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:8px;background:#f8fafc;border-radius:12px;padding:10px 12px;font-size:13px}.progress-all-row .muted{color:#8e98a3}.progress-all-head{font-size:11px;color:#8e98a3;font-weight:700;padding:0 12px 2px}
+    @media(max-width:380px){.progress-registration-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.progress-periods-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+    @media(min-width:600px){.progress-periods-grid{grid-template-columns:repeat(6,minmax(0,1fr))}}
 </style>
 </head>
 <body><div id="toast" class="toast" role="status" aria-live="polite"></div>
@@ -669,82 +709,59 @@
     </section>
 
     <section id="view-analytics" class="view progress-page">
-      <div class="card analytics-dashboard">
+      <div class="progress-card progress-header-card">
         <div class="progress-heading">Прогресс</div>
-        <div class="progress-section-title">Динамика показателей</div>
-        <div class="progress-periods" id="progressPeriods">
+        <div class="progress-periods progress-periods-grid" id="progressPeriods">
           <button class="progress-period active" data-period="week">1 нед</button><button class="progress-period" data-period="month">1 мес</button><button class="progress-period" data-period="3month">3 мес</button><button class="progress-period" data-period="halfyear">6 мес</button><button class="progress-period" data-period="year">1 год</button><button class="progress-period" data-period="all">Весь период</button>
         </div>
         <div class="progress-range"><button id="progressPrev" aria-label="Предыдущий период">‹</button><strong id="progressRangeLabel"></strong><button id="progressNext" aria-label="Следующий период">›</button></div>
+      </div>
 
-        <div class="dashboard-section">
-          <div class="dashboard-section-title">Итоги периода</div>
-          <div class="period-caption" id="dashboardPeriodCaption"></div>
-          <div id="progressSummary" class="progress-summary"></div>
-        </div>
+      <div class="progress-card">
+        <div class="progress-card__title">Ключевые показатели</div>
+        <div id="progressKeyMetrics" class="progress-key-metrics"></div>
+      </div>
 
-        <div class="dashboard-section">
-          <div class="dashboard-section-title">Сравнение</div>
-          <div id="periodComparison"></div>
+      <div class="progress-card">
+        <div class="progress-card__title">Динамика</div>
+        <div class="progress-metric-tabs progress-tabs" id="progressMetricTabs">
+          <button class="progress-metric progress-tab active" data-metric="weight">Вес</button><button class="progress-metric progress-tab" data-metric="fatPercent">% Жира</button><button class="progress-metric progress-tab" data-metric="calories">Ккал</button><button class="progress-metric progress-tab" data-metric="macros">БЖУ</button><button class="progress-metric progress-tab" data-metric="steps">Шаги</button><button class="progress-metric progress-tab" data-metric="water">Вода</button><button class="progress-metric progress-tab" data-metric="training">Тренировки</button><button class="progress-metric progress-tab" data-metric="cycle">Цикл</button>
         </div>
+        <div id="analyticsChart" class="progress-chart-wrap"></div>
+        <div class="progress-legend" id="progressLegend"></div>
+      </div>
 
-        <div class="dashboard-section">
-          <div class="dashboard-section-title">⚖️ Вес</div>
-          <div id="weightDashboard"></div>
-          <div class="progress-metric-tabs" id="progressMetricTabs"><button class="progress-metric active" data-metric="weight">Вес</button><button class="progress-metric" data-metric="fatPercent">% Жира</button><button class="progress-metric" data-metric="calories">Ккал</button><button class="progress-metric" data-metric="protein">Белки</button><button class="progress-metric" data-metric="fat">Жиры</button><button class="progress-metric" data-metric="carbs">Углеводы</button><button class="progress-metric" data-metric="water">Вода</button><button class="progress-metric" data-metric="steps">Шаги</button><button class="progress-metric" data-metric="burnedCalories">Потраченные ккал</button><button class="progress-metric" data-metric="totalBurned">Всего потрачено</button><button class="progress-metric" data-metric="calorieBalance">Баланс ккал</button><button class="progress-metric" data-metric="trainingMinutes">Тренировки, мин</button><button class="progress-metric" data-metric="trainingIntensity">Интенсивность</button><button class="progress-metric" data-metric="activityCoefficient">Коэф. активности</button><button class="progress-metric" data-metric="cycle">Дни цикла</button></div>
-          <div id="analyticsChart" class="progress-chart-wrap"></div>
-          <div class="progress-legend"><div><span class="legend-dot"></span><span id="progressLegendPrimary">Вес — ежедневные измерения</span></div><div><span class="legend-line"></span><span>Тренд — сглаженное изменение</span></div></div>
-        </div>
+      <div class="progress-card">
+        <div class="progress-card__title">🎯 Прогресс к цели</div>
+        <div id="progressGoal"></div>
+      </div>
 
-        <div class="dashboard-section">
-          <div class="dashboard-section-title">🍽 Питание</div>
-          <div id="nutritionDashboard" class="dashboard-kpis"></div>
-          <div class="mini-note">Средние значения рассчитываются только по дням, где соответствующий показатель заполнен.</div>
-        </div>
+      <div class="progress-card">
+        <div class="progress-card__title">📊 От регистрации</div>
+        <div id="progressRegistration" class="progress-registration-grid"></div>
+        <button class="progress-link" id="openAllProgress" type="button">Все показатели →</button>
+      </div>
 
-        <div class="dashboard-section">
-          <div class="dashboard-section-title">⚡ Энергетический баланс</div>
-          <div id="energyDashboard" class="dashboard-kpis"></div>
-        </div>
+      <div class="progress-card">
+        <div class="progress-card__title">🏃 Активность</div>
+        <div id="progressActivity" class="progress-activity-grid"></div>
+        <div id="progressActivitySummary" class="progress-activity-summary"></div>
+      </div>
 
-        <div class="dashboard-section">
-          <div class="dashboard-section-title">🏃 Активность и тренировки</div>
-          <div id="activityDashboard" class="training-kpis"></div>
-        </div>
+      <div class="progress-card">
+        <div class="progress-card__title">🎯 Цели недели <span id="progressWeeklyCount" class="progress-inline-count"></span></div>
+        <div id="weeklyGoalDashboard"></div>
+      </div>
 
-        <div class="dashboard-section">
-          <div class="dashboard-section-title">🧬 Состав тела</div>
-          <div id="bodyDashboard" class="dashboard-kpis"></div>
-        </div>
-
-        <div class="dashboard-section">
-          <div class="dashboard-section-title">📏 Объёмы</div>
-          <div id="volumeDashboard" class="volume-grid"></div>
-          <div class="mini-note">Если в выбранном периоде был один замер, показывается его значение; при нескольких замерах — среднее.</div>
-        </div>
-
-        <div class="dashboard-section">
-          <div class="dashboard-section-title">🔎 Связи показателей</div>
-          <div class="note">Сравниваем данные предыдущего дня с весом следующего дня. <b>r</b> — статистическая связь от −1 до +1 и не доказывает причинность.</div>
-          <div id="weightCorrelations" class="correlation-grid" style="margin-top:10px"></div>
-        </div>
-
-        <div class="dashboard-section">
-          <div class="progress-section-title" style="margin-top:0">Ежедневные цели — календарь</div>
-          <div class="calendarHead"><button id="prevMonth">‹</button><strong id="monthTitle"></strong><button id="nextMonth">›</button></div>
-          <div class="weekdays"><span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span></div>
-          <div id="habitCalendar" class="calendar"></div><div id="dayDetail" style="margin-top:11px"></div>
-        </div>
-
-        <div class="dashboard-section">
-          <div class="progress-section-title" style="margin-top:0">Недельные цели</div>
-          <div id="weeklyGoalDashboard"></div>
-        </div>
-
-        <div class="dashboard-section">
-          <div class="progress-section-title" style="margin-top:0">Анализ еженедельных отчётов</div>
-          <div id="analyticsWeeklyStats" class="weekly-report-list"></div>
-        </div>
+      <div class="progress-card progress-calendar-card">
+        <details id="progressCalendarDetails">
+          <summary>▶ 📅 Календарь целей</summary>
+          <div class="progress-calendar-body">
+            <div class="calendarHead"><button id="prevMonth" aria-label="Предыдущий месяц">‹</button><strong id="monthTitle"></strong><button id="nextMonth" aria-label="Следующий месяц">›</button></div>
+            <div class="weekdays"><span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span></div>
+            <div id="habitCalendar" class="calendar"></div><div id="dayDetail" style="margin-top:11px"></div>
+          </div>
+        </details>
       </div>
     </section>
 
@@ -840,7 +857,7 @@
       <div class="profile-zone profile-footer-zone">
         <div class="profile-disclaimer">⚠️ Расчёты ориентировочные и не являются медицинской диагностикой. % жира по формулам — это оценка, а не измерение.</div>
         <button class="profile-delete-btn" id="resetData" type="button">🗑 Удалить все данные</button>
-        <div class="profile-version">FormulaVS — v4.1.6</div>
+        <div class="profile-version">FormulaVS — v4.1.21</div>
       </div>
 
       <div class="modal" id="profileHistoryModal" aria-hidden="true">
@@ -865,9 +882,10 @@
     <button class="bottom-tab" data-tab="analytics"><span class="nav-icon">⌁</span>Мой прогресс</button>
   </nav>
   <div class="card app-settings-card" id="appSettingsCard"><div class="title">⚙️ Настройки</div><div class="settings-row"><div><b>Резервная копия и перенос данных между устройствами</b></div><button class="btn ghost settings-data-btn" id="openDataModal" type="button" data-open-data-modal="1" onclick="var m=document.getElementById('dataModal'); if(m){m.classList.add('show');m.setAttribute('aria-hidden','false');}">Управление</button></div></div>
-  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v4.1.12</span></div>
+  <div class="footerNote">Расчёты ориентировочные и не являются медицинской диагностикой. Особенно % жира по формулам — это оценка, а не измерение.<br><span id="appVersion" style="opacity:.6">FormulaVS · v4.1.21</span></div>
 </div>
   <div id="quickModal" class="modal" aria-hidden="true"><div class="modal-card quick-modal-card"><button class="modal-close" id="quickModalClose" aria-label="Закрыть">×</button><div class="onboarding-title">Быстро добавить</div><div class="quick-grid"><button data-quick="weight">⚖️<span>Вес</span></button><button data-quick="water">💧<span>Вода</span></button><button data-quick="steps">🚶<span>Шаги</span></button><button data-quick="calories">🍽<span>Калории</span></button><button data-quick="training">🏋️<span>Тренировка</span></button><button data-quick="measurement">📏<span>Замер</span></button></div></div></div>
+  <div id="allProgressModal" class="modal" aria-hidden="true"><div class="modal-card progress-all-modal-card"><button type="button" class="modal-close" id="allProgressModalClose" aria-label="Закрыть">×</button><div class="onboarding-title">Все показатели</div><div id="allProgressModalBody"></div></div></div>
   <div id="dataModal" class="modal" aria-hidden="true"><div class="modal-card"><button type="button" class="modal-close" id="dataModalClose" aria-label="Закрыть" onclick="event.preventDefault();event.stopPropagation();var m=document.getElementById('dataModal');if(m){m.classList.remove('show');m.setAttribute('aria-hidden','true');}">×</button><div class="onboarding-title">Резервная копия и перенос данных между устройствами</div><div class="data-actions"><button class="btn secondary" id="exportData">Экспортировать JSON</button><label class="btn ghost" for="importData">Импортировать JSON</label><input id="importData" type="file" accept="application/json,.json" class="file-upload"><button class="btn danger" id="resetDataFromModal">Удалить все данные</button></div></div></div>
   <div id="dietModal" class="modal"><div class="modal-card"><button class="modal-close" id="dietModalClose">×</button><div id="dietModalTitle" class="onboarding-title"></div><div id="dietModalBody" style="color:#475569;line-height:1.55"></div></div></div>
 
@@ -876,7 +894,7 @@
 (() => {
   'use strict';
 
-  const APP_VERSION = '4.1.20';
+  const APP_VERSION = '4.1.21';
   const KEY = 'formavs_v2';
   const LEGACY_KEY = 'forma_v2';
   const todayStr = () => {
@@ -2144,7 +2162,7 @@
   function renderWeeklyGoalDashboard(){
     const start=analyticsWeekStartDate(state.ui.analyticsDate||todayStr()), goals=goalSnapshotForAnalyticsRange(start,addDays(start,6)), done=goals.filter(g=>g.done).length,total=goals.length,pct=total?Math.round(done/total*100):0;
     const items=goals.map(g=>`<div class="weekly-goal"><span class="weekly-goal-label">${esc(g.label)}</span><span class="weekly-goal-status ${g.done?'done':'not-done'}">${g.done?'✓':'✕'}</span></div>`).join('');
-    $('weeklyGoalDashboard').innerHTML=`<div class="note ${pct===100?'good':''}"><b>${done}/${total}</b> целей · <b>${pct}%</b></div><div class="weekly-goals-grid">${items}</div>`;
+    $('weeklyGoalDashboard').innerHTML=total?`<div class="progress-weekly-bar"><div class="progress-goal-line"><span>${done}/${total} целей</span><b>${pct}%</b></div><div class="progress-bar-track"><div class="progress-bar-fill" style="width:${pct}%"></div></div></div><div class="weekly-goals-grid">${items}</div>`:'<div class="progress-empty" style="padding:18px 8px"><div>Добавьте недельные цели в Дневнике</div></div>';
   }
   function weeklyReportData(){
     const out=[], currentStart=analyticsWeekStartDate(todayStr()), reg=state.profile.registrationDate;
@@ -2171,19 +2189,118 @@
     if(!state.dailyDone[d]) state.dailyDone[d]={};
     for(const g of state.dailyGoals) if(typeof state.dailyDone[d][g.id]!=='boolean') state.dailyDone[d][g.id]=false;
   }
+  function progressMetricConfig(key){
+    return {
+      weight:{label:'Вес',unit:'кг',type:'line'},fatPercent:{label:'% Жира',unit:'%',type:'line'},calories:{label:'Ккал',unit:'ккал',type:'bar'},
+      macros:{label:'БЖУ',unit:'г',type:'macros'},steps:{label:'Шаги',unit:'шагов',type:'bar'},water:{label:'Вода',unit:'л',type:'bar'},
+      training:{label:'Тренировки',unit:'раз',type:'bar'},cycle:{label:'Цикл',unit:'дней',type:'cycle'}
+    }[key]||{label:key,unit:'',type:'line'};
+  }
+  function progressBucketSeries(key,end,period){
+    const [start,endDate]=periodStartEnd(end,period);
+    if(key==='macros'){
+      const bs=buckets(endDate,period,'calories').map(b=>{const vals={protein:[],fat:[],carbs:[]};for(const d of b.dates){for(const k of Object.keys(vals)){const v=n(journalValue(d,k));if(v!=null)vals[k].push(v);}}return {...b,protein:vals.protein.length?round(vals.protein.reduce((a,v)=>a+v,0)/vals.protein.length):null,fat:vals.fat.length?round(vals.fat.reduce((a,v)=>a+v,0)/vals.fat.length):null,carbs:vals.carbs.length?round(vals.carbs.reduce((a,v)=>a+v,0)/vals.carbs.length):null};});
+      return {start:start,end:endDate,rows:bs.filter(b=>b.protein!=null||b.fat!=null||b.carbs!=null)};
+    }
+    if(key==='training'){
+      const bs=buckets(endDate,period,'calories').map(b=>({...b,value:trainingStats(b.dates[0],b.dates.at(-1)).total}));
+      return {start:start,end:endDate,rows:bs.filter(b=>b.value>0)};
+    }
+    if(key==='cycle'){
+      const bs=buckets(endDate,period,'calories').map(b=>({...b,value:b.dates.filter(d=>state.cycleDays[d]).length}));
+      return {start:start,end:endDate,rows:bs.filter(b=>b.value>0)};
+    }
+    const bs=buckets(endDate,period,key).filter(b=>b.avg!=null).map(b=>({...b,value:b.avg}));
+    if(key==='fatPercent'){
+      const rows=buckets(endDate,period,'calories').map(b=>{const vals=b.dates.map(d=>bodyFatAt(d)).filter(v=>v!=null);return {...b,value:vals.length?round(vals.reduce((a,v)=>a+v,0)/vals.length):null};}).filter(b=>b.value!=null);
+      return {start:start,end:endDate,rows};
+    }
+    return {start:start,end:endDate,rows:bs};
+  }
+  function progressEmpty(){return '<div class="progress-empty"><div class="progress-empty__icon">📊</div><div>Добавьте данные за 2+ дня, чтобы увидеть график</div></div>';}
+  function progressChartLabels(rows){return `<div class="progress-chart-labels">${rows.map(r=>`<span>${esc((r.label||'').split(' — ')[0])}</span>`).join('')}</div>`;}
+  function renderProgressVisual(key,end,period){
+    const cfg=progressMetricConfig(key), series=progressBucketSeries(key,end,period), rows=series.rows;
+    if(rows.length<2) return progressEmpty();
+    if(cfg.type==='line'){
+      const W=760,H=200,L=38,R=10,T=14,B=30,vals=rows.map(r=>r.value),min=Math.min(...vals),max=Math.max(...vals),range=max-min||1;
+      const x=i=>L+i/(rows.length-1)*(W-L-R),y=v=>T+(1-(v-min)/range)*(H-T-B);
+      const grid=[0,1,2,3].map(i=>{const yy=T+i*(H-T-B)/3;const v=max-range*i/3;return `<line x1="${L}" y1="${yy}" x2="${W-R}" y2="${yy}" stroke="#E6EAF0" stroke-dasharray="4 4"/><text x="4" y="${yy+4}" fill="#8E98A3" font-size="11">${round(v)}</text>`}).join('');
+      const path=rows.map((r,i)=>(i?'L':'M')+x(i).toFixed(1)+' '+y(r.value).toFixed(1)).join(' ');
+      const points=rows.map((r,i)=>`<circle cx="${x(i)}" cy="${y(r.value)}" r="4.5" fill="#fff" stroke="#2563EB" stroke-width="2"><title>${esc(r.label)}: ${r.value} ${cfg.unit}</title></circle>`).join('');
+      const labels=rows.map((r,i)=>{if(rows.length>7&&i%Math.ceil(rows.length/7)!==0&&i!==rows.length-1)return '';return `<text x="${x(i)}" y="${H-8}" text-anchor="middle" fill="#8E98A3" font-size="10">${esc(r.label.split(' — ')[0])}</text>`}).join('');
+      return `<div class="progress-chart"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="График ${esc(cfg.label)}"><title>График ${esc(cfg.label)}</title>${grid}<path d="${path}" fill="none" stroke="#2563EB" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>${points}${labels}</svg></div>`;
+    }
+    if(cfg.type==='macros'){
+      const max=Math.max(...rows.flatMap(r=>[r.protein||0,r.fat||0,r.carbs||0]),1);
+      const bars=rows.map(r=>`<div class="progress-bar-group"><div class="progress-bar" style="height:${Math.max(3,Math.round((r.protein||0)/max*145))}px" title="Белки: ${r.protein??'—'} г"></div><div class="progress-bar orange" style="height:${Math.max(3,Math.round((r.fat||0)/max*145))}px" title="Жиры: ${r.fat??'—'} г"></div><div class="progress-bar green" style="height:${Math.max(3,Math.round((r.carbs||0)/max*145))}px" title="Углеводы: ${r.carbs??'—'} г"></div></div>`).join('');
+      return `<div class="progress-chart"><div class="progress-chart-bars">${bars}</div>${progressChartLabels(rows)}</div>`;
+    }
+    if(cfg.type==='cycle'){
+      const items=rows.map(r=>`<div class="progress-bar-group" title="${esc(r.label)}: ${r.value} дней"><div class="progress-bar orange" style="height:${Math.max(8,Math.round(Math.min(1,r.value/Math.max(1,r.dates.length))*145))}px"></div></div>`).join('');
+      return `<div class="progress-chart"><div class="progress-chart-bars">${items}</div>${progressChartLabels(rows)}</div>`;
+    }
+    const max=Math.max(...rows.map(r=>r.value||0),1);
+    const bars=rows.map(r=>`<div class="progress-bar-group"><div class="progress-bar" style="height:${Math.max(3,Math.round((r.value||0)/max*145))}px" title="${esc(r.label)}: ${r.value} ${cfg.unit}"></div></div>`).join('');
+    return `<div class="progress-chart"><div class="progress-chart-bars">${bars}</div>${progressChartLabels(rows)}</div>`;
+  }
+  function progressCurrentValue(key,start,end){
+    if(key==='training') return trainingStats(start,end).total;
+    if(key==='cycle') return averageValue('cycle',start,end);
+    if(key==='macros') return null;
+    return averageValue(key,start,end);
+  }
+  function progressChangeClass(key,diff){
+    if(diff==null||Math.abs(diff)<0.0001)return 'progress-neutral';
+    if(key==='weight'){const g=state.profile.goal;if(g==='lose')return diff<0?'progress-good':'progress-bad';if(g==='gain'||g==='muscle_gain')return diff>0?'progress-good':'progress-bad';return Math.abs(diff)<=0.2?'progress-good':'progress-bad';}
+    return diff>0?'progress-good':'progress-neutral';
+  }
+  function progressKeyMetrics(start,end){
+    const prev=previousPeriodStartEnd(start,end);
+    const defs=[['weight','Вес','кг'],['calories','Ккал','ккал'],['steps','Шаги',''],['water','Вода','л']];
+    return defs.map(([k,label,unit])=>{const cur=averageValue(k,start,end), old=averageValue(k,prev[0],prev[1]), diff=cur!=null&&old!=null?round(cur-old):null;return `<div class="progress-tile"><div class="progress-tile__label">${label}</div><div class="progress-tile__value">${cur!=null?cur+' '+unit:'—'}</div>${diff!=null?`<div class="progress-tile__change ${progressChangeClass(k,diff)}">${diff>0?'+':''}${diff} ${unit}</div>`:'<div class="progress-tile__change progress-neutral">—</div>'}</div>`;}).join('');
+  }
+  function lastWeightAtOrBefore(end){const ds=Object.keys(state.weights||{}).filter(d=>d<=end).sort();return ds.length?n(state.weights[ds.at(-1)]):n(state.profile.weight);}
+  function renderProgressGoal(end){
+    const p=getFullProfileAt(end),target=n(p.target),start=n(state.weights?.[state.profile.registrationDate]??state.profile.registrationSnapshot?.weight??p.weight),current=lastWeightAtOrBefore(end);
+    if(target==null||start==null||current==null){$('progressGoal').innerHTML='<div class="progress-empty" style="padding:18px 8px"><div>Задайте стартовый и целевой вес в профиле</div></div>';return;}
+    const total=target-start, done=current-start, pct=Math.abs(total)<.01?(Math.abs(current-target)<.5?100:0):clamp(Math.round(done/total*100),0,100), remaining=round(Math.abs(current-target),1), direction=target<start?'снижение веса':'набор веса';
+    $('progressGoal').innerHTML=`<div class="progress-goal-line"><span>Старт <b>${start} кг</b></span><span>Цель <b>${target} кг</b></span></div><div class="progress-bar-track"><div class="progress-bar-fill" style="width:${pct}%"></div></div><div class="progress-goal-foot"><span>${pct}%</span><span>${remaining===0?'Цель достигнута':'Осталось: '+remaining+' кг'}</span></div>`;
+  }
+  function renderProgressRegistration(start,end){
+    const defs=[['weight','Вес','кг'],['fatPercent','% Жира','%'],['waist','Талия','см']];
+    $('progressRegistration').innerHTML=defs.map(([k,label,unit])=>{const cur=averageValue(k,start,end),reg=registrationDateValue(k),d=cur!=null&&reg!=null?round(cur-reg):null;return `<div class="progress-tile"><div class="progress-tile__label">${label}</div><div class="progress-tile__value">${d==null?'—':(d>0?'+':'')+d+' '+unit}</div><div class="progress-tile__change ${goalAwareClass(k,d)}">от регистрации</div></div>`;}).join('');
+  }
+  function renderProgressActivity(start,end){
+    const stepRows=buckets(end, state.ui.analyticsPeriod||'week','steps').filter(r=>r.avg!=null), trainBuckets=buckets(end,state.ui.analyticsPeriod||'week','calories'), trainRows=trainBuckets.map(r=>({...r,value:trainingStats(r.dates[0],r.dates.at(-1)).total}));
+    const mini=(rows,color='blue')=>{if(rows.length<2)return progressEmpty();const max=Math.max(...rows.map(r=>r.value??r.avg??0),1),bars=rows.map(r=>`<div class="progress-bar-group"><div class="progress-bar ${color==='orange'?'orange':''}" style="height:${Math.max(3,Math.round((r.value??r.avg??0)/max*58))}px"></div></div>`).join('');return `<div class="progress-activity-mini"><div class="progress-chart-bars" style="height:70px;padding:0 2px 0">${bars}</div></div>`;};
+    const steps=averageValue('steps',start,end),train=trainingStats(start,end),summary=`Средние шаги: <b>${steps!=null?round(steps):'—'}</b> / день · Тренировки: <b>${train.total}</b> · Время: <b>${train.minutes}</b> мин`;
+    $('progressActivity').innerHTML=`<div class="progress-activity-tile"><div class="progress-activity-title">Шаги</div><div class="progress-activity-value">${steps!=null?round(steps):'—'} / день</div>${mini(stepRows)}</div><div class="progress-activity-tile"><div class="progress-activity-title">Тренировки</div><div class="progress-activity-value">${train.total} раза</div>${mini(trainRows,'orange')}</div>`;
+    $('progressActivitySummary').innerHTML=summary;
+  }
+  function renderProgressLegend(key){
+    const cfg=progressMetricConfig(key); if(key==='macros')return '<span class="progress-legend-item"><i class="progress-legend-dot"></i>Белки</span><span class="progress-legend-item"><i class="progress-legend-dot orange"></i>Жиры</span><span class="progress-legend-item"><i class="progress-legend-dot green"></i>Углеводы</span>';
+    return `<span class="progress-legend-item"><i class="progress-legend-dot"></i>${cfg.label} · ${cfg.type==='line'?'ежедневные измерения':'средние значения'}</span>`;
+  }
+  function renderAllProgressModal(start,end){
+    const defs=[['weight','Вес','кг'],['fatPercent','% Жира','%'],['calories','Ккал','ккал'],['protein','Белки','г'],['fat','Жиры','г'],['carbs','Углеводы','г'],['water','Вода','л'],['steps','Шаги',''],['burnedCalories','Потраченные ккал','ккал'],['totalBurned','Всего потрачено','ккал'],['calorieBalance','Баланс ккал','ккал'],['trainingMinutes','Тренировки','мин'],['trainingIntensity','Интенсивность','коэф.'],['activityCoefficient','Коэф. активности',''],['cycle','Дни цикла','дней'],...MEASUREMENTS.map(([k,l])=>[k,l,'см'])];
+    $('allProgressModalBody').innerHTML=`<div class="progress-all-grid"><div class="progress-all-head">Показатель · Среднее · От регистрации</div>${defs.map(([k,l,u])=>{const cur=averageValue(k,start,end),reg=registrationDateValue(k);return `<div class="progress-all-row"><span>${esc(l)}</span><span>${cur!=null?cur+' '+u:'—'}</span><span class="muted">${cur!=null&&reg!=null?((cur-reg>0?'+':'')+round(cur-reg)+' '+u):'—'}</span></div>`}).join('')}</div>`;
+  }
   function renderAnalytics(){
     const end=state.ui.analyticsDate||todayStr(),period=state.ui.analyticsPeriod||'week',key=state.ui.analyticsMetric||'weight';
     const [start,endDate]=periodStartEnd(end,period);
-    $('progressSummary').innerHTML=periodSummary(start,endDate);
-    $('dashboardPeriodCaption').textContent=`${fmtLong(start)} — ${fmtLong(endDate)}`;
-    renderComparison(start,endDate);renderWeightDashboard(start,endDate);renderNutritionDashboard(start,endDate);renderEnergyDashboard(start,endDate);renderActivityDashboard(start,endDate);renderBodyDashboard(start,endDate);renderVolumeDashboard(start,endDate);
+    $('progressKeyMetrics').innerHTML=progressKeyMetrics(start,endDate);
     document.querySelectorAll('.progress-metric').forEach(b=>b.classList.toggle('active',b.dataset.metric===key));
     document.querySelectorAll('.progress-period').forEach(b=>b.classList.toggle('active',b.dataset.period===period));
-    $('progressLegendPrimary').textContent=`${JOURNAL_LABELS[key]||key} — ${key==='weight'?'ежедневные измерения':'средние значения'}`;
-    $('analyticsChart').innerHTML=renderProgressChart(key,endDate,period);
+    $('analyticsChart').innerHTML=renderProgressVisual(key,endDate,period);
+    $('progressLegend').innerHTML=renderProgressLegend(key);
     $('progressRangeLabel').textContent=`${fmtLong(start)} — ${fmtLong(endDate)}`;
     const today=todayStr();$('progressNext').disabled=period==='all'||endDate>=today;
-    renderWeightCorrelations(start,endDate);renderWeeklyGoalDashboard();renderAnalyticsWeeklyStats();renderCalendar();
+    renderProgressGoal(endDate);renderProgressRegistration(start,endDate);renderProgressActivity(start,endDate);renderWeeklyGoalDashboard();
+    const goals=goalSnapshotForAnalyticsRange(analyticsWeekStartDate(endDate),addDays(analyticsWeekStartDate(endDate),6));
+    $('progressWeeklyCount').textContent=`${goals.filter(g=>g.done).length}/${goals.length}`;
+    renderCalendar();
+    renderAllProgressModal(start,endDate);
   }
   function navigate(tab){
     document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
@@ -2380,12 +2497,10 @@
       state.measurementHistory.sort((a,b)=>`${b.date} ${b.time||''}`.localeCompare(`${a.date} ${a.time||''}`));
       state.ui.measureDate=d;save();renderWeek();renderProfileDashboard();renderProfileHistory();toast('Данные сохранены');
     });
-    $('analyticsWeekStart').addEventListener('change',()=>{
-      state.ui.analyticsWeekStartDay=Number($('analyticsWeekStart').value);
-      if((state.ui.analyticsPeriod||'week')==='week') state.ui.analyticsDate=todayStr();
-      save();renderAnalytics();
-    });
     document.querySelectorAll('.progress-metric').forEach(b=>b.addEventListener('click',()=>{state.ui.analyticsMetric=b.dataset.metric;save();renderAnalytics();}));
+    $('openAllProgress').addEventListener('click',()=>{const m=$('allProgressModal');m.classList.add('show');m.setAttribute('aria-hidden','false');});
+    $('allProgressModalClose').addEventListener('click',()=>{const m=$('allProgressModal');m.classList.remove('show');m.setAttribute('aria-hidden','true');});
+    $('allProgressModal').addEventListener('click',e=>{if(e.target.id==='allProgressModal'){$('allProgressModal').classList.remove('show');$('allProgressModal').setAttribute('aria-hidden','true');}});
     // Analytics period controls: bind once at document level so they survive every re-render.
     if(!window.__fvsProgressPeriodBound){
       window.__fvsProgressPeriodBound=true;
